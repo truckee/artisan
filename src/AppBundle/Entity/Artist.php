@@ -1,9 +1,21 @@
 <?php
+/*
+ * This file is part of the UUFNN Artisan package.
+ *
+ * (c) UUFNN
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+//src\AppBundle\Entity\Artist.php
 
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Artwork;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -13,13 +25,17 @@ class Artist
 {
     /**
      * @ORM\Column(type="string", length=45)
+     * @Assert\NotBlank(message="First name may not be empty")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Assert\NotBlank(message="Last name may not be empty")
      */
     private $lastName;
+
+//    protected $name;
 
     /**
      * @ORM\Column(type="integer")
