@@ -1,4 +1,14 @@
 <?php
+/*
+ * This file is part of the UUFNN Artisan package.
+ *
+ * (c) UUFNN
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+//src\AppBundle\Entity\Artwork.php
 
 namespace AppBundle\Entity;
 
@@ -14,8 +24,15 @@ class Artwork
 {
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Description may not be empty")
      */
     private $description;
+
+    /**
+     * @ORM\Column(type="decimal", precision=6, scale=2, nullable=true)
+     * @Assert\GreaterThanOrEqual(value = 0, message="Price may not be less than 0")
+     */
+    private $price;
 
     /**
      * @ORM\Column(type="integer")
@@ -27,7 +44,6 @@ class Artwork
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Artist", inversedBy="artworks")
      * @ORM\JoinColumn(name="artist_id", referencedColumnName="id")
-     * @Assert\NotBlank(message="Description may not be blank")
      */
     protected $artist;
 
@@ -53,6 +69,30 @@ class Artwork
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set price
+     *
+     * @param string $price
+     *
+     * @return Artwork
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return string
+     */
+    public function getPrice()
+    {
+        return $this->price;
     }
 
     /**

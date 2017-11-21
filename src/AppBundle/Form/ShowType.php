@@ -8,41 +8,39 @@
  * file that was distributed with this source code.
  */
 
-//src\AppBundle\Form\ArtworkType.php
+//src\AppBundle\Form\ShowType.php
 
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ArtworkType extends AbstractType
+class ShowType extends AbstractType
 {
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->artworkOptions = $options['artworkOptions'];
-
         $builder
-            ->add('description')
-            ->add('price', MoneyType::class, [
-                'currency' => 'USD',
-                'data' => $this->artworkOptions['price'],
-                ])
-            ;
+            ->add('show')
+            ->add('lowest')
+            ->add('highest')
+            ->add('save', SubmitType::class, array(
+                'label' => 'Add show',
+            ));
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Artwork',
-            'artworkOptions' => null,
+            'data_class' => 'AppBundle\Entity\Show'
         ));
     }
 
@@ -51,8 +49,6 @@ class ArtworkType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'artwork';
+        return 'show';
     }
-
-
 }

@@ -13,6 +13,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Artwork;
+use AppBundle\Entity\Ticket;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -35,8 +36,6 @@ class Artist
      */
     private $lastName;
 
-//    protected $name;
-
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -47,6 +46,7 @@ class Artist
     public function __construct()
     {
         $this->artworks = new ArrayCollection();
+        $this->ticketnumbers = new ArrayCollection();
     }
 
     /**
@@ -57,6 +57,25 @@ class Artist
      */
     protected $artworks;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Ticket", mappedBy="artist", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OrderBy({"ticketnumber" = "ASC"})
+     */
+    protected $ticketnumbers;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\GreaterThan(value = 0, message="Ticket number > 0")
+     */
+    private $lowest;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\GreaterThan(value = 0, message="Ticket number > 0")
+     */
+    private $highest;
 
     /**
      * Set firstName
@@ -128,5 +147,65 @@ class Artist
     {
         $this->artworks->removeElement($artwork);
     }
-}
 
+    public function addTicketnumber(Ticket $ticketnumber)
+    {
+        $this->ticketnumbers[] = $ticketnumber;
+        $ticketnumber->setArtist($this);
+
+        return $this;
+    }
+
+    public function removeTicketnumber(Ticket $ticketnumber)
+    {
+        $this->ticketnumbers->removeElement($ticketnumber);
+    }
+
+    /**
+     * Set lowest
+     *
+     * @param string $lowest
+     *
+     * @return Lowest
+     */
+    public function setLowest($lowest)
+    {
+        $this->lowest = $lowest;
+
+        return $this;
+    }
+
+    /**
+     * Get lowest
+     *
+     * @return string
+     */
+    public function getLowest()
+    {
+        return $this->lowest;
+    }
+
+    /**
+     * Set highest
+     *
+     * @param string $highest
+     *
+     * @return Highest
+     */
+    public function setHighest($highest)
+    {
+        $this->highest = $highest;
+
+        return $this;
+    }
+
+    /**
+     * Get highest
+     *
+     * @return string
+     */
+    public function getHighest()
+    {
+        return $this->highest;
+    }
+}

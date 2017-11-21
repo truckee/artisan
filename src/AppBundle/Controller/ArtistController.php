@@ -31,7 +31,7 @@ class ArtistController extends Controller
      * @Route("/new", name="new_artist")
      *
      */
-    public function addArtist(Request $request)
+    public function addArtistAction(Request $request)
     {
         $artist = new Artist();
         $form = $this->createForm(ArtistType::class, $artist);
@@ -52,7 +52,6 @@ class ArtistController extends Controller
                     'notice', 'Artist already exists!'
                 );               
             }
-
         }
 
         return $this->render('Artist/newArtist.html.twig',
