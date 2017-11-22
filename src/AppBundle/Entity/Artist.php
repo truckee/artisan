@@ -13,7 +13,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Artwork;
-use AppBundle\Entity\Ticket;
+use AppBundle\Entity\Block;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -46,7 +46,7 @@ class Artist
     public function __construct()
     {
         $this->artworks = new ArrayCollection();
-        $this->ticketnumbers = new ArrayCollection();
+        $this->blocks = new ArrayCollection();
     }
 
     /**
@@ -60,22 +60,9 @@ class Artist
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Ticket", mappedBy="artist", cascade={"persist"}, orphanRemoval=true)
-     * @ORM\OrderBy({"ticketnumber" = "ASC"})
+     * @ORM\OneToMany(targetEntity="Block", mappedBy="artist", cascade={"persist"}, orphanRemoval=true)
      */
-    protected $ticketnumbers;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @Assert\GreaterThan(value = 0, message="Ticket number > 0")
-     */
-    private $lowest;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @Assert\GreaterThan(value = 0, message="Ticket number > 0")
-     */
-    private $highest;
+    protected $blocks;
 
     /**
      * Set firstName
@@ -148,64 +135,34 @@ class Artist
         $this->artworks->removeElement($artwork);
     }
 
-    public function addTicketnumber(Ticket $ticketnumber)
+    public function addBlock(Block $block)
     {
-        $this->ticketnumbers[] = $ticketnumber;
-        $ticketnumber->setArtist($this);
+        $this->blocks[] = $block;
+        $block->setArtist($this);
 
         return $this;
     }
 
-    public function removeTicketnumber(Ticket $ticketnumber)
+    public function removeBlock(Block $block)
     {
-        $this->ticketnumbers->removeElement($ticketnumber);
+        $this->blocks->removeElement($block);
     }
-
-    /**
-     * Set lowest
-     *
-     * @param string $lowest
-     *
-     * @return Lowest
-     */
-    public function setLowest($lowest)
-    {
-        $this->lowest = $lowest;
-
-        return $this;
-    }
-
-    /**
-     * Get lowest
-     *
-     * @return string
-     */
-    public function getLowest()
-    {
-        return $this->lowest;
-    }
-
-    /**
-     * Set highest
-     *
-     * @param string $highest
-     *
-     * @return Highest
-     */
-    public function setHighest($highest)
-    {
-        $this->highest = $highest;
-
-        return $this;
-    }
-
-    /**
-     * Get highest
-     *
-     * @return string
-     */
-    public function getHighest()
-    {
-        return $this->highest;
-    }
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Show", inversedBy="artists")
+//     * @ORM\JoinColumn(name="show_id", referencedColumnName="id")
+//     */
+//    protected $show;
+//
+//    public function setShow(Show $show)
+//    {
+//        $this->show = $show;
+//
+//        return $this;
+//    }
+//
+//    public function getShow()
+//    {
+//        return $this->show;
+//    }
 }

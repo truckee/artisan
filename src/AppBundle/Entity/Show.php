@@ -12,6 +12,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Block;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -20,6 +21,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity
  * @ORM\Table(name="show")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\ShowRepository")
  * @UniqueEntity("show", message = "Show already exists")
  */
 class Show
@@ -33,7 +35,7 @@ class Show
 
     public function __construct()
     {
-        $this->artist = new ArrayCollection();
+        $this->receipt = new ArrayCollection();
     }
 
     /**
@@ -44,15 +46,15 @@ class Show
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\GreaterThan(value = 0, message="Ticket number > 0")
+     * @Assert\GreaterThan(value = 0, message="Starting number > 0")
      */
-    private $lowest;
+    private $start;
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\GreaterThan(value = 0, message="Ticket number > 0")
+     * @Assert\GreaterThan(value = 0, message="Block size > 0")
      */
-    private $highest;
+    private $size;
 
     /**
      * Set show
@@ -79,50 +81,90 @@ class Show
     }
 
     /**
-     * Set lowest
+     * Set start
      *
-     * @param string $lowest
+     * @param string $start
      *
-     * @return Lowest
+     * @return Start
      */
-    public function setLowest($lowest)
+    public function setStart($start)
     {
-        $this->lowest = $lowest;
+        $this->start = $start;
 
         return $this;
     }
 
     /**
-     * Get lowest
+     * Get start
      *
      * @return string
      */
-    public function getLowest()
+    public function getStart()
     {
-        return $this->lowest;
+        return $this->start;
     }
 
     /**
-     * Set highest
+     * Set size
      *
-     * @param string $highest
+     * @param string $size
      *
-     * @return Highest
+     * @return Size
      */
-    public function setHighest($highest)
+    public function setSize($size)
     {
-        $this->highest = $highest;
+        $this->size = $size;
 
         return $this;
     }
 
     /**
-     * Get highest
+     * Get size
      *
      * @return string
      */
-    public function getHighest()
+    public function getSize()
     {
-        return $this->highest;
+        return $this->size;
+    }
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Block", mappedBy="show", cascade={"persist"}, orphanRemoval=true)
+     */
+    protected $blocks;
+
+    public function addBlock(Block $block)
+    {
+        $this->blocks[] = $block;
+        $block->setShow($this);
+
+        return $this;
+    }
+
+    public function removeBlock(Block $block)
+    {
+        $this->blocks->removeElement($block);
+    }
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Receipt", mappedBy="show", cascade={"persist"}, orphanRemoval=true)
+     */
+    protected $receipts;
+
+    public function addReceipt(Receipt $receipt)
+    {
+        $this->receipts[] = $receipt;
+        $receipt->setShow($this);
+
+        return $this;
+    }
+
+    public function removeReceipt(Receipt $receipt)
+    {
+        $this->receipts->removeElement($receipt);
     }
 }

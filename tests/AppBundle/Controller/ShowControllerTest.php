@@ -19,7 +19,9 @@ class ShowControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
         //empty database
-        $this->fixtures = $this->loadFixtures([]);
+        $this->fixtures = $this->loadFixtures([
+            'AppBundle\DataFixtures\Test\BlockFixture',
+        ])->getReferenceRepository();
 //        file_put_contents("G:\\Documents\\response.html", $this->client->getResponse()->getContent());
     }
     public function testNew()
@@ -31,8 +33,9 @@ class ShowControllerTest extends WebTestCase
         
         $form = $crawler->selectButton('Add show')->form();
         $form['show[show]'] = 'Artisan Show 2001';
-        $form['show[lowest]'] = 1;
-        $form['show[highest]'] = 100;
+        $form['show[start]'] = 1;
+        $form['show[size]'] = 10;
+        $form['show[last]'] = 10;
         $crawler = $this->client->submit($form);
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Show added")')->count());
@@ -47,22 +50,11 @@ class ShowControllerTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Show may not be empty")')->count());
     }
 
-    public function testOneNameShow()
+    public function testFixture()
     {
-        $crawler = $this->client->request('GET', '/show/new');
+        $show = $this->fixtures->getReference('show');
+        $name = $show->getShow();
 
-        $form = $crawler->selectButton('Add show')->form();
-        $form['show[firstName]'] = 'Benny';
-        $form['show[lastName]'] = 'Borko';
-        $crawler = $this->client->submit($form);
-
-        $crawler = $this->client->request('GET', '/show/new');
-
-        $form = $crawler->selectButton('Add show')->form();
-        $form['show[firstName]'] = 'Benny';
-        $form['show[lastName]'] = 'Borko';
-        $crawler = $this->client->submit($form);
-
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Show already exists")')->count());
+        $this->assertEquals($name, 'Artisan Show 2017');
     }
 }

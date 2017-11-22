@@ -12,6 +12,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Show;
 use AppBundle\Entity\Ticket;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -43,10 +44,16 @@ class Receipt
      */
     protected $ticketnumbers;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Show", inversedBy="receipts")
+     * @ORM\JoinColumn(name="show_id", referencedColumnName="id")
+     */
+    protected $show;
+
     public function addTicketnumber(Ticket $ticketnumber)
     {
         $this->ticketnumbers[] = $ticketnumber;
-        $ticketnumber->setArtist($this);
+        $ticketnumber->setShow($this);
 
         return $this;
     }
@@ -54,6 +61,18 @@ class Receipt
     public function removeTicketnumber(Ticket $ticketnumber)
     {
         $this->ticketnumbers->removeElement($ticketnumber);
+    }
+
+    public function setShow(Show $show)
+    {
+        $this->show = $show;
+
+        return $this;
+    }
+
+    public function getShow()
+    {
+        return $this->show;
     }
     
 }

@@ -27,8 +27,8 @@ class ShowType extends AbstractType
     {
         $builder
             ->add('show')
-            ->add('lowest')
-            ->add('highest')
+            ->add('start')
+            ->add('size')
             ->add('save', SubmitType::class, array(
                 'label' => 'Add show',
             ));
