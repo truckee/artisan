@@ -14,6 +14,7 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Artwork;
 use AppBundle\Entity\Block;
+use AppBundle\Entity\Ticket;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -47,6 +48,7 @@ class Artist
     {
         $this->artworks = new ArrayCollection();
         $this->blocks = new ArrayCollection();
+        $this->ticketnumbers = new ArrayCollection();
     }
 
     /**
@@ -63,6 +65,14 @@ class Artist
      * @ORM\OneToMany(targetEntity="Block", mappedBy="artist", cascade={"persist"}, orphanRemoval=true)
      */
     protected $blocks;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Ticket", mappedBy="artist", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OrderBy({"ticketnumber" = "ASC"})
+     */
+    protected $ticketnumbers;
 
     /**
      * Set firstName
@@ -133,6 +143,19 @@ class Artist
     public function removeArtwork(Artwork $artwork)
     {
         $this->artworks->removeElement($artwork);
+    }
+
+    public function addTicketnumber(Ticket $ticketnumber)
+    {
+        $this->ticketnumbers[] = $ticketnumber;
+        $ticketnumber->setArtist($this);
+
+        return $this;
+    }
+
+    public function removeTicketnumber(Ticket $ticketnumber)
+    {
+        $this->ticketnumbers->removeElement($ticketnumber);
     }
 
     public function addBlock(Block $block)

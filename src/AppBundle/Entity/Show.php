@@ -57,6 +57,16 @@ class Show
     private $size;
 
     /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Set show
      *
      * @param string $show

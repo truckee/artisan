@@ -90,7 +90,7 @@ class Ticket
      */
     public function setTicketnumber($ticketnumber)
     {
-        $this->ticketnumber = ticketnumber;
+        $this->ticketnumber = $ticketnumber;
 
         return $this;
     }
