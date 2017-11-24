@@ -52,4 +52,18 @@ class ShowController extends Controller
                 ]
         );
     }
+
+    /**
+     * @Route("/block/{id}")
+     */
+    public function blockTestAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $show = $em->getRepository('AppBundle:Show')->find($id);
+        $block= $this->getDoctrine()->getRepository(Show::class)->createBlock($show);
+
+        return $this->render('Show/blockTest.html.twig', [
+            'ticketblock' => $block
+        ]);
+}
 }

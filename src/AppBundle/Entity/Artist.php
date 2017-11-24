@@ -14,6 +14,7 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Artwork;
 use AppBundle\Entity\Block;
+use AppBundle\Entity\Show;
 use AppBundle\Entity\Ticket;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -48,6 +49,7 @@ class Artist
     {
         $this->artworks = new ArrayCollection();
         $this->blocks = new ArrayCollection();
+        $this->shows = new ArrayCollection();
         $this->ticketnumbers = new ArrayCollection();
     }
 
@@ -65,6 +67,13 @@ class Artist
      * @ORM\OneToMany(targetEntity="Block", mappedBy="artist", cascade={"persist"}, orphanRemoval=true)
      */
     protected $blocks;
+
+        /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Show", mappedBy="artists")
+     */
+    protected $shows;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -170,22 +179,18 @@ class Artist
     {
         $this->blocks->removeElement($block);
     }
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Show", inversedBy="artists")
-//     * @ORM\JoinColumn(name="show_id", referencedColumnName="id")
-//     */
-//    protected $show;
-//
-//    public function setShow(Show $show)
-//    {
-//        $this->show = $show;
-//
-//        return $this;
-//    }
-//
-//    public function getShow()
-//    {
-//        return $this->show;
-//    }
+
+    public function addShow(Show $show)
+    {
+        $this->shows[] = $show;
+        $show->setArtist($this);
+
+        return $this;
+    }
+
+    public function removeShow(Show $show)
+    {
+        $this->shows->removeElement($show);
+    }
+
 }

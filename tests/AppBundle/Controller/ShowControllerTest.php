@@ -62,9 +62,7 @@ class ShowControllerTest extends WebTestCase
 
     public function testArtistFound()
     {
-        $show = $this->fixtures->getReference('show');
-        $id = $show->getId();
-        $crawler = $this->client->request('GET', '/receipt/findTicket/' . $id);
+        $crawler = $this->client->request('GET', '/receipt/findTicket');
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Find ticket")')->count());
 
@@ -77,9 +75,7 @@ class ShowControllerTest extends WebTestCase
 
     public function testArtistNotFound()
     {
-        $show = $this->fixtures->getReference('show');
-        $id = $show->getId();
-        $crawler = $this->client->request('GET', '/receipt/findTicket/' . $id);
+        $crawler = $this->client->request('GET', '/receipt/findTicket');
         $form = $crawler->selectButton('Find ticket')->form();
         $form['receipt[ticketnumber]'] = 44;
         $crawler = $this->client->submit($form);

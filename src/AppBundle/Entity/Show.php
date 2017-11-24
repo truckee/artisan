@@ -12,6 +12,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Artist;
 use AppBundle\Entity\Block;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,7 +21,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="show")
+ * @ORM\Table(name="art_show")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ShowRepository")
  * @UniqueEntity("show", message = "Show already exists")
  */
@@ -55,6 +56,22 @@ class Show
      * @Assert\GreaterThan(value = 0, message="Block size > 0")
      */
     private $size;
+
+    /**
+     * @ORM\Column(name="is_default", type="boolean", options={"default"=false})
+     */
+    private $default;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Artist", inversedBy="shows", cascade={"persist"})
+     * @ORM\JoinTable(name="participation",
+     *      joinColumns={@ORM\JoinColumn(name="show_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="artist_id", referencedColumnName="id")}
+     *      ))
+     */
+    protected $artists;
 
     /**
      * Get id
@@ -139,6 +156,30 @@ class Show
     }
 
     /**
+     * Set default
+     *
+     * @param string $default
+     *
+     * @return Default
+     */
+    public function setDefault($default)
+    {
+        $this->default = $default;
+
+        return $this;
+    }
+
+    /**
+     * Get default
+     *
+     * @return string
+     */
+    public function isDefault()
+    {
+        return $this->default;
+    }
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Block", mappedBy="show", cascade={"persist"}, orphanRemoval=true)
@@ -176,5 +217,16 @@ class Show
     public function removeReceipt(Receipt $receipt)
     {
         $this->receipts->removeElement($receipt);
+    }
+
+    public function addArtist(Artist $artist)
+    {
+        $artist->addShow($this); // synchronously updating inverse side
+        $this->artists[] = $artist;
+    }
+
+    public function getArtists()
+    {
+        return $this->artists;
     }
 }

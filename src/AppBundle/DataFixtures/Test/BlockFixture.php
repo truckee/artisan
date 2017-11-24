@@ -34,6 +34,7 @@ class BlockFixture extends AbstractFixture implements OrderedFixtureInterface
         $show->setShow('Artisan Show 2017');
         $show->setStart($start);
         $show->setSize($size);
+        $show->setDefault(true);
         $this->setReference('show', $show);
 
         $block1 = $manager->getRepository(Show::class)->createBlock($show);

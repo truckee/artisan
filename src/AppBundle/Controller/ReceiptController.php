@@ -13,8 +13,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Ticket;
-use AppBundle\Entity\Block;
 use AppBundle\Form\ReceiptTicketType;
+use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,12 +28,13 @@ class ReceiptController extends Controller
 {
 
     /**
-     * @Route("/findTicket/{show}", name="find_ticket")
+     * @Route("/findTicket", name="find_ticket")
      */
-    public function findTicketAction(Request $request, $show)
+    public function findTicketAction(Request $request, Defaults $defaults)
     {
         $ticket = new Ticket();
         $form = $this->createForm(ReceiptTicketType::class, $ticket);
+        $show = $defaults->showDefault();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $ticket = $form->getData()->getTicketnumber();
@@ -54,9 +55,8 @@ class ReceiptController extends Controller
             }
         }
 
-        return $this->render('Receipt/findTicket.html.twig',
-                [
-                'form' => $form->createView(),
+        return $this->render('Receipt/findTicket.html.twig', [
+                    'form' => $form->createView(),
         ]);
     }
 }
