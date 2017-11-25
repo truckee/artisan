@@ -117,4 +117,3 @@ class Artwork
         return $this->artist;
     }
 }
-

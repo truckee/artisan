@@ -19,7 +19,9 @@ class ArtistControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
         //empty database
-        $this->fixtures = $this->loadFixtures([]);
+        $this->fixtures = $this->loadFixtures([
+            'AppBundle\DataFixtures\Test\ArtistFixture',
+        ]);
 //        file_put_contents("G:\\Documents\\response.html", $this->client->getResponse()->getContent());
     }
     public function testNew()

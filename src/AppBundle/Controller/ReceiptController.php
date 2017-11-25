@@ -1,9 +1,9 @@
 <?php
 /*
  * This file is part of the UUFNN Artisan package.
- * 
+ *
  * (c) UUFNN
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -45,11 +45,13 @@ class ReceiptController extends Controller
                 if ($block[0] <= $ticket && $ticket <= $block[1]) {
                     $artist = $value->getArtist();
                     $this->addFlash(
-                        'notice', 'Artist found: ' . $artist->getFirstName() . ' ' . $artist->getLastName()
+                        'notice',
+                        'Artist found: ' . $artist->getFirstName() . ' ' . $artist->getLastName()
                     );
                 } else {
                     $this->addFlash(
-                        'notice', 'Ticket not found!'
+                        'notice',
+                        'Ticket not found!'
                     );
                 }
             }

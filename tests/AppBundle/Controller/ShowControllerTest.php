@@ -37,7 +37,7 @@ class ShowControllerTest extends WebTestCase
         $form['show[show]'] = 'Artisan Show 2001';
         $form['show[start]'] = 1;
         $form['show[size]'] = 10;
-        $form['show[last]'] = 10;
+        $form['show[default]'] = true;
         $crawler = $this->client->submit($form);
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Show added")')->count());

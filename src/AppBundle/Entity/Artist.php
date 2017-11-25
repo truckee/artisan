@@ -68,7 +68,7 @@ class Artist
      */
     protected $blocks;
 
-        /**
+    /**
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Show", mappedBy="artists")
@@ -192,5 +192,4 @@ class Artist
     {
         $this->shows->removeElement($show);
     }
-
 }

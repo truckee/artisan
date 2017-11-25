@@ -15,6 +15,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ShowType extends AbstractType
@@ -29,6 +30,10 @@ class ShowType extends AbstractType
             ->add('show')
             ->add('start')
             ->add('size')
+            ->add('default', CheckboxType::class, [
+                'label' => 'Default show?',
+                'data' => true,
+                ])
             ->add('save', SubmitType::class, array(
                 'label' => 'Add show',
             ));
@@ -40,7 +45,8 @@ class ShowType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Show'
+            'data_class' => 'AppBundle\Entity\Show',
+            'required' => false,
         ));
     }
 

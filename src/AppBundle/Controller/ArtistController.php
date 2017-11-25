@@ -14,6 +14,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Artist;
 use AppBundle\Form\ArtistType;
+use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,10 +32,18 @@ class ArtistController extends Controller
      * @Route("/new", name="new_artist")
      *
      */
-    public function addArtistAction(Request $request)
+    public function addArtistAction(Request $request, Defaults $defaults)
     {
         $artist = new Artist();
         $form = $this->createForm(ArtistType::class, $artist);
+        $default = $defaults->showDefault();
+        if (is_null($default)) {
+            $this->addFlash(
+                'notice',
+                'Create a default show before adding an artist!'
+            );
+            return $this->redirectToRoute("new_show");
+        }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $nameArray = ['firstName' => $form->getData()->getFirstName(), 'lastName' => $form->getData()->getLastName()];
@@ -44,19 +53,23 @@ class ArtistController extends Controller
                 $em->persist($artist);
                 $em->flush();
                 $this->addFlash(
-                    'notice', 'Artist added!'
+                    'notice',
+                    'Artist added!'
                 );
                 $this->redirectToRoute("homepage");
             } else {
                 $this->addFlash(
-                    'notice', 'Artist already exists!'
-                );               
+                    'notice',
+                    'Artist already exists!'
+                );
             }
         }
 
-        return $this->render('Artist/newArtist.html.twig',
+        return $this->render(
+            'Artist/newArtist.html.twig',
                 [
                     'form' => $form->createView(),
+                    'defaultShow' => $default->getShow(),
                 ]
         );
     }

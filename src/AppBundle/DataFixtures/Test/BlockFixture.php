@@ -1,9 +1,9 @@
 <?php
 /*
  * This file is part of the UUFNN Artisan package.
- * 
+ *
  * (c) UUFNN
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -37,6 +37,14 @@ class BlockFixture extends AbstractFixture implements OrderedFixtureInterface
         $show->setDefault(true);
         $this->setReference('show', $show);
 
+
+        $show2 = new Show();
+        $show2->setShow('Artisan Show 2018');
+        $show2->setStart($start);
+        $show2->setSize($size);
+        $show2->setDefault(true);
+
+
         $block1 = $manager->getRepository(Show::class)->createBlock($show);
         $block2 = $manager->getRepository(Show::class)->createBlock($show);
         
@@ -49,6 +57,7 @@ class BlockFixture extends AbstractFixture implements OrderedFixtureInterface
         $show->addBlock($block2);
         $this->setReference('artist', $artist);
         $manager->persist($show);
+        $manager->persist($show2);
         $manager->persist($artist);
 
         $manager->flush();

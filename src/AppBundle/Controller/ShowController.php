@@ -38,15 +38,23 @@ class ShowController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-                $em->persist($show);
-                $em->flush();
-                $this->addFlash(
-                    'notice', 'Show added!'
-                );
-                $this->redirectToRoute("homepage");
+            //set other default show to not be default
+            if (true == $form->getData()->isDefault()) {
+                $default = $em->getRepository('AppBundle:Show')->findOneBy(['default' => true]);
+                $default->setDefault(false);
+                $em->persist($default);
+            }
+            $em->persist($show);
+            $em->flush();
+            $this->addFlash(
+                'notice',
+                'Show added!'
+            );
+            $this->redirectToRoute("homepage");
         }
 
-        return $this->render('Show/newShow.html.twig',
+        return $this->render(
+            'Show/newShow.html.twig',
                 [
                     'form' => $form->createView(),
                 ]
@@ -60,10 +68,10 @@ class ShowController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $show = $em->getRepository('AppBundle:Show')->find($id);
-        $block= $this->getDoctrine()->getRepository(Show::class)->createBlock($show);
+        $block = $this->getDoctrine()->getRepository(Show::class)->createBlock($show);
 
         return $this->render('Show/blockTest.html.twig', [
-            'ticketblock' => $block
+                'ticketblock' => $block
         ]);
-}
+    }
 }

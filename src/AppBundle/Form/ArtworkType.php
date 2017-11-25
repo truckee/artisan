@@ -43,6 +43,7 @@ class ArtworkType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Artwork',
             'artworkOptions' => null,
+            'required' => false,
         ));
     }
 
@@ -53,6 +54,4 @@ class ArtworkType extends AbstractType
     {
         return 'artwork';
     }
-
-
 }
