@@ -20,7 +20,7 @@ class ArtistControllerTest extends WebTestCase
         $this->client->followRedirects();
         //empty database
         $this->fixtures = $this->loadFixtures([
-            'AppBundle\DataFixtures\Test\ArtistFixture',
+            'AppBundle\DataFixtures\Test\DefaultShowFixture',
         ]);
 //        file_put_contents("G:\\Documents\\response.html", $this->client->getResponse()->getContent());
     }
@@ -30,6 +30,7 @@ class ArtistControllerTest extends WebTestCase
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Add artist")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Artisan Show 2017")')->count());
         
         $form = $crawler->selectButton('Add artist')->form();
         $form['artist[firstName]'] = 'Benny';

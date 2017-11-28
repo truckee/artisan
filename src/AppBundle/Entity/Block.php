@@ -15,10 +15,14 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\Artist;
 use AppBundle\Entity\Show;
+use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as AppAssert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="ticket_block")
+ * @AppAssert\BlockLimits
+ * @AppAssert\UniqueBlock
  */
 class Block
 {
@@ -31,15 +35,27 @@ class Block
     private $id;
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="integer")
+     * @Assert\GreaterThan(value = 0, message = "Must be > 0")
      */
-    private $block;
+    private $lower;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\GreaterThan(value=0, message="Must be > 0")
+     */
+    private $upper;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Artist", inversedBy="blocks")
      * @ORM\JoinColumn(name="artist_id", referencedColumnName="id")
      */
     protected $artist;
+
+    public function getId()
+    {
+        return $this->id;
+    }
 
     public function setArtist(Artist $artist)
     {
@@ -71,15 +87,27 @@ class Block
         return $this->show;
     }
 
-    public function setBlock($block)
+    public function setLower($lower)
     {
-        $this->block = $block;
+        $this->lower = $lower;
 
         return $this;
     }
 
-    public function getBlock()
+    public function getLower()
     {
-        return $this->block;
+        return $this->lower;
+    }
+
+    public function setUpper($upper)
+    {
+        $this->upper = $upper;
+
+        return $this;
+    }
+
+    public function getUpper()
+    {
+        return $this->upper;
     }
 }

@@ -20,14 +20,4 @@ class DefaultControllerTest extends WebTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertContains('Welcome to Symfony', $crawler->filter('#container h1')->text());
     }
-
-    public function testNoArtistWithoutDefaultShow()
-    {
-        $crawler = $this->client->request('GET', '/artist/new');
-
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Create a default show before adding an artist")')->count()
-        );
-    }
 }

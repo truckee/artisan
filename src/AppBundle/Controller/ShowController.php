@@ -35,12 +35,14 @@ class ShowController extends Controller
     {
         $show = new Show();
         $form = $this->createForm(ShowType::class, $show);
+        $em = $this->getDoctrine()->getManager();
+        $default = $em->getRepository('AppBundle:Show')->findOneBy(['default' => true]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            
             //set other default show to not be default
-            if (true == $form->getData()->isDefault()) {
-                $default = $em->getRepository('AppBundle:Show')->findOneBy(['default' => true]);
+            if (true == $form->getData()->isDefault() && !is_null($default)) {
+                
                 $default->setDefault(false);
                 $em->persist($default);
             }
@@ -59,19 +61,5 @@ class ShowController extends Controller
                     'form' => $form->createView(),
                 ]
         );
-    }
-
-    /**
-     * @Route("/block/{id}")
-     */
-    public function blockTestAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $show = $em->getRepository('AppBundle:Show')->find($id);
-        $block = $this->getDoctrine()->getRepository(Show::class)->createBlock($show);
-
-        return $this->render('Show/blockTest.html.twig', [
-                'ticketblock' => $block
-        ]);
     }
 }

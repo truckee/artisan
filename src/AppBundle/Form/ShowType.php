@@ -28,8 +28,6 @@ class ShowType extends AbstractType
     {
         $builder
             ->add('show')
-            ->add('start')
-            ->add('size')
             ->add('default', CheckboxType::class, [
                 'label' => 'Default show?',
                 'data' => true,

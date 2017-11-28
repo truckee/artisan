@@ -56,7 +56,7 @@ class ArtistController extends Controller
                     'notice',
                     'Artist added!'
                 );
-                $this->redirectToRoute("homepage");
+                return $this->redirectToRoute("homepage");
             } else {
                 $this->addFlash(
                     'notice',

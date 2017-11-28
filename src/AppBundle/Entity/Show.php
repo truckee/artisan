@@ -46,18 +46,6 @@ class Show
     private $show;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\GreaterThan(value = 0, message="Starting number > 0")
-     */
-    private $start;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @Assert\GreaterThan(value = 0, message="Block size > 0")
-     */
-    private $size;
-
-    /**
      * @ORM\Column(name="is_default", type="boolean", options={"default"=false})
      */
     private $default;
@@ -105,54 +93,6 @@ class Show
     public function getShow()
     {
         return $this->show;
-    }
-
-    /**
-     * Set start
-     *
-     * @param string $start
-     *
-     * @return Start
-     */
-    public function setStart($start)
-    {
-        $this->start = $start;
-
-        return $this;
-    }
-
-    /**
-     * Get start
-     *
-     * @return string
-     */
-    public function getStart()
-    {
-        return $this->start;
-    }
-
-    /**
-     * Set size
-     *
-     * @param string $size
-     *
-     * @return Size
-     */
-    public function setSize($size)
-    {
-        $this->size = $size;
-
-        return $this;
-    }
-
-    /**
-     * Get size
-     *
-     * @return string
-     */
-    public function getSize()
-    {
-        return $this->size;
     }
 
     /**
