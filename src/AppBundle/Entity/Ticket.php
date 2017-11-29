@@ -86,7 +86,6 @@ class Ticket
      *
      * @param string ticketnumber
      *
-     * @return Artwork
      */
     public function setTicketnumber($ticketnumber)
     {
@@ -103,5 +102,22 @@ class Ticket
     public function getTicketnumber()
     {
         return $this->ticketnumber;
+    }
+
+    /**
+     * @ORM\Column(type="decimal", precision=8, scale=2)
+     */
+    private $amount;
+
+    public function setAmount(Amount $amount)
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getAmount()
+    {
+        return $this->amount;
     }
 }

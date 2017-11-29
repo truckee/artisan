@@ -36,6 +36,8 @@ class Show
 
     public function __construct()
     {
+        $this->artists = new ArrayCollection();
+        $this->blocks = new ArrayCollection();
         $this->receipt = new ArrayCollection();
     }
 
@@ -49,6 +51,16 @@ class Show
      * @ORM\Column(name="is_default", type="boolean", options={"default"=false})
      */
     private $default;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $tax;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $percent;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -117,6 +129,54 @@ class Show
     public function isDefault()
     {
         return $this->default;
+    }
+
+    /**
+     * Set tax
+     *
+     * @param string $tax
+     *
+     * @return Tax
+     */
+    public function setTax($tax)
+    {
+        $this->tax = $tax;
+
+        return $this;
+    }
+
+    /**
+     * Get tax
+     *
+     * @return string
+     */
+    public function getTax()
+    {
+        return $this->tax;
+    }
+
+    /**
+     * Set percent
+     *
+     * @param string $percent
+     *
+     * @return Percent
+     */
+    public function setPercent($percent)
+    {
+        $this->percent = $percent;
+
+        return $this;
+    }
+
+    /**
+     * Get percent
+     *
+     * @return string
+     */
+    public function getPercent()
+    {
+        return $this->percent;
     }
 
     /**

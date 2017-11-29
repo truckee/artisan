@@ -24,11 +24,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Receipt
 {
+
     public function __construct()
     {
         $this->ticketnumbers = new ArrayCollection();
     }
-
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -73,5 +73,22 @@ class Receipt
     public function getShow()
     {
         return $this->show;
+    }
+    
+    /**
+     * @ORM\Column(type="date", nullable = false)
+     */
+    private $sales_date;
+
+    public function setSales_date(Sales_date $sales_date)
+    {
+        $this->sales_date = $sales_date;
+
+        return $this;
+    }
+
+    public function getSales_date()
+    {
+        return $this->sales_date;
     }
 }
