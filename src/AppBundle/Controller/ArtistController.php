@@ -39,34 +39,25 @@ class ArtistController extends Controller
         $default = $defaults->showDefault();
         if (is_null($default)) {
             $this->addFlash(
-                'notice',
-                'Create a default show before adding an artist!'
+                'notice', 'Create a default show before adding an artist!'
             );
+
             return $this->redirectToRoute("new_show");
         }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $nameArray = ['firstName' => $form->getData()->getFirstName(), 'lastName' => $form->getData()->getLastName()];
             $em = $this->getDoctrine()->getManager();
-            $nameExists = $em->getRepository('AppBundle:Artist')->findOneBy($nameArray);
-            if (null === $nameExists) {
-                $em->persist($artist);
-                $em->flush();
-                $this->addFlash(
-                    'notice',
-                    'Artist added!'
-                );
-                return $this->redirectToRoute("homepage");
-            } else {
-                $this->addFlash(
-                    'notice',
-                    'Artist already exists!'
-                );
-            }
+            $em->persist($artist);
+            $em->flush();
+            $this->addFlash(
+                'notice', 'Artist added!'
+            );
+
+            return $this->redirectToRoute("homepage");
         }
 
         return $this->render(
-            'Artist/newArtist.html.twig',
+                'Artist/newArtist.html.twig',
                 [
                     'form' => $form->createView(),
                     'defaultShow' => $default->getShow(),

@@ -106,4 +106,11 @@ class NoDefaultShowTest extends WebTestCase
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Block exists or overlaps existing block")')->count());
     }
+
+    public function testNoDefaultShow()
+    {
+        $crawler = $this->client->request('GET', '/');
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Default show not assigned")')->count());
+    }
 }

@@ -18,10 +18,12 @@ use AppBundle\Entity\Ticket;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as AppAssert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="artist")
+ * @AppAssert\UniqueArtistName
  */
 class Artist
 {
