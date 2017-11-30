@@ -50,7 +50,7 @@ class Artist
     {
         $this->blocks = new ArrayCollection();
         $this->shows = new ArrayCollection();
-        $this->ticketnumbers = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
     }
 
     /**
@@ -73,7 +73,7 @@ class Artist
      * @ORM\OneToMany(targetEntity="Ticket", mappedBy="artist", cascade={"persist"}, orphanRemoval=true)
      * @ORM\OrderBy({"ticketnumber" = "ASC"})
      */
-    protected $ticketnumbers;
+    protected $tickets;
 
     /**
      * Set firstName
@@ -133,17 +133,17 @@ class Artist
         return $this->id;
     }
 
-    public function addTicketnumber(Ticket $ticketnumber)
+    public function addTicket(Ticket $ticket)
     {
-        $this->ticketnumbers[] = $ticketnumber;
-        $ticketnumber->setArtist($this);
+        $this->tickets[] = $ticket;
+        $ticket->setArtist($this);
 
         return $this;
     }
 
-    public function removeTicketnumber(Ticket $ticketnumber)
+    public function removeTicket(Ticket $ticket)
     {
-        $this->ticketnumbers->removeElement($ticketnumber);
+        $this->tickets->removeElement($ticket);
     }
 
     public function addBlock(Block $block)
@@ -159,6 +159,11 @@ class Artist
         $this->blocks->removeElement($block);
     }
 
+    public function getBlocks()
+    {
+        return $this->blocks;
+    }
+
     public function addShow(Show $show)
     {
         $this->shows[] = $show;
@@ -170,6 +175,11 @@ class Artist
     public function removeShow(Show $show)
     {
         $this->shows->removeElement($show);
+    }
+
+    public function getShows()
+    {
+        return $this->shows;
     }
 
     /**
@@ -296,14 +306,14 @@ class Artist
      */
     private $tax_id;
 
-    public function setTax_id($tax_id)
+    public function setTaxId($tax_id)
     {
         $this->tax_id = $tax_id;
 
         return $this;
     }
 
-    public function getTax_id()
+    public function getTaxId()
     {
         return $this->tax_id;
     }
@@ -347,14 +357,14 @@ class Artist
      */
     private $tax_form;
 
-    public function setTax_form($tax_form)
+    public function setTaxForm($tax_form)
     {
         $this->tax_form = $tax_form;
 
         return $this;
     }
 
-    public function getTax_form()
+    public function getTaxForm()
     {
         return $this->tax_form;
     }

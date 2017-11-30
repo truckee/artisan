@@ -34,16 +34,16 @@ class ArtistController extends Controller
      */
     public function addArtistAction(Request $request, Defaults $defaults)
     {
+        $show = $defaults->showDefault();
         $artist = new Artist();
-        $form = $this->createForm(ArtistType::class, $artist);
-        $default = $defaults->showDefault();
-        if (is_null($default)) {
+        if (is_null($show)) {
             $this->addFlash(
                 'notice', 'Create a default show before adding an artist!'
             );
 
             return $this->redirectToRoute("new_show");
         }
+        $form = $this->createForm(ArtistType::class, $artist);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -60,7 +60,7 @@ class ArtistController extends Controller
                 'Artist/newArtist.html.twig',
                 [
                     'form' => $form->createView(),
-                    'defaultShow' => $default->getShow(),
+//                    'defaultShow' => $default->getShow(),
                 ]
         );
     }

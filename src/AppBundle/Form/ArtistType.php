@@ -1,21 +1,13 @@
 <?php
-/*
- * This file is part of the UUFNN Artisan package.
- *
- * (c) UUFNN
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-//src\AppBundle\Form\ArtistType.php
 
 namespace AppBundle\Form;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ArtistType extends AbstractType
 {
@@ -26,11 +18,51 @@ class ArtistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstName')
-            ->add('lastName')
+            ->add('firstName', TextType::class, [
+                'label' => 'First name:',
+            ])
+            ->add('lastName', TextType::class, [
+                'label' => 'Last name:',
+            ])
+            ->add('address', TextType::class, [
+                'label' => 'Address:',
+            ])
+            ->add('city', TextType::class, [
+                'label' => 'City: ',
+            ])
+            ->add('state', TextType::class, [
+                'label' => 'State: ',
+            ])
+            ->add('zip', TextType::class, [
+                'label' => 'Zip: ',
+            ])
+            ->add('email', TextType::class, [
+                'label' => 'Email: ',
+            ])
+            ->add('phone', TextType::class, [
+                'label' => 'Phone: ',
+            ])
+            ->add('dba', TextType::class, [
+                'label' => 'DBA: ',
+            ])
+            ->add('tax_id', TextType::class, [
+                'label' => 'Tax ID: ',
+            ])
+            ->add('vendor', CheckboxType::class, [
+                'label' => 'Vendor? ',
+            ])
+            ->add('confirmed', CheckboxType::class, [
+                'label' => 'Confirmed? ',
+                'label_format' => ['class' => 'text-bold']
+            ])
+            ->add('tax_form', CheckboxType::class, [
+                'label' => 'Tax form? ',
+                'label_format' => ['class' => 'text-bold']
+            ])
             ->add('save', SubmitType::class, array(
                 'label' => 'Add artist',
-        ));
+                'label_format' => ['class' => 'text-bold']
+            ));
     }
 
     /**
