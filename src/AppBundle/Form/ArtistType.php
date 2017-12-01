@@ -2,10 +2,10 @@
 
 namespace AppBundle\Form;
 
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -48,16 +48,32 @@ class ArtistType extends AbstractType
             ->add('tax_id', TextType::class, [
                 'label' => 'Tax ID: ',
             ])
-            ->add('vendor', CheckboxType::class, [
-                'label' => 'Vendor? ',
+            ->add('vendor', ChoiceType::class, [
+                'label' => 'Vendor?',
+                'choices' => [
+                    'Vendor?' => 1,
+                    ],
+                'choice_label' => false,
+                'multiple' => true,
+                'expanded' => true,
+                ])
+            ->add('confirmed', ChoiceType::class, [
+                'label' => 'Confirmed?',
+                'choices' => [
+                    'Confirmed?' => 1,
+                    ],
+                'choice_label' => false,
+                'multiple' => true,
+                'expanded' => true,
             ])
-            ->add('confirmed', CheckboxType::class, [
-                'label' => 'Confirmed? ',
-                'label_format' => ['class' => 'text-bold']
-            ])
-            ->add('tax_form', CheckboxType::class, [
-                'label' => 'Tax form? ',
-                'label_format' => ['class' => 'text-bold']
+            ->add('tax_form', ChoiceType::class, [
+                'label' => 'Tax form?',
+                'choices' => [
+                    'Tax form?' => 1
+                    ],
+                'choice_label' => false,
+                'multiple' => true,
+                'expanded' => true,
             ])
             ->add('save', SubmitType::class, array(
                 'label' => 'Add artist',

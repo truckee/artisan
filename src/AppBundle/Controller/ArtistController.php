@@ -14,6 +14,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Artist;
 use AppBundle\Form\ArtistType;
+use AppBundle\Form\ShowArtistsType;
 use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -57,10 +58,30 @@ class ArtistController extends Controller
         }
 
         return $this->render(
-                'Artist/newArtist.html.twig',
-                [
+                'Artist/newArtist.html.twig', [
                     'form' => $form->createView(),
-//                    'defaultShow' => $default->getShow(),
+                ]
+        );
+    }
+
+    /**
+     * @Route("/existing", name="existing_artists")
+     */
+    public function addExistingArtistsAction(Request $request, Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $form = $this->createForm(ShowArtistsType::class, null, ['show' => $show]);
+        if (is_null($show)) {
+            $this->addFlash(
+                'notice', 'Create a default show before adding an artist!'
+            );
+
+            return $this->redirectToRoute("new_show");
+        }
+
+        return $this->render(
+                'Artist/existingArtist.html.twig', [
+                    'form' => $form->createView(),
                 ]
         );
     }

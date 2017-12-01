@@ -14,15 +14,14 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Artist;
 use AppBundle\Entity\Block;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="art_show")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\ShowRepository")
  * @UniqueEntity("show", message = "Show already exists")
  */
 class Show
@@ -65,11 +64,8 @@ class Show
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Artist", inversedBy="shows", cascade={"persist"})
-     * @ORM\JoinTable(name="participation",
-     *      joinColumns={@ORM\JoinColumn(name="show_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="artist_id", referencedColumnName="id")}
-     *      ))
+     * @ORM\ManyToMany(targetEntity="Artist", mappedBy="shows")
+     *
      */
     protected $artists;
 
@@ -199,6 +195,11 @@ class Show
         $this->blocks->removeElement($block);
     }
 
+    public function getBlocks()
+    {
+        return $this->blocks;
+    }
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
@@ -219,10 +220,20 @@ class Show
         $this->receipts->removeElement($receipt);
     }
 
+    public function getReceipts()
+    {
+        return $this->receipts;
+    }
+
     public function addArtist(Artist $artist)
     {
         $artist->addShow($this); // synchronously updating inverse side
         $this->artists[] = $artist;
+    }
+
+    public function removeArtist(Artist $artist)
+    {
+        $this->artists->removeElement($artist);
     }
 
     public function getArtists()

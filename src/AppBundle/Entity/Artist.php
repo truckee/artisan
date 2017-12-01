@@ -15,10 +15,10 @@ namespace AppBundle\Entity;
 use AppBundle\Entity\Block;
 use AppBundle\Entity\Show;
 use AppBundle\Entity\Ticket;
+use AppBundle\Validator\Constraints as AppAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints as AppAssert;
 
 /**
  * @ORM\Entity
@@ -63,7 +63,12 @@ class Artist
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Show", mappedBy="artists")
+     * @ORM\ManyToMany(targetEntity="Show", inversedBy="artists", cascade={"persist"})
+     * @ORM\JoinTable(name="participation",
+     *      joinColumns={@ORM\JoinColumn(name="artist_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="show_id", referencedColumnName="id")}
+     *      ))
+     *
      */
     protected $shows;
 
