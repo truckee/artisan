@@ -12,10 +12,12 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Form\TicketType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class ReceiptTicketType extends AbstractType
 {
@@ -26,9 +28,15 @@ class ReceiptTicketType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('ticketnumber')
+            ->add('tickets', CollectionType::class,[
+                'entry_type'   => TicketType::class,
+//                'entry_options' => array('label' => false),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+            ])
             ->add('save', SubmitType::class, array(
-                'label' => 'Find ticket',
+                'label' => 'Add receipt',
         ));
     }
 
@@ -38,7 +46,7 @@ class ReceiptTicketType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Ticket',
+            'data_class' => 'AppBundle\Entity\Receipt',
             'required' => false,
         ));
     }

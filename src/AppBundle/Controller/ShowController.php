@@ -14,6 +14,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Show;
 use AppBundle\Form\ShowType;
+use AppBundle\Form\ShowArtistsType;
+use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,5 +63,18 @@ class ShowController extends Controller
                     'form' => $form->createView(),
                 ]
         );
+    }
+
+    /**
+     * @Route("/artists", name="show_artists")
+     */
+    public function addArtistsToShow(Request $request, Defaults $defaults)
+    {
+        $form = $this->createForm(ShowArtistsType::class);
+        $defaultShow = $defaults->showDefault();
+        return $this->render('Show/newShow.html.twig', [
+            'form' => $form->createView(),
+            'defaultShow' => $defaultShow,
+        ]);
     }
 }

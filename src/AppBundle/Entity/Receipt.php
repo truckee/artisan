@@ -27,7 +27,7 @@ class Receipt
 
     public function __construct()
     {
-        $this->ticketnumbers = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
     }
     /**
      * @ORM\Column(type="integer")
@@ -42,7 +42,7 @@ class Receipt
      * @ORM\OneToMany(targetEntity="Ticket", mappedBy="receipt", cascade={"persist"}, orphanRemoval=true)
      * @ORM\OrderBy({"ticketnumber" = "ASC"})
      */
-    protected $ticketnumbers;
+    protected $tickets;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Show", inversedBy="receipts")
@@ -50,17 +50,22 @@ class Receipt
      */
     protected $show;
 
-    public function addTicketnumber(Ticket $ticketnumber)
+    public function addTicket(Ticket $ticket)
     {
-        $this->ticketnumbers[] = $ticketnumber;
-        $ticketnumber->setShow($this);
+        $this->tickets[] = $ticket;
+        $ticket->setShow($this);
 
         return $this;
     }
 
-    public function removeTicketnumber(Ticket $ticketnumber)
+    public function removeTicket(Ticket $ticket)
     {
-        $this->ticketnumbers->removeElement($ticketnumber);
+        $this->tickets->removeElement($ticket);
+    }
+
+    public function getTickets()
+    {
+        return $this->tickets;
     }
 
     public function setShow(Show $show)

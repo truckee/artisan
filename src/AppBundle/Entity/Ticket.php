@@ -31,13 +31,13 @@ class Ticket
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Artist", inversedBy="ticketnumbers")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Artist", inversedBy="tickets")
      * @ORM\JoinColumn(name="artist_id", referencedColumnName="id")
      */
     protected $artist;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Receipt", inversedBy="ticketnumbers")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Receipt", inversedBy="tickets")
      * @ORM\JoinColumn(name="receipt_id", referencedColumnName="id")
      */
     protected $receipt;

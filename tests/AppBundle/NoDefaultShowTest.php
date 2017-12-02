@@ -49,13 +49,24 @@ class NoDefaultShowTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Show may not be empty")')->count());
     }
 
-    public function testNoArtistWithoutDefaultShow()
+//    public function testNoArtistWithoutDefaultShow()
+//    {
+//        $crawler = $this->client->request('GET', '/artist/new');
+//
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Create a default show before adding an artist")')->count()
+//        );
+//    }
+
+    public function testNoReceiptWithoutDefaultShow()
     {
-        $crawler = $this->client->request('GET', '/artist/new');
+        $crawler = $this->client->request('GET', '/receipt/new');
+        file_put_contents("G:\\Documents\\response.html", $this->client->getResponse()->getContent());
 
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Create a default show before adding an artist")')->count()
+            $crawler->filter('html:contains("Create a default show before adding a receipt")')->count()
         );
     }
 

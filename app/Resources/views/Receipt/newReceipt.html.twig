@@ -1,0 +1,18 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    {{ form_start(form) }}
+    <h3>Tickets</h3>
+    <div class="tickets" data-prototype="{{ form_widget(form.tickets.vars.prototype)|e('html_attr') }}">
+        {% for ticket in form.tickets %}
+            <div class="row">
+                <div class="col-sm-4">{{ form_row(ticket.ticketnumber) }}</div>
+                <div class="col-sm-4"> {{ form_row(ticket.amount) }}</div></div>
+        {% endfor %}
+    </div>
+    {{ form_end(form) }}
+{% endblock body %}
+{%  block javascripts %}
+    {{ parent() }}
+    <script src="/js/tickets.js"></script>
+{%  endblock javascripts %}
+

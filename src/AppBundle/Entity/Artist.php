@@ -172,7 +172,7 @@ class Artist
     public function addShow(Show $show)
     {
         $this->shows[] = $show;
-        $show->setArtist($this);
+//        $show->addArtist($this);
 
         return $this;
     }

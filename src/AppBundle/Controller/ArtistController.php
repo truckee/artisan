@@ -59,7 +59,7 @@ class ArtistController extends Controller
 
         return $this->render(
                 'Artist/newArtist.html.twig', [
-                    'form' => $form->createView(),
+                'form' => $form->createView(),
                 ]
         );
     }
@@ -70,13 +70,37 @@ class ArtistController extends Controller
     public function addExistingArtistsAction(Request $request, Defaults $defaults)
     {
         $show = $defaults->showDefault();
-        $form = $this->createForm(ShowArtistsType::class, null, ['show' => $show]);
+        $artist = new Artist();
+        $form = $this->createForm(ShowArtistsType::class, $show, ['show' => $show]);
         if (is_null($show)) {
             $this->addFlash(
                 'notice', 'Create a default show before adding an artist!'
             );
 
             return $this->redirectToRoute("new_show");
+        }
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $artists = $form->get('artists')->getData();
+            $n = 0;
+            foreach ($artists as $artist) {
+                $artist->addShow($show);
+                $em->persist($artist);
+                $n ++;
+            }
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            if (0 === $n) {
+                $flash->info('No artist added!');
+
+                return $this->redirectToRoute("existing_artists");
+            } else {
+                $em->flush();
+                $qty = (1 === $n) ? 'Artist ' : $n . ' artists';
+                $flash->success($qty . ' added!');
+            }
+
+            return $this->redirectToRoute("homepage");
         }
 
         return $this->render(

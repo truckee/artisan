@@ -8,30 +8,29 @@
  * file that was distributed with this source code.
  */
 
-//src\AppBundle\Form\ArtworkType.php
+//src\AppBundle\Form\TicketType.php
 
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class ArtworkType extends AbstractType
+class TicketType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->artworkOptions = $options['artworkOptions'];
-
         $builder
-            ->add('description')
-            ->add('price', MoneyType::class, [
-                'currency' => 'USD',
-                'data' => $this->artworkOptions['price'],
-                ])
+            ->add('ticket', TextType::class, [
+                
+            ])
+            ->add('amount', TextType::class)
+//            ->add('artist')
+//            ->add('receipt')
             ;
     }
     
@@ -41,9 +40,7 @@ class ArtworkType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Artwork',
-            'artworkOptions' => null,
-            'required' => false,
+            'data_class' => 'AppBundle\Entity\Ticket'
         ));
     }
 
@@ -52,6 +49,8 @@ class ArtworkType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'artwork';
+        return 'ticket';
     }
+
+
 }

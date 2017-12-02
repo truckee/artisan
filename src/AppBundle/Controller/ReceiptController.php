@@ -12,7 +12,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Ticket;
+use AppBundle\Entity\Receipt;
 use AppBundle\Form\ReceiptTicketType;
 use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -60,5 +60,44 @@ class ReceiptController extends Controller
         return $this->render('Receipt/findTicket.html.twig', [
                     'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/new", name="new_receipt")
+     * @param Request $request
+     * @param Defaults $defaults
+     */
+    public function newReceipt(Request $request, Defaults $defaults)
+    {
+        $receipt = new Receipt();
+        $default = $defaults->showDefault();
+        if (is_null($default)) {
+            $this->addFlash(
+                'notice', 'Create a default show before adding a receipt!'
+            );
+
+            return $this->redirectToRoute("new_show");
+        }
+        $form = $this->createForm(ReceiptTicketType::class, $receipt);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+        $default = $defaults->showDefault();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($receipt);
+            $em->flush();
+            $this->addFlash(
+                'notice', 'Receipt added!'
+            );
+
+            return $this->redirectToRoute("homepage");
+        }
+
+        return $this->render(
+                'Receipt/newReceipt.html.twig',
+                [
+                    'form' => $form->createView(),
+                ]
+        );
+
     }
 }
