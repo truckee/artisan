@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-//src\AppBundle\Form\ShowArtistsType.php
+//src\AppBundle\Form\AddExistingArtistsType.php
 
 namespace AppBundle\Form;
 
@@ -21,10 +21,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * ShowArtistsType
+ * AddExistingArtistsType
  *
  */
-class ShowArtistsType extends AbstractType
+class AddExistingArtistsType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -45,7 +45,7 @@ class ShowArtistsType extends AbstractType
                             ->setParameter(1, $show->getShow())
                             ->getQuery()
                             ->getResult();
-                        if (empty($id)) {
+                        if (empty($ids)) {
                             return $er->createQueryBuilder('a');
                         } else {
                             return $er->createQueryBuilder('a')

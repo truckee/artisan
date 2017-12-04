@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class BlockController extends Controller
 {
+
     /**
      * @Route("/new", name="new_block")
      * @param Request $request
@@ -39,14 +40,12 @@ class BlockController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($block);
             $em->flush();
-                $this->addFlash(
-                    'notice',
-                    'Block added!'
-                );
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            $flash->success('Block added!');
         }
 
         return $this->render('Block/newBlock.html.twig', [
-            'form' => $form->createView(),
+                'form' => $form->createView(),
         ]);
     }
 }

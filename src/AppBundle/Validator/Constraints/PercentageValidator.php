@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-//src\AppBundle\Validator\Constraints\BlockLimitsValidator.php
+//src\AppBundle\Validator\Constraints\PercentageValidator.php
 
 namespace AppBundle\Validator\Constraints;
 
@@ -16,17 +16,17 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * BlockLimitsValidator
+ * PercentageValidator
  *
  */
-class BlockLimitsValidator extends ConstraintValidator
+class PercentageValidator extends ConstraintValidator
 {
 
-    public function validate($block, Constraint $constraint)
+    public function validate($percent, Constraint $constraint)
     {
-        if ($block->getLower() > $block->getUpper()) {
+        if ($percent < 0 || $percent > 1) {
             $this->context->buildViolation($constraint->message)
-                ->atPath('block')
+//                ->atPath('tax')
                 ->addViolation();
         }
     }

@@ -14,6 +14,7 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Artist;
 use AppBundle\Entity\Block;
+use AppBundle\Validator\Constraints as AppAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -53,11 +54,13 @@ class Show
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @AppAssert\Percentage
      */
     private $tax;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @AppAssert\Percentage
      */
     private $percent;
 

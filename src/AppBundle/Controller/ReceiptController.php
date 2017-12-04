@@ -40,25 +40,21 @@ class ReceiptController extends Controller
             $ticket = $form->getData()->getTicketnumber();
             $em = $this->getDoctrine()->getManager();
             $blocks = $em->getRepository('AppBundle\Entity\Block')->findBy(['show' => $show]);
+            $flash = $this->get('braincrafted_bootstrap.flash');
             foreach ($blocks as $value) {
                 $block = $value->getBlock();
                 if ($block[0] <= $ticket && $ticket <= $block[1]) {
                     $artist = $value->getArtist();
-                    $this->addFlash(
-                        'notice',
-                        'Artist found: ' . $artist->getFirstName() . ' ' . $artist->getLastName()
-                    );
+                    $flash->success('Artist found: ' . $artist->getFirstName() . ' ' . $artist->getLastName());
                 } else {
-                    $this->addFlash(
-                        'notice',
-                        'Ticket not found!'
-                    );
+                    $flash->error('Ticket not found!');
                 }
             }
         }
 
-        return $this->render('Receipt/findTicket.html.twig', [
-                    'form' => $form->createView(),
+        return $this->render('Receipt/findTicket.html.twig',
+                [
+                'form' => $form->createView(),
         ]);
     }
 
@@ -71,33 +67,28 @@ class ReceiptController extends Controller
     {
         $receipt = new Receipt();
         $default = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
         if (is_null($default)) {
-            $this->addFlash(
-                'notice', 'Create a default show before adding a receipt!'
-            );
+            $flash->error('Create a default show before adding a receipt!');
 
             return $this->redirectToRoute("new_show");
         }
         $form = $this->createForm(ReceiptTicketType::class, $receipt);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-        $default = $defaults->showDefault();
+            $default = $defaults->showDefault();
             $em = $this->getDoctrine()->getManager();
             $em->persist($receipt);
             $em->flush();
-            $this->addFlash(
-                'notice', 'Receipt added!'
-            );
+            $flash->success('Receipt added!');
 
             return $this->redirectToRoute("homepage");
         }
 
         return $this->render(
-                'Receipt/newReceipt.html.twig',
-                [
+                'Receipt/newReceipt.html.twig', [
                     'form' => $form->createView(),
                 ]
         );
-
     }
 }

@@ -14,8 +14,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Show;
 use AppBundle\Form\ShowType;
-use AppBundle\Form\ShowArtistsType;
-use AppBundle\Services\Defaults;
+use AppBundle\Form\SelectShowType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,40 +40,74 @@ class ShowController extends Controller
         $default = $em->getRepository('AppBundle:Show')->findOneBy(['default' => true]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            
+            $flash = $this->get('braincrafted_bootstrap.flash');
             //set other default show to not be default
             if (true == $form->getData()->isDefault() && !is_null($default)) {
-                
                 $default->setDefault(false);
                 $em->persist($default);
             }
             $em->persist($show);
             $em->flush();
-            $this->addFlash(
-                'notice',
-                'Show added!'
-            );
-            $this->redirectToRoute("homepage");
+            $flash->success('Show added!');
+
+            return $this->redirectToRoute("homepage");
         }
 
         return $this->render(
-            'Show/newShow.html.twig',
+                'Show/showForm.html.twig',
                 [
                     'form' => $form->createView(),
+                    'action' => 'Add show',
                 ]
         );
     }
 
     /**
-     * @Route("/artists", name="show_artists")
+     * @Route("/select", name="show_select")
      */
-    public function addArtistsToShow(Request $request, Defaults $defaults)
+    public function selectShowForEdit(Request $request)
     {
-        $form = $this->createForm(ShowArtistsType::class);
-        $defaultShow = $defaults->showDefault();
-        return $this->render('Show/newShow.html.twig', [
-            'form' => $form->createView(),
-            'defaultShow' => $defaultShow,
+        $show = new Show();
+        $form = $this->createForm(SelectShowType::class, $show);
+
+        return $this->render('Show/selectShow.html.twig',
+                [
+                    'form' => $form->createView(),
+                    'show' => $show
+        ]);
+    }
+
+    /**
+     * @Route("/edit", name="show_edit")
+     */
+    public function editShowAction(Request $request)
+    {
+        $id = $request->get('select_show')['show'];
+        $em = $this->getDoctrine()->getManager();
+        if (!empty($id)) {
+            $show = $em->getRepository('AppBundle:Show')->find($id);
+        } else {
+            $name = $request->get('show')['show'];
+            $show = $em->getRepository('AppBundle:Show')->findOneBy(['show' => $name]);
+        }
+        $form = $this->createForm(ShowType::class, $show);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            dump('Not yet!');
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($show);
+            $em->flush();
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            $flash->success($show->getShow() . ' updated!');
+
+            return $this->redirectToRoute("homepage");
+        }
+
+        return $this->render('Show/showForm.html.twig',
+                [
+                    'form' => $form->createView(),
+                    'show' => $show,
+                    'action' => 'Edit show'
         ]);
     }
 }

@@ -23,6 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="artist")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\ArtistRepository")
  * @AppAssert\UniqueArtistName
  */
 class Artist

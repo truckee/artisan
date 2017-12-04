@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\AppBundle;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
@@ -49,20 +49,29 @@ class NoDefaultShowTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Show may not be empty")')->count());
     }
 
-//    public function testNoArtistWithoutDefaultShow()
-//    {
-//        $crawler = $this->client->request('GET', '/artist/new');
-//
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("Create a default show before adding an artist")')->count()
-//        );
-//    }
+    public function testShowTaxValidation()
+    {
+        $crawler = $this->client->request('GET', '/show/new');
+        $form = $crawler->selectButton('Add show')->form();
+        $form['show[tax]'] = '110';
+        $crawler = $this->client->submit($form);
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Must be between 0% and 100%")')->count());
+    }
+
+    public function testShowTPercentValidation()
+    {
+        $crawler = $this->client->request('GET', '/show/new');
+        $form = $crawler->selectButton('Add show')->form();
+        $form['show[percent]'] = '-5';
+        $crawler = $this->client->submit($form);
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Must be between 0% and 100%")')->count());
+    }
 
     public function testNoReceiptWithoutDefaultShow()
     {
         $crawler = $this->client->request('GET', '/receipt/new');
-        file_put_contents("G:\\Documents\\response.html", $this->client->getResponse()->getContent());
 
         $this->assertGreaterThan(
             0,

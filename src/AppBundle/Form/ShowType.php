@@ -16,6 +16,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\PercentType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ShowType extends AbstractType
@@ -27,10 +29,17 @@ class ShowType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('show')
+            ->add('show', TextType::class)
+            ->add('tax', PercentType::class, [
+                'label' => 'Local tax rate',
+                'scale' => 3
+                ])
+            ->add('percent', PercentType::class, [
+                'label' => 'UUFNN percentage',
+                'scale' => 1
+                ])
             ->add('default', CheckboxType::class, [
                 'label' => 'Default show?',
-                'data' => true,
                 ])
             ->add('save', SubmitType::class, array(
                 'label' => 'Add show',

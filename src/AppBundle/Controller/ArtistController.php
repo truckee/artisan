@@ -14,7 +14,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Artist;
 use AppBundle\Form\ArtistType;
-use AppBundle\Form\ShowArtistsType;
+use AppBundle\Form\AddExistingArtistsType;
 use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -37,10 +37,9 @@ class ArtistController extends Controller
     {
         $show = $defaults->showDefault();
         $artist = new Artist();
+        $flash = $this->get('braincrafted_bootstrap.flash');
         if (is_null($show)) {
-            $this->addFlash(
-                'notice', 'Create a default show before adding an artist!'
-            );
+            $flash->error('Create a default show before adding an artist!');
 
             return $this->redirectToRoute("new_show");
         }
@@ -48,14 +47,14 @@ class ArtistController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $artist->addShow($show);
             $em->persist($artist);
             $em->flush();
-            $this->addFlash(
-                'notice', 'Artist added!'
-            );
+            $flash->success('Artist added!');
 
             return $this->redirectToRoute("homepage");
         }
+        $flash->error($form->getErrors());
 
         return $this->render(
                 'Artist/newArtist.html.twig', [
@@ -71,11 +70,10 @@ class ArtistController extends Controller
     {
         $show = $defaults->showDefault();
         $artist = new Artist();
-        $form = $this->createForm(ShowArtistsType::class, $show, ['show' => $show]);
+        $form = $this->createForm(AddExistingArtistsType::class, $show, ['show' => $show]);
+        $flash = $this->get('braincrafted_bootstrap.flash');
         if (is_null($show)) {
-            $this->addFlash(
-                'notice', 'Create a default show before adding an artist!'
-            );
+            $flash->error('Create a default show before adding an artist!');
 
             return $this->redirectToRoute("new_show");
         }
@@ -83,13 +81,11 @@ class ArtistController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $artists = $form->get('artists')->getData();
-            $n = 0;
+            $n = count($artists);
             foreach ($artists as $artist) {
                 $artist->addShow($show);
                 $em->persist($artist);
-                $n ++;
             }
-            $flash = $this->get('braincrafted_bootstrap.flash');
             if (0 === $n) {
                 $flash->info('No artist added!');
 
@@ -104,9 +100,25 @@ class ArtistController extends Controller
         }
 
         return $this->render(
-                'Artist/existingArtist.html.twig', [
-                    'form' => $form->createView(),
+                'Artist/existingArtist.html.twig',
+                [
+                'form' => $form->createView(),
                 ]
         );
+    }
+    
+    /**
+     * @Route("/view", name="show_view")
+     */
+    public function viewShowArtists(Request $request, Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $em = $this->getDoctrine()->getManager();
+        $artists = $em->getRepository('AppBundle:Artist')->inShow($show);
+
+        return $this->render('Artist/inShow.html.twig', [
+            'artists' => $artists,
+        ]);
+        
     }
 }

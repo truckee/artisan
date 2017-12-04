@@ -42,18 +42,18 @@
             </div>
             <div class="row">
                 <div class="col-sm-2">
-                    {{ form_row(form.vendor) }}
+                    <b>Vendor?</b> {{ form_row(form.vendor) }}
                 </div>
                 <div class="col-sm-2">
-                    {{ form_row(form.confirmed) }}
+                    <b>Confirmed?</b> {{ form_row(form.confirmed) }}
                 </div>
                 <div class="col-sm-2">
-                    {{ form_row(form.tax_form) }}
+                   <b>Tax form?</b> {{ form_row(form.tax_form) }}
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-2">
-                    {{ form_row(form.save) }}
+                    {{ form_row(form.save) }}{{ form_rest(form) }}
                 </div>
             </div>
         </div></div>
