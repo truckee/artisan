@@ -65,7 +65,7 @@ class ShowController extends Controller
     /**
      * @Route("/select", name="show_select")
      */
-    public function selectShowForEdit(Request $request)
+    public function selectShowForEdit()
     {
         $show = new Show();
         $form = $this->createForm(SelectShowType::class, $show);
@@ -78,22 +78,19 @@ class ShowController extends Controller
     }
 
     /**
-     * @Route("/edit", name="show_edit")
+     * @Route("/edit/{id}", name="show_edit")
      */
-    public function editShowAction(Request $request)
+    public function editShowAction(Request $request, $id = null)
     {
-        $id = $request->get('select_show')['show'];
-        $em = $this->getDoctrine()->getManager();
-        if (!empty($id)) {
+        if (null !== $id) {
+            $em = $this->getDoctrine()->getManager();
             $show = $em->getRepository('AppBundle:Show')->find($id);
         } else {
-            $name = $request->get('show')['show'];
-            $show = $em->getRepository('AppBundle:Show')->findOneBy(['show' => $name]);
+            return $this->redirectToRoute('show_select');
         }
         $form = $this->createForm(ShowType::class, $show);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            dump('Not yet!');
             $em = $this->getDoctrine()->getManager();
             $em->persist($show);
             $em->flush();

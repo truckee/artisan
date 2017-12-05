@@ -31,7 +31,7 @@ class ArtistControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/artist/new');
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Add new artist for this show")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Add artist")')->count());
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Artisan Show 2017")')->count());
 
         $form = $crawler->selectButton('Add artist')->form();
@@ -43,7 +43,7 @@ class ArtistControllerTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/artist/existing');
 
-         $this->assertEquals(0, $crawler->filter('html:contains("Benny")')->count());
+         $this->assertEquals(1, $crawler->filter('html:contains("Benny")')->count());
     }
 
     public function testValidation()

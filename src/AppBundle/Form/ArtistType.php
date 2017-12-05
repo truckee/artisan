@@ -7,6 +7,9 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ArtistType extends AbstractType
@@ -17,6 +20,7 @@ class ArtistType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $show = $options['show'];
         $builder
             ->add('firstName', TextType::class, [
                 'label' => 'First name:',
@@ -50,17 +54,34 @@ class ArtistType extends AbstractType
             ])
             ->add('vendor', CheckboxType::class, [
                 'label' => false,
-                ])
+            ])
             ->add('confirmed', CheckboxType::class, [
                 'label' => false,
             ])
             ->add('tax_form', CheckboxType::class, [
                 'label' => false,
             ])
-            ->add('save', SubmitType::class, array(
-                'label' => 'Add artist',
-                'label_format' => ['class' => 'text-bold']
-            ));
+            ->add('save', SubmitType::class,
+                array(
+                    'label' => false,
+                    'label_format' => ['class' => 'text-bold']
+        ));
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use($show, $options) {
+            $artist = $event->getData();
+            $form = $event->getForm();
+            $em = $options['entity_manager'];
+            $isInShow = (null !== $artist->getId()) ? $em->getRepository('AppBundle:Artist')->isArtistInShow($show, $artist) : false;
+            if (null !== $show) {
+                $form->add('inShow', CheckboxType::class,
+                    [
+                        'label' => false,
+                        'data' => $isInShow,
+                        'mapped' => false
+                ]);
+            }
+        });
     }
 
     /**
@@ -71,7 +92,10 @@ class ArtistType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Artist',
             'required' => false,
+            'show' => null,
+            'validation_groups' => null,
         ));
+        $resolver->setRequired('entity_manager');
     }
 
     /**

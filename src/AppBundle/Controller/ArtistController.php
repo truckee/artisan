@@ -15,6 +15,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Artist;
 use AppBundle\Form\ArtistType;
 use AppBundle\Form\AddExistingArtistsType;
+use AppBundle\Form\SelectArtistType;
 use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -38,27 +39,33 @@ class ArtistController extends Controller
         $show = $defaults->showDefault();
         $artist = new Artist();
         $flash = $this->get('braincrafted_bootstrap.flash');
-        if (is_null($show)) {
-            $flash->error('Create a default show before adding an artist!');
-
-            return $this->redirectToRoute("new_show");
-        }
-        $form = $this->createForm(ArtistType::class, $artist);
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(ArtistType::class, $artist,
+            [
+                'show' => $show,
+                'entity_manager' => $em,
+                'validation_groups' => ['add'],
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $artist->addShow($show);
+            $inShow = (isset($form->children['inShow'])) ? $form->get('inShow')->getData() : null;
+            if (true === $inShow) {
+                $artist->addShow($show);
+            }
             $em->persist($artist);
             $em->flush();
             $flash->success('Artist added!');
 
             return $this->redirectToRoute("homepage");
+        } else {
+            $flash->error($form->getErrors());
         }
-        $flash->error($form->getErrors());
 
         return $this->render(
-                'Artist/newArtist.html.twig', [
-                'form' => $form->createView(),
+                'Artist/artistForm.html.twig',
+                [
+                    'form' => $form->createView(),
+                    'action' => 'Add artist',
                 ]
         );
     }
@@ -106,7 +113,7 @@ class ArtistController extends Controller
                 ]
         );
     }
-    
+
     /**
      * @Route("/view", name="show_view")
      */
@@ -114,11 +121,69 @@ class ArtistController extends Controller
     {
         $show = $defaults->showDefault();
         $em = $this->getDoctrine()->getManager();
-        $artists = $em->getRepository('AppBundle:Artist')->inShow($show);
+        $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
 
         return $this->render('Artist/inShow.html.twig', [
-            'artists' => $artists,
+                'artists' => $artists,
         ]);
-        
+    }
+
+    /**
+     * @Route("/select", name="artist_select")
+     */
+    public function selectArtistAction(Request $request)
+    {
+        $artist = new Artist();
+        $form = $this->createForm(SelectArtistType::class, $artist);
+
+        return $this->render('Artist/selectArtist.html.twig',
+                [
+                    'form' => $form->createView(),
+                    'artist' => $artist
+        ]);
+    }
+
+    /**
+     * @Route("/edit/{id}", name="artist_edit")
+     */
+    public function editArtistAction(Request $request, Defaults $defaults, $id = null)
+    {
+        if (null !== $id) {
+            $em = $this->getDoctrine()->getManager();
+            $artist = $em->getRepository('AppBundle:Artist')->find($id);
+        } else {
+            return $this->redirectToRoute('artist_select');
+        }
+        $show = $defaults->showDefault();
+        $form = $this->createForm(ArtistType::class, $artist,
+            [
+                'show' => $show,
+                'entity_manager' => $em,
+                'validation_groups' => ['edit'],
+        ]);
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $inShow = ($form->has('inShow')) ? $form->get('inShow')->getData() : null;
+            if (true === $inShow) {
+                $artist->addShow($show);
+            } elseif (false === $inShow) {
+                $artist->removeShow($show);
+            }
+            $em->persist($artist);
+            $em->flush();
+            $flash->success($artist->getFirstName() . ' ' . $artist->getLastName() . ' updated!');
+
+            return $this->redirectToRoute("homepage");
+        } else {
+            $flash->error($form->getErrors());
+        }
+
+        return $this->render('Artist/artistForm.html.twig',
+                [
+                    'form' => $form->createView(),
+                    'artist' => $artist,
+                    'action' => 'Edit artist',
+        ]);
     }
 }

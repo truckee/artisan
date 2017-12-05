@@ -24,19 +24,19 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="artist")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ArtistRepository")
- * @AppAssert\UniqueArtistName
+ * @AppAssert\UniqueArtistName(groups = {"add"})
  */
 class Artist
 {
     /**
      * @ORM\Column(type="string", length=45)
-     * @Assert\NotBlank(message="First name may not be empty")
+     * @Assert\NotBlank(message="First name may not be empty", groups = {"add", "edit"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=45)
-     * @Assert\NotBlank(message="Last name may not be empty")
+     * @Assert\NotBlank(message="Last name may not be empty", groups = {"add", "edit"})
      */
     private $lastName;
 

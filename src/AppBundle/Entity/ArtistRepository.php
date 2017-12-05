@@ -21,10 +21,8 @@ use Doctrine\ORM\EntityRepository;
 class ArtistRepository extends EntityRepository
 {
 
-    public function inShow($show)
+    public function allArtistsInShow($show)
     {
-//        $qb = $this->getEntityManager()->createQueryBuilder();
-
         return $this->getEntityManager()->createQueryBuilder()
             ->select('a')
             ->from('AppBundle:Artist', 'a')
@@ -35,15 +33,21 @@ class ArtistRepository extends EntityRepository
             ->setParameter(1, $show->getShow())
             ->getQuery()
             ->getResult();
+    }
 
-//        $ids = array_keys($ids);
+    public function isArtistInShow($show, $artist)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('a')
+            ->from('AppBundle:Artist', 'a')
+            ->join('a.shows', 's')
+            ->where('s.show = ?1')
+            ->andWhere('a = ?2')
+            ->setParameter(1, $show->getShow())
+            ->setParameter(2, $artist)
+            ->getQuery()
+            ->getResult();
 
-//        $qbA = $this->getEntityManager()->createQuery(
-//            'SELECT a FROM AppBundle:Artist a '
-//            . 'WHERE a.id NOT IN (:ids)')
-//            ->setParameter(':ids', $ids)
-//            ->getResult();
-
-//        return $ids;
+            return !empty($qb);
     }
 }
