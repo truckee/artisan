@@ -48,7 +48,7 @@ class ArtistController extends Controller
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $inShow = (isset($form->children['inShow'])) ? $form->get('inShow')->getData() : null;
+            $inShow = ($form->has('inShow')) ? $form->get('inShow')->getData() : null;
             if (true === $inShow) {
                 $artist->addShow($show);
             }
@@ -77,8 +77,18 @@ class ArtistController extends Controller
     {
         $show = $defaults->showDefault();
         $artist = new Artist();
-        $form = $this->createForm(AddExistingArtistsType::class, $show, ['show' => $show]);
         $flash = $this->get('braincrafted_bootstrap.flash');
+        $em = $this->getDoctrine()->getManager();
+        $someNotInShow = $em->getRepository('AppBundle:Artist')->someNotInShow($show);
+        if (0 === count($someNotInShow->getQuery()->getResult())) {
+            $flash->info('All artists are participating in the show');
+
+            return $this->redirectToRoute('homepage');
+        }
+        $form = $this->createForm(AddExistingArtistsType::class, $show, [
+            'show' => $show,
+            'query_bulider' => $someNotInShow,
+            ]);
         if (is_null($show)) {
             $flash->error('Create a default show before adding an artist!');
 
@@ -86,7 +96,6 @@ class ArtistController extends Controller
         }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $artists = $form->get('artists')->getData();
             $n = count($artists);
             foreach ($artists as $artist) {
@@ -107,9 +116,8 @@ class ArtistController extends Controller
         }
 
         return $this->render(
-                'Artist/existingArtist.html.twig',
-                [
-                'form' => $form->createView(),
+                'Artist/existingArtist.html.twig', [
+                    'form' => $form->createView(),
                 ]
         );
     }

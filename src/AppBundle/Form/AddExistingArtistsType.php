@@ -30,29 +30,14 @@ class AddExistingArtistsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $show = $options['show'];
+        $qbA = $options['query_bulider'];
         $builder->add('artists', EntityType::class,
                 [
                     'class' => Artist::class,
                     'choice_label' => function($artist, $key, $index) {
                         return $artist->getLastName() . ', ' . $artist->getFirstName();
                     },
-                    'query_builder' => function (EntityRepository $er) use($show) {
-                        $qb = $er->createQueryBuilder('a');
-                        $ids = $qb
-                            ->select('a.id')
-                            ->leftJoin('a.shows', 's')
-                            ->where('s.show = ?1')
-                            ->setParameter(1, $show->getShow())
-                            ->getQuery()
-                            ->getResult();
-                        if (empty($ids)) {
-                            return $er->createQueryBuilder('a');
-                        } else {
-                            return $er->createQueryBuilder('a')
-                                ->where($er->createQueryBuilder('a')->expr()->notIn('a.id', ':ids'))
-                                ->setParameter(':ids', $ids);
-                        }
-                    },
+                    'query_builder' => $qbA,
                     'expanded' => true,
                     'multiple' => true,
             ])
@@ -69,6 +54,7 @@ class AddExistingArtistsType extends AbstractType
             'data_class' => 'AppBundle\Entity\Show',
             'required' => false,
             'show' => null,
+            'query_bulider' => null,
         ));
     }
 
