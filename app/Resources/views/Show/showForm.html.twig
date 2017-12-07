@@ -4,39 +4,39 @@
         <div class="col-sm-4">
         </div>
         <div class="col-sm-4">
-    <div class="panel panel-primary">
-        <div class="panel-heading"><h4>{{ action }}</h4></div>
-        <div class="panel-body">
-            {{ form_start(form) }}
-    <div class="row">
-        <div class="col-sm-12">
-            {{ form_row(form.show) }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-3"></div>
-        <div class="col-sm-6">
-            {{ form_row(form.tax) }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-3"></div>
-        <div class="col-sm-6">
-            {{ form_row(form.percent) }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-3"></div>
-        <div class="col-sm-6 text-center">
-            {{ form_row(form.default) }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
-            {{ form_row(form.save, {'label': action}) }}{{ form_rest(form) }}
-        </div>
-    </div>
-        </div></div></div></div>
-    {% endblock body %}
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h4>{{ action }}</h4></div>
+                <div class="panel-body">
+                    {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ form_row(form.show) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-6">
+                            {{ form_row(form.tax) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-6">
+                            {{ form_row(form.percent) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-6 text-center">
+                            {{ form_row(form.default) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.save, {'label': action}) }}{{ form_rest(form) }}
+                        </div>
+                    </div>
+                </div></div></div></div>
+            {% endblock body %}
 

@@ -27,7 +27,7 @@ class ExistingArtistControllerTest extends WebTestCase
         $this->client->followRedirects();
         $this->fixtures = $this->loadFixtures([
             'AppBundle\DataFixtures\Test\DefaultShowFixture',
-            'AppBundle\DataFixtures\Test\ArtistFixture',
+            'AppBundle\DataFixtures\Test\OneArtistFixture',
         ]);
     }
 

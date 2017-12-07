@@ -35,6 +35,19 @@ class UniqueBlockValidator extends ConstraintValidator
     public function validate($block, Constraint $constraint)
     {
         $show = $this->defaults->showDefault();
+        $artist = $block->getArtist();
+        $samePerson = $this->em->getRepository('AppBundle:Block')->findBy(['show' => $show, 'artist' => $artist]);
+        $passes = false;
+        //if block has shrunk in edit no need to check further
+        foreach ($samePerson as $possible) {
+            if ($block->getLower() >= $possible->getLower() && $block->getUpper() <= $possible->getUpper()) {
+                $passes = true;
+            }
+        }
+        if (true === $passes) {
+            return;
+        }
+        //otherwise, check all blocks for show
         $existing = $this->em->getRepository('AppBundle:Block')->findBy(['show' => $show]);
         foreach ($existing as $possible) {
             if ($block->getLower() <= $possible->getUpper() && $block->getUpper() >= $possible->getLower()) {

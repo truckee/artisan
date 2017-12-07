@@ -137,12 +137,12 @@ class ArtistController extends Controller
     }
 
     /**
-     * @Route("/select", name="artist_select")
+     * @Route("/select/{target}", name="artist_select")
      */
-    public function selectArtistAction(Request $request)
+    public function selectArtistAction(Request $request, $target)
     {
         $artist = new Artist();
-        $form = $this->createForm(SelectArtistType::class, $artist);
+        $form = $this->createForm(SelectArtistType::class, $artist, ['target' => $target]);
 
         return $this->render('Artist/selectArtist.html.twig',
                 [
@@ -160,7 +160,7 @@ class ArtistController extends Controller
             $em = $this->getDoctrine()->getManager();
             $artist = $em->getRepository('AppBundle:Artist')->find($id);
         } else {
-            return $this->redirectToRoute('artist_select');
+            return $this->redirectToRoute('artist_select', ['target' => 'edit']);
         }
         $show = $defaults->showDefault();
         $form = $this->createForm(ArtistType::class, $artist,

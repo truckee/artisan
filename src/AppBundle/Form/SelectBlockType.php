@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-//src\AppBundle\Form\SelectArtistType.php
+//src\AppBundle\Form\SelectBlockType.php
 
 namespace AppBundle\Form;
 
@@ -20,27 +20,31 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * SelectArtist
+ * SelectBlockType
  *
  */
-class SelectArtistType extends AbstractType
+class SelectBlockType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $target = $options['target'];
+        $artist = $options['artist'];
+        $show = $options['show'];
         $builder
-            ->add('artist', EntityType::class,
+            ->add('block', EntityType::class,
                 [
-                    'class' => 'AppBundle:Artist',
-                    'label' => 'Select artist for ' . $target,
-                    'choice_label' => function($artist, $key, $index) {
-                        return $artist->getLastName() . ', ' . $artist->getFirstName();
+                    'class' => 'AppBundle:Block',
+                    'label' => 'Select block',
+                    'choice_label' => function($block, $key, $index) {
+                        return $block->getLower() . ' to ' . $block->getUpper();
                     },
-                    'query_builder' => function (EntityRepository $er) {
-                        return $er->createQueryBuilder('a')
-                            ->orderBy('a.firstName', 'ASC')
-                            ->orderBy('a.lastName', 'ASC');
+                    'query_builder' => function (EntityRepository $er) use($artist, $show) {
+                        return $er->createQueryBuilder('b')
+                            ->where('b.artist = :artist')
+                            ->andWhere('b.show = :show')
+                            ->setParameter(':artist', $artist)
+                            ->setParameter(':show', $show)
+                            ->orderBy('b.lower', 'ASC');
                     },
                     'mapped' => false,
             ])
@@ -54,10 +58,11 @@ class SelectArtistType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Artist',
+            'data_class' => 'AppBundle\Entity\Block',
             'required' => false,
-            'target' => null,
-            'block' => null,
+            'artist' => null,
+            'show' => null,
         ));
+//        $resolver->setRequired('entity_manager');
     }
 }

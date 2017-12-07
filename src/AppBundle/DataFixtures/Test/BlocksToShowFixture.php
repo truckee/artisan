@@ -30,9 +30,13 @@ class BlocksToShowFixture extends AbstractFixture implements OrderedFixtureInter
         $block->setLower(1);
         $block->setUpper(10);
         $show = $this->getReference('show');
+        $artist = $this->getReference('artist');
         $block->setShow($show);
+        $block->setArtist($artist);
+        $this->setReference('block', $block);
         $manager->persist($block);
 
+        //to test block not in show
         $block2 = new Block();
         $block2->setLower(20);
         $block2->setUpper(29);
@@ -49,6 +53,6 @@ class BlocksToShowFixture extends AbstractFixture implements OrderedFixtureInter
 
     public function getOrder()
     {
-        return 2; // the order in which fixtures will be loaded
+        return 3; // the order in which fixtures will be loaded
     }
 }

@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-//src\AppBundle\DataFixtures\Test\ArtistFixture.php
+//src\AppBundle\DataFixtures\Test\TwoArtistFixture.php
 
 namespace AppBundle\DataFixtures\Test;
 
@@ -21,7 +21,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  * ArtistFixture
  *
  */
-class ArtistFixture extends AbstractFixture implements OrderedFixtureInterface
+class TwoArtistFixture extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -30,6 +30,12 @@ class ArtistFixture extends AbstractFixture implements OrderedFixtureInterface
         $artist->setLastName('Borko');
         $this->setReference('artist', $artist);
         $manager->persist($artist);
+
+        $artist2 = new Artist();
+        $artist2->setFirstName('Al');
+        $artist2->setLastName('Einstein');
+        $this->setReference('artist2', $artist2);
+        $manager->persist($artist2);
 
         $manager->flush();
     }

@@ -8,6 +8,8 @@
  * file that was distributed with this source code.
  */
 
+//src\Tests\AppBundle\NoDefaultShowTest.php
+
 namespace Tests\AppBundle;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
@@ -79,52 +81,40 @@ class NoDefaultShowTest extends WebTestCase
         );
     }
 
-    public function testNewBlock()
-    {
-        $crawler = $this->client->request('GET', '/block/new');
-
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testBlockLimits()
-    {
-        $crawler = $this->client->request('GET', '/block/new');
-        $form = $crawler->selectButton('Add block')->form();
-        $form['block[lower]'] = '10';
-        $form['block[upper]'] = '1';
-        $crawler = $this->client->submit($form);
-
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Block upper end must be greater than or equal to lower end")')->count());
-    }
-
-    public function testBlockBadNumbers()
-    {
-        $crawler = $this->client->request('GET', '/block/new');
-        $form = $crawler->selectButton('Add block')->form();
-        $form['block[lower]'] = 'a';
-        $form['block[upper]'] = 1;
-        $crawler = $this->client->submit($form);
-
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Must be > 0")')->count());
-    }
+//    public function testNewBlock()
+//    {
+//        $crawler = $this->client->request('GET', '/block/new');
+//
+//        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+//    }
+//
+//    public function testBlockLimits()
+//    {
+//        $crawler = $this->client->request('GET', '/block/new');
+//        $form = $crawler->selectButton('Add block')->form();
+//        $form['block[lower]'] = '10';
+//        $form['block[upper]'] = '1';
+//        $crawler = $this->client->submit($form);
+//
+//        $this->assertGreaterThan(0, $crawler->filter('html:contains("Block upper end must be greater than or equal to lower end")')->count());
+//    }
+//
+//    public function testBlockBadNumbers()
+//    {
+//        $crawler = $this->client->request('GET', '/block/new');
+//        $form = $crawler->selectButton('Add block')->form();
+//        $form['block[lower]'] = 'a';
+//        $form['block[upper]'] = 1;
+//        $crawler = $this->client->submit($form);
+//
+//        $this->assertGreaterThan(0, $crawler->filter('html:contains("Must be > 0")')->count());
+//    }
 
     public function testBlockAdd()
     {
         $crawler = $this->client->request('GET', '/block/new');
-        $form = $crawler->selectButton('Add block')->form();
-        $form['block[lower]'] = 1;
-        $form['block[upper]'] = 10;
-        $crawler = $this->client->submit($form);
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Block added")')->count());
-
-        $crawler = $this->client->request('GET', '/block/new');
-        $form = $crawler->selectButton('Add block')->form();
-        $form['block[lower]'] = 5;
-        $form['block[upper]'] = 15;
-        $crawler = $this->client->submit($form);
-
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Block exists or overlaps existing block")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Create a default show before adding a ticket block!")')->count());
     }
 
     public function testNoDefaultShow()

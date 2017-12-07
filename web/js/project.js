@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 $(document).ready(function () {
+
     $("#select_show_save").click(function () {
         $id = $("#select_show_show option:selected").val();
         nowAt = $(location).attr('pathname');
@@ -15,11 +16,30 @@ $(document).ready(function () {
         window.location.href = url
         return false;
     });
+
     $("#select_artist_save").click(function () {
         $id = $("#select_artist_artist option:selected").val();
         nowAt = $(location).attr('pathname');
         artistPathAt = nowAt.indexOf('/artist/select');
-        url = nowAt.slice(0, artistPathAt) + '/artist/edit/' + $id;
+        labelClass = $(".control-label").text();
+        if (labelClass.includes('edit')) {
+            newPath = '/artist/edit/' + $id;
+        }
+        if (labelClass.includes('block')) {
+            newPath = '/block/new/' + $id;
+        }
+        if (labelClass.includes('block edit')) {
+            newPath = '/block/edit/' + $id;
+        }
+        url = nowAt.slice(0, artistPathAt) + newPath;
+        window.location.href = url
+        return false;
+    });
+
+    $("#select_block_save").click(function () {
+        $id = $("#select_block_block option:selected").val();
+        nowAt = $(location).attr('pathname');
+        url = nowAt.replace('select', 'edit');
         window.location.href = url
         return false;
     });
