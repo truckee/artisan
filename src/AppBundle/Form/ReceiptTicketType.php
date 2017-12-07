@@ -29,6 +29,7 @@ class ReceiptTicketType extends AbstractType
     {
         $builder
             ->add('tickets', CollectionType::class,[
+                'label' => false,
                 'entry_type'   => TicketType::class,
 //                'entry_options' => array('label' => false),
                 'allow_add' => true,

@@ -66,9 +66,9 @@ class ReceiptController extends Controller
     public function newReceipt(Request $request, Defaults $defaults)
     {
         $receipt = new Receipt();
-        $default = $defaults->showDefault();
+        $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
-        if (is_null($default)) {
+        if (null === $show) {
             $flash->error('Create a default show before adding a receipt!');
 
             return $this->redirectToRoute("new_show");
@@ -76,7 +76,6 @@ class ReceiptController extends Controller
         $form = $this->createForm(ReceiptTicketType::class, $receipt);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $default = $defaults->showDefault();
             $em = $this->getDoctrine()->getManager();
             $em->persist($receipt);
             $em->flush();
@@ -86,7 +85,7 @@ class ReceiptController extends Controller
         }
 
         return $this->render(
-                'Receipt/newReceipt.html.twig', [
+                'Receipt/receiptForm.html.twig', [
                     'form' => $form->createView(),
                 ]
         );
