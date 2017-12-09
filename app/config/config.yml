@@ -21,6 +21,9 @@ framework:
     #serializer: { enable_annotations: true }
     templating:
         engines: ['twig']
+        form:
+            resources:
+                - 'AppBundle:Form'
     default_locale: '%locale%'
     trusted_hosts: ~
     session:
@@ -37,6 +40,8 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+#    form_themes:
+#        resources: BraincraftedBootstrapBundle:Form:bootstrap.html.twig
 
 # Doctrine Configuration
 doctrine:

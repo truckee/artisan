@@ -15,6 +15,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class TicketType extends AbstractType
@@ -25,12 +26,14 @@ class TicketType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('ticket', TextType::class, [
-                
+            ->add('ticket', TextType::class)
+            ->add('amount', NumberType::class, [
+                'scale' => 2,
             ])
-            ->add('amount', TextType::class)
-//            ->add('artist')
-//            ->add('receipt')
+            ->add('artist', TextType::class, [
+                'mapped' => false,
+                'disabled' => true,
+            ])
             ;
     }
     

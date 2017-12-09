@@ -70,7 +70,8 @@ class BlockWithShowAndArtistTest extends WebTestCase
         $form['block[upper]'] = 15;
         $crawler = $this->client->submit($form);
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Block exists or overlaps existing block")')->count());
+        $this->assertGreaterThan(0,
+            $crawler->filter('html:contains("Block exists or overlaps existing block")')->count());
     }
 
     public function testOkToShrinkBlock()
@@ -86,5 +87,13 @@ class BlockWithShowAndArtistTest extends WebTestCase
         $crawler = $this->client->submit($form);
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Block updated")')->count());
+    }
+
+    public function testReceiptFormReturnsArtistByTicket()
+    {
+        $crawler = $this->client->request('GET', '/receipt/findTicket/1');
+        file_put_contents("G:\\Documents\\response.html", $this->client->getResponse()->getContent());
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Benny Borko")')->count());
     }
 }

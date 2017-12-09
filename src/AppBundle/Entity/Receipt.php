@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="receipt")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\ReceiptRepository")
  */
 class Receipt
 {
@@ -40,7 +41,9 @@ class Receipt
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Ticket", mappedBy="receipt", cascade={"persist"}, orphanRemoval=true)
-     * @ORM\OrderBy({"ticketnumber" = "ASC"})
+     * @ORM\OrderBy({"ticket" = "ASC"})
+     * @Assert\Valid
+     * @Assert\Count(min=1,minMessage="At least one ticket is required")
      */
     protected $tickets;
 
@@ -53,7 +56,7 @@ class Receipt
     public function addTicket(Ticket $ticket)
     {
         $this->tickets[] = $ticket;
-        $ticket->setShow($this);
+        $ticket->setReceipt($this);
 
         return $this;
     }
@@ -81,19 +84,36 @@ class Receipt
     }
     
     /**
-     * @ORM\Column(type="date", nullable = false)
+     * @ORM\Column(name="sales_date", type="date", nullable = false)
      */
-    private $sales_date;
+    private $salesDate;
 
-    public function setSales_date(Sales_date $sales_date)
+    public function setSalesDate($salesDate)
     {
-        $this->sales_date = $sales_date;
+        $this->salesDate = $salesDate;
 
         return $this;
     }
 
-    public function getSales_date()
+    public function getSalesDate()
     {
-        return $this->sales_date;
+        return $this->salesDate;
+    }
+
+    /**
+     *  @ORM\Column(name="receipt_no", type="integer", nullable = false)
+     */
+    private $receiptNo;
+
+    public function setReceiptNo($receiptNo)
+    {
+        $this->receiptNo = $receiptNo;
+
+        return $this;
+    }
+
+    public function getReceiptNo()
+    {
+        return $this->receiptNo;
     }
 }

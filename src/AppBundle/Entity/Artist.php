@@ -77,7 +77,7 @@ class Artist
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Ticket", mappedBy="artist", cascade={"persist"}, orphanRemoval=true)
-     * @ORM\OrderBy({"ticketnumber" = "ASC"})
+     * @ORM\OrderBy({"ticket" = "ASC"})
      */
     protected $tickets;
 

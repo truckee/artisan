@@ -14,6 +14,7 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Artist;
 use AppBundle\Entity\Receipt;
+use AppBundle\Validator\Constraints as AppAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -44,8 +45,11 @@ class Ticket
     
     /**
      * @ORM\Column(type="integer")
+     * @Assert\GreaterThan(value = 0, message = "Must be > 0")
+     * @Assert\NotBlank(message = "May not be empty")
+     * @AppAssert\TicketExists
      */
-    private $ticketnumber;
+    private $ticket;
 
     /**
      * Get id
@@ -82,34 +86,36 @@ class Ticket
     }
 
     /**
-     * Set ticketnumber
+     * Set ticket
      *
-     * @param string ticketnumber
+     * @param string ticket
      *
      */
-    public function setTicketnumber($ticketnumber)
+    public function setTicket($ticket)
     {
-        $this->ticketnumber = $ticketnumber;
+        $this->ticket = $ticket;
 
         return $this;
     }
 
     /**
-     * Get ticketnumber
+     * Get ticket
      *
      * @return string
      */
-    public function getTicketnumber()
+    public function getTicket()
     {
-        return $this->ticketnumber;
+        return $this->ticket;
     }
 
     /**
      * @ORM\Column(type="decimal", precision=8, scale=2)
+     * @Assert\GreaterThan(value = 0, message = "Must be > 0")
+     * @Assert\NotBlank(message = "May not be empty")
      */
     private $amount;
 
-    public function setAmount(Amount $amount)
+    public function setAmount($amount)
     {
         $this->amount = $amount;
 

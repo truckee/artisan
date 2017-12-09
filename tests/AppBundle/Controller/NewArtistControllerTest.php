@@ -43,7 +43,6 @@ class NewArtistControllerTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Artist added")')->count());
 
         $crawler = $this->client->request('GET', '/artist/existing');
-        file_put_contents("G:\\Documents\\response.html", $this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $crawler->filter('html:contains("Benny")')->count());
     }

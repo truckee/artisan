@@ -47,7 +47,7 @@ class Block
     private $upper;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Artist", inversedBy="blocks")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Artist", inversedBy="blocks", fetch="EAGER")
      * @ORM\JoinColumn(name="artist_id", referencedColumnName="id")
      */
     protected $artist;

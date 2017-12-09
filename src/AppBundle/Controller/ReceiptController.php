@@ -13,11 +13,13 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Receipt;
+use AppBundle\Services\TicketArtist;
 use AppBundle\Form\ReceiptTicketType;
 use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * ReceiptController
@@ -28,34 +30,22 @@ class ReceiptController extends Controller
 {
 
     /**
-     * @Route("/findTicket", name="find_ticket")
+     * Used by receipt form to get artist name
+     *
+     * @Route("/findTicket/{ticket}", name="find_ticket")
      */
-    public function findTicketAction(Request $request, Defaults $defaults)
+    public function findTicketAction(Request $request, TicketArtist $artist, $ticket)
     {
-        $ticket = new Ticket();
-        $form = $this->createForm(ReceiptTicketType::class, $ticket);
-        $show = $defaults->showDefault();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $ticket = $form->getData()->getTicketnumber();
-            $em = $this->getDoctrine()->getManager();
-            $blocks = $em->getRepository('AppBundle\Entity\Block')->findBy(['show' => $show]);
-            $flash = $this->get('braincrafted_bootstrap.flash');
-            foreach ($blocks as $value) {
-                $block = $value->getBlock();
-                if ($block[0] <= $ticket && $ticket <= $block[1]) {
-                    $artist = $value->getArtist();
-                    $flash->success('Artist found: ' . $artist->getFirstName() . ' ' . $artist->getLastName());
-                } else {
-                    $flash->error('Ticket not found!');
-                }
-            }
-        }
+        $entity = $artist->getTicketArtist($ticket);
+        if (null === $entity) {
+            $response = new Response('Ticket does not exist');
 
-        return $this->render('Receipt/findTicket.html.twig',
-                [
-                'form' => $form->createView(),
-        ]);
+            return $response;
+        }
+        $name = $entity->getFirstName() . ' ' . $entity->getLastName();
+        $response = new Response($name);
+
+        return $response;
     }
 
     /**
@@ -63,7 +53,7 @@ class ReceiptController extends Controller
      * @param Request $request
      * @param Defaults $defaults
      */
-    public function newReceipt(Request $request, Defaults $defaults)
+    public function newReceipt(Request $request, Defaults $defaults, TicketArtist $artist)
     {
         $receipt = new Receipt();
         $show = $defaults->showDefault();
@@ -73,20 +63,38 @@ class ReceiptController extends Controller
 
             return $this->redirectToRoute("new_show");
         }
-        $form = $this->createForm(ReceiptTicketType::class, $receipt);
+        $em = $this->getDoctrine()->getManager();
+        $nextId = $em->getRepository('AppBundle:Receipt')->getNewReceiptNo();
+        $form = $this->createForm(ReceiptTicketType::class, $receipt, ['next' => $nextId]);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($receipt);
-            $em->flush();
-            $flash->success('Receipt added!');
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
 
-            return $this->redirectToRoute("homepage");
+                $tickets = $form->get('tickets')->getData();
+                foreach ($tickets as $ticket) {
+                    $ticketNumber = $ticket->getTicket();
+                    $owner = $artist->getTicketArtist($ticketNumber);
+                    $ticket->setArtist($owner);
+                    $receipt->addTicket($ticket);
+                }
+                $receipt->setShow($show);
+
+                $em->persist($receipt);
+                $em->flush();
+                $flash->success('Receipt added!');
+
+                return $this->redirectToRoute("homepage");
+            } else {
+                $flash->error('At least one ticket is required');
+            }
         }
 
+
         return $this->render(
-                'Receipt/receiptForm.html.twig', [
-                    'form' => $form->createView(),
+                'Receipt/receiptForm.html.twig',
+                [
+                'form' => $form->createView(),
+                'nextId' => $nextId,
                 ]
         );
     }

@@ -16,6 +16,8 @@ use AppBundle\Form\TicketType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
@@ -28,6 +30,17 @@ class ReceiptTicketType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('salesDate', DateType::class, [
+                'widget' => 'single_text',
+                'data' => new \DateTime(),
+                'html5' => false,
+                'attr' => ['class' => 'js-datepicker'],
+                'format' => 'MM/dd/yyyy',
+                ])
+            ->add('receiptNo', HiddenType::class, [
+                'data' => $options['next'],
+                'label' => false,
+                ])
             ->add('tickets', CollectionType::class,[
                 'label' => false,
                 'entry_type'   => TicketType::class,
@@ -35,7 +48,8 @@ class ReceiptTicketType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-            ])
+                'prototype' => true,
+                ])
             ->add('save', SubmitType::class, array(
                 'label' => 'Add receipt',
         ));
@@ -49,6 +63,7 @@ class ReceiptTicketType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Receipt',
             'required' => false,
+            'next' => null,
         ));
     }
 
