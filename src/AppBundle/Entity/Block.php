@@ -21,6 +21,7 @@ use AppBundle\Validator\Constraints as AppAssert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="ticket_block")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\BlockRepository")
  * @AppAssert\BlockLimits
  * @AppAssert\UniqueBlock
  */

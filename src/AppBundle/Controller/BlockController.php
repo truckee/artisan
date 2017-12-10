@@ -147,4 +147,34 @@ class BlockController extends Controller
                     'artist' => $owner,
         ]);
     }
+
+    /**
+     * @Route("/byArtist", name="blocks_by_artist")
+     */
+    public function showAllArtistBlocks(Request $request, Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $em = $this->getDoctrine()->getManager();
+        $blocks = $em->getRepository('AppBundle:Block')->getBlocksByArtists($show);
+
+        return $this->render('Block/blocksByArtists.html.twig', [
+            'blocks' => $blocks,
+            'show' => $show,
+        ]);
+    }
+
+    /**
+     * @Route("/byBlock", name="blocks_by_block")
+     */
+    public function showArtistByBlocks(Request $request, Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $em = $this->getDoctrine()->getManager();
+        $blocks = $em->getRepository('AppBundle:Block')->getBlocksByBlock($show);
+
+        return $this->render('Block/blocksByBlock.html.twig', [
+            'blocks' => $blocks,
+            'show' => $show,
+        ]);
+    }
 }

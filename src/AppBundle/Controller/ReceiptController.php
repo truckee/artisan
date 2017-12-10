@@ -69,7 +69,6 @@ class ReceiptController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-
                 $tickets = $form->get('tickets')->getData();
                 foreach ($tickets as $ticket) {
                     $ticketNumber = $ticket->getTicket();
@@ -88,8 +87,7 @@ class ReceiptController extends Controller
                 $flash->error('At least one ticket is required');
             }
         }
-
-
+        
         return $this->render(
                 'Receipt/receiptForm.html.twig',
                 [
