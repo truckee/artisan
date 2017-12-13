@@ -54,5 +54,4 @@ class ReceiptControllerTest extends WebTestCase
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("At least one ticket is required")')->count());
     }
-    
 }

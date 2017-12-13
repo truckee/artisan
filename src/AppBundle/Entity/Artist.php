@@ -76,7 +76,7 @@ class Artist
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Ticket", mappedBy="artist", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Ticket", mappedBy="artist", cascade={"persist"}, orphanRemoval=true, fetch="EAGER")
      * @ORM\OrderBy({"ticket" = "ASC"})
      */
     protected $tickets;
@@ -150,6 +150,11 @@ class Artist
     public function removeTicket(Ticket $ticket)
     {
         $this->tickets->removeElement($ticket);
+    }
+
+    public function getTickets()
+    {
+        return $this->tickets;
     }
 
     public function addBlock(Block $block)

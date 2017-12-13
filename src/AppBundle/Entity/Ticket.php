@@ -14,6 +14,7 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Artist;
 use AppBundle\Entity\Receipt;
+use AppBundle\Services\TicketUsed;
 use AppBundle\Validator\Constraints as AppAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -47,7 +48,8 @@ class Ticket
      * @ORM\Column(type="integer")
      * @Assert\GreaterThan(value = 0, message = "Must be > 0")
      * @Assert\NotBlank(message = "May not be empty")
-     * @AppAssert\TicketExists
+     * @AppAssert\TicketUsed(groups={"Default"})
+     * @AppAssert\TicketExists(groups={"Default", "edit"})
      */
     private $ticket;
 

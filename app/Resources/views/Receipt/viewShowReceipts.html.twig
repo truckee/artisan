@@ -1,0 +1,79 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-1">
+            <u>Receipt</u>
+        </div>
+        <div class="col-sm-1">
+            <u>Ticket</u>
+        </div>
+        <div class="col-sm-1 text-right">
+            <u>Amount</u>
+        </div>
+        <div class="col-sm-1 text-right">
+            <u>Tax</u>
+        </div>
+        <div class="col-sm-1 text-right">
+            <u>Total</u>
+        </div>
+    </div>
+    {% set grandTotal = 0 %}{% set grandTaxTotal = 0 %}
+    {% for receipt in receipts %}
+        {% set total = 0 %}{% set receiptTaxTotal = 0 %}
+        {% for ticket in receipt.tickets %}
+            <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-1">
+                    {{ receipt.receiptNo }}
+                </div>
+                <div class="col-sm-1">
+                    {{ ticket.ticket }}
+                </div>
+                <div class="col-sm-1 text-right">
+                    {{ ticket.amount|number_format(2) }}
+                </div>
+                <div class="col-sm-1 text-right">
+                    {#- tax -#}
+                </div>
+                <div class="col-sm-1 text-right">
+                    {#- sums -#}{%- set receiptTaxTotal = receiptTaxTotal + ticket.amount * show.tax -%}
+                    {%-  set total = total + ticket.amount -%}
+                </div>
+            </div>
+        {% endfor  %}
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-1">
+                {#- receipt -#}
+            </div>
+            <div class="col-sm-1">
+                Total
+            </div>
+            <div class="col-sm-1 text-right">
+                {{ total|number_format(2) }}
+            </div>
+            <div class="col-sm-1 text-right">
+                {{ receiptTaxTotal|number_format(2) }}
+            </div>
+            <div class="col-sm-1 text-right" style="padding-bottom: 10px;">
+                {{ '$'~(total + receiptTaxTotal)|number_format(2) }}
+            </div>
+        </div>
+        {% set grandTotal = grandTotal + total %}{% set grandTaxTotal = grandTaxTotal + receiptTaxTotal %}
+    {%  endfor  %}
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-1">
+        </div>
+        <div class="col-sm-2 text-right">
+            Grand total
+        </div>
+        <div class="col-sm-1 text-right">
+            {{ '$'~grandTaxTotal|number_format(2, '.', ',') }}
+        </div>
+        <div class="col-sm-1 text-right">
+            {{ '$'~grandTotal|number_format(2, '.', ',') }}
+        </div>
+    </div>
+{% endblock body %}

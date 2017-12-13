@@ -1,0 +1,74 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <div class="text-center text-info"><h3>Tickets for {{ artist.firstName~' '~artist.lastName }} </h3></div>
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-1">
+            <u>Ticket</u>
+        </div>
+        <div class="col-sm-1 text-right">
+            <u>Amount</u>
+        </div>
+        <div class="col-sm-1 text-right">
+            <u>Tax</u>
+        </div>
+        <div class="col-sm-1 text-right">
+            <u>Total</u>
+        </div>
+    </div>
+    {% set total = 0 %}{% set taxTotal = 0 %}
+    {% for ticket in artist.tickets %}
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-1">
+                {{ ticket.ticket }}
+            </div>
+            <div class="col-sm-1 text-right">
+                {{ ticket.amount|number_format(2) }}
+            </div>
+            <div class="col-sm-1 text-right">
+                {{ (ticket.amount*show.tax)|number_format(2) }}
+            </div>
+            <div class="col-sm-1 text-right">
+                {#- sums -#}{%- set taxTotal = taxTotal + ticket.amount * show.tax -%}
+                {%-  set total = total + ticket.amount -%}
+            </div>
+        </div>
+    {% endfor  %}
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-1">
+            Total
+        </div>
+        <div class="col-sm-1 text-right">
+            {{ total|number_format(2) }}
+        </div>
+        <div class="col-sm-1 text-right">
+            {{ taxTotal|number_format(2) }}
+        </div>
+        <div class="col-sm-1 text-right" style="padding-bottom: 10px;">
+            {{ '$'~(total + taxTotal)|number_format(2) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-2">
+            Distribution
+        </div>
+        <div class="col-sm-1">
+            Artist
+        </div>
+        <div class="col-sm-1 text-right">
+            {{ '$'~(total*(1-show.percent))|number_format(2, '.', ',') }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6"></div>
+        <div class="col-sm-1">
+            UUFNN
+        </div>
+        <div class="col-sm-1 text-right">
+            {{ '$'~(total*show.percent)|number_format(2, '.', ',') }}
+        </div>
+    </div>
+{% endblock %}

@@ -8,30 +8,30 @@
  * file that was distributed with this source code.
  */
 
-//src\AppBundle\Validator\Constraints\TicketExistsValidator.php
+//src\AppBundle\Validator\Constraints\TicketUsedValidator.php
 
 namespace AppBundle\Validator\Constraints;
 
-use AppBundle\Services\TicketArtist;
+use AppBundle\Services\TicketUsed;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * TicketExistsValidator
+ * TicketUsedValidator
  *
  */
-class TicketExistsValidator extends ConstraintValidator
+class TicketUsedValidator extends ConstraintValidator
 {
-    private $artist;
+    private $ticket;
 
-    public function __construct(TicketArtist $artist)
+    public function __construct(TicketUsed $ticket)
     {
-        $this->artist = $artist;
+        $this->ticket = $ticket;
     }
 
     public function validate($ticket, Constraint $constraint)
     {
-        $entity = $this->artist->getTicketArtist($ticket);
+        $entity = $this->ticket->getTicketUsed($ticket);
         if (null === $entity) {
             $this->context->buildViolation($constraint->message)
 //                ->atPath('block')

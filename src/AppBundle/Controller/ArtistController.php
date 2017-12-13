@@ -85,10 +85,11 @@ class ArtistController extends Controller
 
             return $this->redirectToRoute('homepage');
         }
-        $form = $this->createForm(AddExistingArtistsType::class, $show, [
+        $form = $this->createForm(AddExistingArtistsType::class, $show,
+            [
             'show' => $show,
             'query_bulider' => $someNotInShow,
-            ]);
+        ]);
         if (is_null($show)) {
             $flash->error('Create a default show before adding an artist!');
 
@@ -116,8 +117,9 @@ class ArtistController extends Controller
         }
 
         return $this->render(
-                'Artist/existingArtist.html.twig', [
-                    'form' => $form->createView(),
+                'Artist/existingArtist.html.twig',
+                [
+                'form' => $form->createView(),
                 ]
         );
     }
@@ -192,6 +194,40 @@ class ArtistController extends Controller
                     'form' => $form->createView(),
                     'artist' => $artist,
                     'action' => 'Edit artist',
+        ]);
+    }
+
+    /**
+     * @Route("/showTickets", name="artist_show_tickets")
+     */
+    public function viewArtistShowTickets(Request $request, Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $em = $this->getDoctrine()->getManager();
+        $artists = $em->getRepository('AppBundle:Artist')->artistsShowTickets($show);
+
+        return $this->render('Artist/viewArtistTickets.html.twig', [
+            'artists' => $artists,
+            'show' => $show,
+        ]);
+    }
+
+    /**
+     * @Route("/tickets/{id}", name="single_artist_tickets")
+     */
+    public function viewSingleArtistTickets(Request $request, Defaults $defaults, $id = null)
+    {
+        if (null !== $id) {
+            $em = $this->getDoctrine()->getManager();
+            $artist = $em->getRepository('AppBundle:Artist')->find($id);
+        } else {
+            return $this->redirectToRoute('artist_select', ['target' => 'tickets']);
+        }
+        $show = $defaults->showDefault();
+
+        return $this->render('Artist/singleArtistTickets.html.twig', [
+            'artist' => $artist,
+            'show' => $show,
         ]);
     }
 }

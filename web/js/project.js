@@ -31,6 +31,9 @@ $(document).ready(function () {
         if (labelClass.includes('block edit')) {
             newPath = '/block/edit/' + $id;
         }
+        if (labelClass.includes('tickets')) {
+            newPath = '/artist/tickets/' + $id;
+        }
         url = nowAt.slice(0, artistPathAt) + newPath;
         window.location.href = url
         return false;
@@ -40,6 +43,14 @@ $(document).ready(function () {
         $id = $("#select_block_block option:selected").val();
         nowAt = $(location).attr('pathname');
         url = nowAt.replace('select', 'edit');
+        window.location.href = url
+        return false;
+    });
+
+    $("#select_receipt_save").click(function () {
+        $id = $("#select_receipt_receipt option:selected").val();
+        nowAt = $(location).attr('pathname');
+        url = nowAt.replace('select', 'edit/' + $id);
         window.location.href = url
         return false;
     });

@@ -52,6 +52,13 @@ jQuery(document).ready(function () {
     $('.js-datepicker').datepicker({
         format: 'mm/dd/yyyy'
     });
+
+//  a hack to remove bogus HTML on validation errors
+    $('.control-label').each(function () {
+        if ($.isNumeric(($(this).html()))) {
+            $(this).parent().parent().remove();
+        }
+    });
 });
 
 function addticketForm($collectionHolder, $newLinkLi) {

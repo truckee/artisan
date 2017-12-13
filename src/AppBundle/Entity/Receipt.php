@@ -40,9 +40,9 @@ class Receipt
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Ticket", mappedBy="receipt", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Ticket", mappedBy="receipt", cascade={"persist"}, orphanRemoval=true, fetch="EAGER")
      * @ORM\OrderBy({"ticket" = "ASC"})
-     * @Assert\Valid
+     * @Assert\Valid()
      * @Assert\Count(min=1,minMessage="At least one ticket is required")
      */
     protected $tickets;

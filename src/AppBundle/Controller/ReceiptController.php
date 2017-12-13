@@ -14,7 +14,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Receipt;
 use AppBundle\Services\TicketArtist;
+use AppBundle\Services\TicketUsed;
 use AppBundle\Form\ReceiptTicketType;
+use AppBundle\Form\SelectReceiptType;
 use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -65,7 +67,9 @@ class ReceiptController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $nextId = $em->getRepository('AppBundle:Receipt')->getNewReceiptNo();
-        $form = $this->createForm(ReceiptTicketType::class, $receipt, ['next' => $nextId]);
+        $form = $this->createForm(ReceiptTicketType::class, $receipt, [
+            'next' => $nextId,
+            ]);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
@@ -95,5 +99,54 @@ class ReceiptController extends Controller
                 'nextId' => $nextId,
                 ]
         );
+    }
+
+    /**
+     * @Route("/view", name="receipts_view")
+     */
+    public function viewShowReceipts(Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $em = $this->getDoctrine()->getManager();
+        $receipts = $em->getRepository('AppBundle:Receipt')->findBy(['show' => $show], ['receiptNo' => 'ASC']);
+
+        return $this->render('Receipt/viewShowReceipts.html.twig', [
+            'receipts' => $receipts,
+            'show' => $show,
+        ]);
+    }
+
+    /**
+     * @Route("/select", name="receipt_select")
+     */
+    public function selectReceipt(Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $receipt = new Receipt();
+        $form = $this->createForm(SelectReceiptType::class, $receipt, ['show' => $show]);
+
+        return $this->render('Receipt/selectReceipt.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/edit/{id}", name="receipt_edit")
+     */
+    public function editReceiptAction(Request $request, Defaults $defaults, $id = null)
+    {
+        if (null !== $id) {
+            $em = $this->getDoctrine()->getManager();
+            $artist = $em->getRepository('AppBundle:Receipt')->find($id);
+        } else {
+            return $this->redirectToRoute('receipt_select');
+        }
+        $show = $defaults->showDefault();
+        $em = $this->getDoctrine()->getManager();
+        $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['receiptNo' => $id]);
+
+        return $this->render('Receipt/editReceipt.html.twig', [
+            'receipt' => $receipt,
+        ]);
     }
 }

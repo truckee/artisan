@@ -1,0 +1,43 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <div class="row">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h4>Edit receipt {{ ticket.receipt.receiptNo }}</h4></div>
+                <div class="panel-body">
+                    {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ form_row(form.ticket) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ form_row(form.amount) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                           {{ form_row(form.artist, {'value':ticket.artist.lastName~', '~ticket.artist.firstName }) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            {{ form_widget(form.save) }}
+                        </div>
+                        <div class="col-sm-3">
+                            {{ form_widget(form.delete) }}
+                        </div>{{ form_rest(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+{%  block javascripts %}
+    {{ parent() }}
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script src="/js/ticketEdit.js"></script>
+{%  endblock javascripts %}

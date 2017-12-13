@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-//src\AppBundle\Services\TicketArtist.php
+//src\AppBundle\Services\TicketUsed.php
 
 namespace AppBundle\Services;
 
@@ -16,10 +16,10 @@ use AppBundle\Services\Defaults;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * TicketArtist
+ * TicketUsed
  *
  */
-class TicketArtist
+class TicketUsed
 {
     private $em;
     private $defaults;
@@ -30,24 +30,20 @@ class TicketArtist
         $this->defaults = $defaults;
     }
 
-    public function getTicketArtist($incoming)
+    public function getTicketUsed($incoming)
     {
         $show = $this->defaults->showDefault();
         $ticket = (is_object($incoming)) ? $incoming->getTicket() : $incoming;
-        $blocks = $this->em->getRepository('AppBundle\Entity\Block')->findBy(['show' => $show]);
-        //no blocks assigned
-        if (empty($blocks)) {
-            return null;
-        }
-        //not in a block
-        foreach ($blocks as $block) {
-            if ($block->getLower() <= $ticket && $ticket <= $block->getUpper()) {
-                $artist = $block->getArtist();
-
-                return $artist;
+        //ticket already used?
+        $receipts = $this->em->getRepository('AppBundle:Receipt')->findBy(['show' => $show]);
+        foreach ($receipts as $receipt) {
+            foreach ($receipt->getTickets() as $entity) {
+                if ($entity->getTicket() == $ticket) {
+                    return null;
+                }
             }
         }
 
-        return null;
+        return true;
     }
 }
