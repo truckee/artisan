@@ -51,7 +51,7 @@ class ReceiptController extends Controller
     }
 
     /**
-     * @Route("/new", name="new_receipt")
+     * @Route("/new", name="receipt_add")
      * @param Request $request
      * @param Defaults $defaults
      */
@@ -63,7 +63,7 @@ class ReceiptController extends Controller
         if (null === $show) {
             $flash->error('Create a default show before adding a receipt!');
 
-            return $this->redirectToRoute("new_show");
+            return $this->redirectToRoute("show_add");
         }
         $em = $this->getDoctrine()->getManager();
         $nextId = $em->getRepository('AppBundle:Receipt')->getNewReceiptNo();

@@ -14,7 +14,6 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Artist;
 use AppBundle\Entity\Receipt;
-use AppBundle\Services\TicketUsed;
 use AppBundle\Validator\Constraints as AppAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;

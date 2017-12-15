@@ -39,7 +39,7 @@ class ShowType extends AbstractType
                 'scale' => 1
                 ])
             ->add('default', CheckboxType::class, [
-                'label' => 'Default show?',
+                'label' => 'Active show?',
                 ])
             ->add('save', SubmitType::class, array(
                 'label' => 'Add show',

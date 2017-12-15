@@ -17,8 +17,6 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TicketType extends AbstractType
@@ -40,16 +38,16 @@ class TicketType extends AbstractType
                 'mapped' => false,
                 'disabled' => true,
             ])
-            ->add('save', SubmitType::class,
-                [
-                'label' => 'Save',
-                'attr' => ['class' => 'btn-sm btn-info']
-            ])
-            ->add('delete', SubmitType::class,
-                [
-                'label' => 'Delete',
-                'attr' => ['class' => 'btn-sm btn-warning']
-            ])
+//            ->add('save', SubmitType::class,
+//                [
+//                'label' => 'Save',
+//                'attr' => ['class' => 'btn-sm btn-info']
+//            ])
+//            ->add('delete', SubmitType::class,
+//                [
+//                'label' => 'Delete',
+//                'attr' => ['class' => 'btn-sm btn-warning']
+//            ])
         ;
     }
 

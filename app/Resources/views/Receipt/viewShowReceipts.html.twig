@@ -2,8 +2,15 @@
 {% block body %}
     <div class="row">
         <div class="col-sm-3"></div>
+        <div class="col-sm-5 text-center text-bold text-info"><h3>Receipts for {{ show.show }}</h3> </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3"></div>
         <div class="col-sm-1">
             <u>Receipt</u>
+        </div>
+        <div class="col-sm-1">
+            <u>Date</u>
         </div>
         <div class="col-sm-1">
             <u>Ticket</u>
@@ -28,6 +35,9 @@
                     {{ receipt.receiptNo }}
                 </div>
                 <div class="col-sm-1">
+                    {{ receipt.salesDate|date('m/d/Y') }}
+                </div>
+                <div class="col-sm-1">
                     {{ ticket.ticket }}
                 </div>
                 <div class="col-sm-1 text-right">
@@ -44,8 +54,8 @@
         {% endfor  %}
         <div class="row">
             <div class="col-sm-3"></div>
-            <div class="col-sm-1">
-                {#- receipt -#}
+            <div class="col-sm-2">
+                {#- receipt, date -#}
             </div>
             <div class="col-sm-1">
                 Total
@@ -64,10 +74,13 @@
     {%  endfor  %}
     <div class="row">
         <div class="col-sm-3"></div>
-        <div class="col-sm-1">
+        <div class="col-sm-2">
         </div>
-        <div class="col-sm-2 text-right">
+        <div class="col-sm-1 text-right">
             Grand total
+        </div>
+        <div class="col-sm-1 text-right">
+            {{ grandTotal|number_format(2) }}
         </div>
         <div class="col-sm-1 text-right">
             {{ '$'~grandTaxTotal|number_format(2, '.', ',') }}

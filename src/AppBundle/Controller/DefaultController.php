@@ -27,7 +27,7 @@ class DefaultController extends Controller
     public function defaultShowAction(Defaults $defaults)
     {
         $show = $defaults->showDefault();
-        $name = (empty($show) || is_null($show)) ? 'Default show not assigned' : $show->getShow();
+        $name = (empty($show) || is_null($show)) ? 'Active show not set' : $show->getShow();
 
         $response = new Response($name);
 

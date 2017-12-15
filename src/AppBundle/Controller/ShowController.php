@@ -29,7 +29,7 @@ class ShowController extends Controller
 
     /**
      *
-     * @Route("/new", name="new_show")
+     * @Route("/new", name="show_add")
      *
      */
     public function addShowAction(Request $request)
@@ -91,7 +91,14 @@ class ShowController extends Controller
         $form = $this->createForm(ShowType::class, $show);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            //set any previous default off
+            $defaults = $em->getRepository('AppBundle:Show')->findBy(['default' => true]);
+            foreach ($defaults as $possible) {
+                if ($id <> $possible->getId()) {
+                    $possible->setDefault(false);
+                    $em->persist($possible);
+                }
+            }
             $em->persist($show);
             $em->flush();
             $flash = $this->get('braincrafted_bootstrap.flash');

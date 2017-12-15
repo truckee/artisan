@@ -28,7 +28,7 @@ class BlockController extends Controller
 {
 
     /**
-     * @Route("/new/{id}", name="new_block")
+     * @Route("/new/{id}", name="block_add")
      * @param Request $request
      * @param Defaults $defaults
      */
@@ -73,7 +73,7 @@ class BlockController extends Controller
     }
 
     /**
-     * @Route("/edit/{id}/{blockId}", name="edit_block")
+     * @Route("/edit/{id}/{blockId}", name="block_edit")
      * @param Request $request
      * @param Defaults $defaults
      */

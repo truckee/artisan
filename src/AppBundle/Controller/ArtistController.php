@@ -31,7 +31,7 @@ class ArtistController extends Controller
 
     /**
      *
-     * @Route("/new", name="new_artist")
+     * @Route("/new", name="artist_add")
      *
      */
     public function addArtistAction(Request $request, Defaults $defaults)
@@ -93,7 +93,7 @@ class ArtistController extends Controller
         if (is_null($show)) {
             $flash->error('Create a default show before adding an artist!');
 
-            return $this->redirectToRoute("new_show");
+            return $this->redirectToRoute("show_add");
         }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -198,7 +198,7 @@ class ArtistController extends Controller
     }
 
     /**
-     * @Route("/showTickets", name="artist_show_tickets")
+     * @Route("/showTickets", name="all_artists_show_tickets")
      */
     public function viewArtistShowTickets(Request $request, Defaults $defaults)
     {

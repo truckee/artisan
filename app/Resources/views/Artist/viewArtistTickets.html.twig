@@ -1,6 +1,10 @@
 {% extends "base.html.twig" %}
 {% block body %}
     <div class="row">
+        <div class="col-sm-12 text-center text-info"><h3>Summary for {{ show.show }}</h3></div>
+    </div>
+    <div class="row">
+    <div class="row">
         <div class="col-sm-3"></div>
         <div class="col-sm-2">
             <u>Artist</u>
@@ -33,7 +37,7 @@
             <div class="col-sm-1 text-right">
                 {{ receiptTaxTotal|number_format(2) }}
             </div>
-            <div class="col-sm-1 text-right" style="padding-bottom: 10px;">
+            <div class="col-sm-1 text-right" style="padding-bottom: 3px;">
                 {{ '$'~(total + receiptTaxTotal)|number_format(2) }}
             </div>
         </div>
@@ -41,8 +45,11 @@
     {%  endfor  %}
     <div class="row">
         <div class="col-sm-3"></div>
-        <div class="col-sm-3 text-right">
+        <div class="col-sm-2">
             Grand total
+        </div>
+        <div class="col-sm-1 text-right">
+            {{ '$'~grandTotal|number_format(2) }}
         </div>
         <div class="col-sm-1 text-right">
             {{ '$'~grandTaxTotal|number_format(2) }}
@@ -52,24 +59,27 @@
         </div>
     </div>
     <div class="row" style="margin-top: 10px;">
-        <div class="col-sm-5"></div>
-        <div class="col-sm-1">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-2">
             Distribution
         </div>
-        <div class="col-sm-1">
+    </div>
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-2">
             Artists
         </div>
         <div class="col-sm-1 text-right">
             {{ '$'~(grandTotal*(1-show.percent))|number_format(2, '.', ',') }}
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-6"></div>
-        <div class="col-sm-1">
-            UUFNN
-        </div>
-        <div class="col-sm-1 text-right">
-            {{ '$'~(grandTotal*show.percent)|number_format(2, '.', ',') }}
-        </div>
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-2">
+        UUFNN
     </div>
+    <div class="col-sm-1 text-right">
+        {{ '$'~(grandTotal*show.percent)|number_format(2, '.', ',') }}
+    </div>
+</div>
 {% endblock body %}

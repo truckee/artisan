@@ -1,0 +1,16 @@
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-sm-12">
+        {{ form_row(form.ticket) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        {{ form_row(form.amount) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        {{ form_row(form.artist, {'value':ticket.artist.lastName~', '~ticket.artist.firstName }) }}
+    </div>
+</div>

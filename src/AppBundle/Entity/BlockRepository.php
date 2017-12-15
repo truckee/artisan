@@ -20,7 +20,9 @@ use Doctrine\ORM\EntityRepository;
  */
 class BlockRepository extends EntityRepository
 {
-    private function qb($show) {
+
+    private function qb($show)
+    {
         return $this->getEntityManager()->createQueryBuilder()
                 ->select('b')
                 ->from('AppBundle:Block', 'b')
@@ -41,6 +43,7 @@ class BlockRepository extends EntityRepository
     public function getBlocksByBlock($show)
     {
         return $this->qb($show)
+                ->andWhere('b.upper <> 0')
                 ->orderBy('b.lower')
                 ->setParameter(1, $show->getId())
                 ->getQuery()

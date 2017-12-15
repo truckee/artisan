@@ -1,26 +1,36 @@
 {% extends "base.html.twig" %}
 {% block body %}
     <div class="row">
-        <div class="col-sm-5">
-            <h4>Ticket Blocks by Block for {{ show.show }}</h4>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading"> <h4>Ticket Blocks by Block for {{ show.show }}</h4></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6  text-center">
+                            <u>Block</u>
+                        </div>
+                        <div class="col-sm-6">
+                            <u>Artist</u>
+                        </div>
+                    </div>
+                    {% for block in blocks %}
+                        <div class="row" style="background-color: {{ cycle(['yellow', ''], loop.index)}}">
+                            <div class="col-sm-3 text-right">
+                                {{ block.lower }}
+                            </div>
+                            <div class="col-sm-1 text-center">-</div>
+                            <div class="col-sm-2 text-right">
+                                {{ block.upper }}
+                            </div>
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-5">
+                                {{ block.artist.lastName }}, {{ block.artist.firstName }}
+                            </div>
+                        </div>
+                    {%  endfor %}
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-3">
-            <u>Block</u>
-        </div>
-        <div class="col-sm-3">
-            <u>Artist</u>
-        </div>
-    </div>
-    {% for block in blocks %}
-    <div class="row">
-        <div class="col-sm-3">
-            {{ block.lower }} - {{ block.upper }}
-        </div>
-        <div class="col-sm-3">
-            {{ block.artist.lastName }}, {{ block.artist.firstName }}
-        </div>
-    </div>
-        {%  endfor %}
 {% endblock body %}
