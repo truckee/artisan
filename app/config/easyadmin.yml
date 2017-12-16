@@ -1,0 +1,51 @@
+## easyadmin
+---
+easy_admin:
+    site_name: UUFNN Artisan Show
+    design:
+        menu:
+            - { entity: 'User', params: { sortField: 'username', sortDirection: 'ASC' } }
+            - { label: 'Home', route: 'homepage' }
+    entities:
+        User:
+            class: AppBundle\Entity\User
+            list:
+            list:
+                fields:
+                    - 'enabled'
+                    - 'username'
+                    - {property: 'firstName', label: 'First name'}
+                    - {property: 'lastName', label: 'Last name'}
+                    - {property: 'email', type: 'email'}
+                    - {property: 'hasRoleAdmin', label: 'Is admin?'}
+                    - 'lastLogin'
+            edit:
+                fields:
+                    - 'enabled'
+                    - 'username'
+                    - {property: 'firstName', label: 'First name'}
+                    - {property: 'lastName', label: 'Last name'}
+                    - {property: 'email', type: 'email'}
+                    - property: 'hasRoleAdmin'
+                      label: 'Is admin?'
+                      type: choice
+                      type_options:
+                        choices:
+                            'No': 'No'
+                            'Yes': 'Yes'
+            new:
+                fields:
+                    - 'enabled'
+                    - 'username'
+                    - {property: 'firstName', label: 'First name'}
+                    - {property: 'lastName', label: 'Last name'}
+                    - {property: 'email', type: 'email'}
+                    - {property: 'plainPassword', label: 'Password', type: text}
+                    - property: 'hasRoleAdmin'
+                      label: 'Is admin?'
+                      type: choice
+                      type_options:
+                        choices:
+                            'No': 'No'
+                            'Yes': 'Yes'
+

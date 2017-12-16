@@ -18,66 +18,75 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 class Builder implements ContainerAwareInterface
 {
+
     use ContainerAwareTrait;
 
     public function mainMenu(FactoryInterface $factory, array $options)
     {
+        $checker = $this->container->get('security.authorization_checker');
+
         $menu = $factory->createItem('root');
 
         $menu->addChild('Home', array('route' => 'homepage'));
 
         $menu->addChild('Receipts');
-            $menu['Receipts']->addChild('Add', [
-                'route' => 'receipt_add'
-                ]);
-            $menu['Receipts']->addChild('Edit', [
-                'route' => 'receipt_edit'
-                ]);
-            $menu['Receipts']->addChild('Single artist', [
+        $menu['Receipts']->addChild('Add', [
+            'route' => 'receipt_add'
+        ]);
+        $menu['Receipts']->addChild('Edit', [
+            'route' => 'receipt_edit'
+        ]);
+        $menu['Receipts']->addChild('Single artist', [
                 'route' => 'single_artist_tickets'
-                ]);
-            $menu['Receipts']->addChild('View', [
-                'route' => 'receipts_view'
-                ]);
+        ]);
+        $menu['Receipts']->addChild('View', [
+            'route' => 'receipts_view'
+        ]);
 
         $menu->addChild('Artist');
-            $menu['Artist']->addChild('Add', [
-                'route' => 'artist_add'
-                ]);
-            $menu['Artist']->addChild('Edit', [
-                'route' => 'artist_edit'
-                ]);
-            $menu['Artist']->addChild('Add existing', [
-                'route' => 'existing_artists'
-                ]);
-            $menu['Artist']->addChild('In show', [
-                'route' => 'show_view'
-                ]);
+        $menu['Artist']->addChild('Add', [
+            'route' => 'artist_add'
+        ]);
+        $menu['Artist']->addChild('Edit', [
+            'route' => 'artist_edit'
+        ]);
+        $menu['Artist']->addChild('Add existing', [
+            'route' => 'existing_artists'
+        ]);
+        $menu['Artist']->addChild('In show', [
+            'route' => 'show_view'
+        ]);
 
         $menu->addChild('Ticket');
-            $menu['Ticket']->addChild('Add block', [
-                'route' => 'block_add'
-                ]);
-            $menu['Ticket']->addChild('Edit block', [
-                'route' => 'block_edit'
-                ]);
-            $menu['Ticket']->addChild('View blocks by artist', [
+        $menu['Ticket']->addChild('Add block', [
+            'route' => 'block_add'
+        ]);
+        $menu['Ticket']->addChild('Edit block', [
+            'route' => 'block_edit'
+        ]);
+        $menu['Ticket']->addChild('View blocks by artist', [
                 'route' => 'blocks_by_artist'
-                ]);
-            $menu['Ticket']->addChild('View blocks by block', [
+        ]);
+        $menu['Ticket']->addChild('View blocks by block', [
                 'route' => 'blocks_by_block'
-                ]);
+        ]);
 
         $menu->addChild('Show');
-            $menu['Show']->addChild('Add', [
-                'route' => 'show_add'
+        $menu['Show']->addChild('Add', [
+            'route' => 'show_add'
+        ]);
+        $menu['Show']->addChild('Edit', [
+            'route' => 'show_edit'
+        ]);
+        $menu['Show']->addChild('Summary', [
+            'route' => 'all_artists_show_tickets'
+        ]);
+
+        if ($checker->isGranted('ROLE_ADMIN')) {
+            $menu->addChild('Admin', [
+                'route' => 'easyadmin'
             ]);
-            $menu['Show']->addChild('Edit', [
-                'route' => 'show_edit'
-            ]);
-            $menu['Show']->addChild('Summary', [
-                'route' => 'all_artists_show_tickets'
-            ]);
+        }
 
         return $menu;
     }
