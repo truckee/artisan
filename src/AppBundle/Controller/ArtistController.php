@@ -175,9 +175,10 @@ class ArtistController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $inShow = ($form->has('inShow')) ? $form->get('inShow')->getData() : null;
-            if (true === $inShow) {
+            $already = $show->getArtists()->contains($artist);
+            if (true === $inShow && !$already) {
                 $artist->addShow($show);
-            } elseif (false === $inShow) {
+            } elseif (false === $inShow && $already) {
                 $artist->removeShow($show);
             }
             $em->persist($artist);
