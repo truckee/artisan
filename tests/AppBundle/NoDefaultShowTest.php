@@ -21,14 +21,25 @@ class NoDefaultShowTest extends WebTestCase
     {
         $this->client = static::createClient();
         $this->client->followRedirects();
-        //empty database
         $this->fixtures = $this->loadFixtures([
+                'AppBundle\DataFixtures\Test\UsersFixture',
+        ]);
+    }
 
-            ]);
+    public function login()
+    {
+        $crawler = $this->client->request('GET', '/');
+        $form = $crawler->selectButton('Log in')->form();
+        $form['_username'] = 'admin';
+        $form['_password'] = 'manapw';
+        $crawler = $this->client->submit($form);
+
+        return $crawler;
     }
 
     public function testNewShow()
     {
+        $crawler = $this->login();
         $crawler = $this->client->request('GET', '/show/new');
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -44,6 +55,7 @@ class NoDefaultShowTest extends WebTestCase
 
     public function testShowValidation()
     {
+        $crawler = $this->login();
         $crawler = $this->client->request('GET', '/show/new');
         $form = $crawler->selectButton('Add show')->form();
         $crawler = $this->client->submit($form);
@@ -53,6 +65,7 @@ class NoDefaultShowTest extends WebTestCase
 
     public function testShowTaxValidation()
     {
+        $crawler = $this->login();
         $crawler = $this->client->request('GET', '/show/new');
         $form = $crawler->selectButton('Add show')->form();
         $form['show[tax]'] = '110';
@@ -63,6 +76,7 @@ class NoDefaultShowTest extends WebTestCase
 
     public function testShowTPercentValidation()
     {
+        $crawler = $this->login();
         $crawler = $this->client->request('GET', '/show/new');
         $form = $crawler->selectButton('Add show')->form();
         $form['show[percent]'] = '-5';
@@ -71,56 +85,39 @@ class NoDefaultShowTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Must be between 0% and 100%")')->count());
     }
 
-    public function testNoReceiptWithoutDefaultShow()
+    public function testNoReceiptAddWithoutDefaultShow()
     {
+        $crawler = $this->login();
         $crawler = $this->client->request('GET', '/receipt/new');
 
         $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Create a default show before adding a receipt")')->count()
+            0, $crawler->filter('html:contains("Set a show to active before adding a receipt")')->count()
         );
     }
 
-//    public function testNewBlock()
-//    {
-//        $crawler = $this->client->request('GET', '/block/new');
-//
-//        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-//    }
-//
-//    public function testBlockLimits()
-//    {
-//        $crawler = $this->client->request('GET', '/block/new');
-//        $form = $crawler->selectButton('Add block')->form();
-//        $form['block[lower]'] = '10';
-//        $form['block[upper]'] = '1';
-//        $crawler = $this->client->submit($form);
-//
-//        $this->assertGreaterThan(0, $crawler->filter('html:contains("Block upper end must be greater than or equal to lower end")')->count());
-//    }
-//
-//    public function testBlockBadNumbers()
-//    {
-//        $crawler = $this->client->request('GET', '/block/new');
-//        $form = $crawler->selectButton('Add block')->form();
-//        $form['block[lower]'] = 'a';
-//        $form['block[upper]'] = 1;
-//        $crawler = $this->client->submit($form);
-//
-//        $this->assertGreaterThan(0, $crawler->filter('html:contains("Must be > 0")')->count());
-//    }
+    public function testNoReceiptEditWithoutDefaultShow()
+    {
+        $crawler = $this->login();
+        $crawler = $this->client->request('GET', '/receipt/edit');
+
+        $this->assertGreaterThan(
+            0, $crawler->filter('html:contains("Set a show to active before adding a receipt")')->count()
+        );
+    }
 
     public function testBlockAdd()
     {
+        $crawler = $this->login();
         $crawler = $this->client->request('GET', '/block/new');
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Create a default show before adding a ticket block!")')->count());
+        $this->assertGreaterThan(0,
+            $crawler->filter('html:contains("Set a show to active before adding a ticket block!")')->count());
     }
 
-    public function testNoDefaultShow()
+    public function testNoLoginDefaultShow()
     {
         $crawler = $this->client->request('GET', '/');
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Default show not assigned")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("UUFNN Artisan Show Management")')->count());
     }
 }

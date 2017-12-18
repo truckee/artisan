@@ -22,13 +22,26 @@ class NewArtistControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
         $this->fixtures = $this->loadFixtures([
+            'AppBundle\DataFixtures\Test\UsersFixture',
             'AppBundle\DataFixtures\Test\DefaultShowFixture',
         ]);
 //        file_put_contents("G:\\Documents\\response.html", $this->client->getResponse()->getContent());
     }
 
+    public function login()
+    {
+        $crawler = $this->client->request('GET', '/');
+        $form = $crawler->selectButton('Log in')->form();
+        $form['_username'] = 'admin';
+        $form['_password'] = 'manapw';
+        $crawler = $this->client->submit($form);
+
+        return $crawler;
+    }
+
     public function testNewNotInShow()
     {
+        $crawler = $this->login();
         $crawler = $this->client->request('GET', '/artist/new');
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -49,6 +62,7 @@ class NewArtistControllerTest extends WebTestCase
 
     public function testNewInShow()
     {
+        $crawler = $this->login();
         $crawler = $this->client->request('GET', '/artist/new');
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -70,6 +84,7 @@ class NewArtistControllerTest extends WebTestCase
 
     public function testValidation()
     {
+        $crawler = $this->login();
         $crawler = $this->client->request('GET', '/artist/new');
         $form = $crawler->selectButton('Add artist')->form();
         $crawler = $this->client->submit($form);
@@ -79,6 +94,7 @@ class NewArtistControllerTest extends WebTestCase
 
     public function testOneNameArtist()
     {
+        $crawler = $this->login();
         $crawler = $this->client->request('GET', '/artist/new');
 
         $form = $crawler->selectButton('Add artist')->form();

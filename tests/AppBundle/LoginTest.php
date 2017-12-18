@@ -8,17 +8,17 @@
  * file that was distributed with this source code.
  */
 
-//src\Tests\AppBundle\Controller\BlockWithShowNoArtistTest.php
+//src\Tests\AppBundle\LoginTest.php
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\AppBundle;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
- * BlockControllerTest
+ * LoginTest
  *
  */
-class BlockWithShowNoArtistTest extends WebTestCase
+class LoginTest extends WebTestCase
 {
 
     public function setup()
@@ -31,7 +31,7 @@ class BlockWithShowNoArtistTest extends WebTestCase
         ]);
     }
 
-    public function login()
+    public function testAdminLogin()
     {
         $crawler = $this->client->request('GET', '/');
         $form = $crawler->selectButton('Log in')->form();
@@ -39,15 +39,20 @@ class BlockWithShowNoArtistTest extends WebTestCase
         $form['_password'] = 'manapw';
         $crawler = $this->client->submit($form);
 
-        return $crawler;
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Artisan Show 2017")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Admin")')->count());
     }
 
-    public function testBlockWithShowNoArtist()
+    public function testUserLogin()
     {
-        $crawler = $this->login();
-        $crawler = $this->client->request('GET', '/block/new');
+        $crawler = $this->client->request('GET', '/');
+        $form = $crawler->selectButton('Log in')->form();
+        $form['_username'] = 'dberry';
+        $form['_password'] = 'password';
+        $crawler = $this->client->submit($form);
 
-        $this->assertGreaterThan(0,
-            $crawler->filter('html:contains("Select artist for block")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Artisan Show 2017")')->count());
+        $this->assertEquals(0, $crawler->filter('html:contains("Admin")')->count());
     }
+    
 }
