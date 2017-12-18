@@ -29,18 +29,18 @@ class Builder implements ContainerAwareInterface
 
         $menu->addChild('Home', array('route' => 'homepage'));
 
-        $menu->addChild('Receipts');
-        $menu['Receipts']->addChild('Add', [
+        $menu->addChild('Receipt');
+        $menu['Receipt']->addChild('Add', [
             'route' => 'receipt_add'
         ]);
-        $menu['Receipts']->addChild('Edit', [
+        $menu['Receipt']->addChild('Edit', [
             'route' => 'receipt_edit'
         ]);
-        $menu['Receipts']->addChild('Single artist', [
+        $menu['Receipt']->addChild('Single artist', [
                 'route' => 'single_artist_tickets'
         ]);
-        $menu['Receipts']->addChild('View', [
-            'route' => 'receipts_view'
+        $menu['Receipt']->addChild('View', [
+            'route' => 'receipt_view'
         ]);
 
         $menu->addChild('Artist');
@@ -57,17 +57,17 @@ class Builder implements ContainerAwareInterface
             'route' => 'show_view'
         ]);
 
-        $menu->addChild('Ticket');
-        $menu['Ticket']->addChild('Add block', [
+        $menu->addChild('Block');
+        $menu['Block']->addChild('Add block', [
             'route' => 'block_add'
         ]);
-        $menu['Ticket']->addChild('Edit block', [
+        $menu['Block']->addChild('Edit block', [
             'route' => 'block_edit'
         ]);
-        $menu['Ticket']->addChild('View blocks by artist', [
+        $menu['Block']->addChild('View blocks by artist', [
                 'route' => 'blocks_by_artist'
         ]);
-        $menu['Ticket']->addChild('View blocks by block', [
+        $menu['Block']->addChild('View blocks by block', [
                 'route' => 'blocks_by_block'
         ]);
 
@@ -87,6 +87,17 @@ class Builder implements ContainerAwareInterface
                 'route' => 'easyadmin'
             ]);
         }
+
+        return $menu;
+    }
+
+    public function logoutMenu(FactoryInterface $factory, array $options)
+    {
+        $menu = $factory->createItem('root');
+
+        $menu->addChild('Log out', [
+            'route' => 'fos_user_security_logout'
+        ]);
 
         return $menu;
     }
