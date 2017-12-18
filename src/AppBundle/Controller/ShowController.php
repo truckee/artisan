@@ -65,15 +65,20 @@ class ShowController extends Controller
     /**
      * @Route("/select", name="show_select")
      */
-    public function selectShowForEdit()
+    public function selectShowForEdit(Request $request)
     {
-        $show = new Show();
-        $form = $this->createForm(SelectShowType::class, $show);
+        $form = $this->createForm(SelectShowType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $id = $request->request->get('select_show')['show'];
 
-        return $this->render('Show/selectShow.html.twig',
+            return $this->redirectToRoute('show_edit', ['id' => $id]);
+        }
+
+        return $this->render('default/selectEntity.html.twig',
                 [
-                    'form' => $form->createView(),
-                    'show' => $show
+                'form' => $form->createView(),
+                'heading' => 'Select show',
         ]);
     }
 

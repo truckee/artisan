@@ -14,7 +14,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Receipt;
 use AppBundle\Services\TicketArtist;
-use AppBundle\Services\TicketUsed;
 use AppBundle\Form\ReceiptTicketType;
 use AppBundle\Form\SelectReceiptType;
 use AppBundle\Services\Defaults;
@@ -61,9 +60,9 @@ class ReceiptController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Create a default show before adding a receipt!');
+            $flash->error('Set a show to active before adding a receipt!');
 
-            return $this->redirectToRoute("show_add");
+            return $this->redirectToRoute("homepage");
         }
         $em = $this->getDoctrine()->getManager();
         $nextId = $em->getRepository('AppBundle:Receipt')->getNewReceiptNo();
@@ -102,7 +101,7 @@ class ReceiptController extends Controller
     }
 
     /**
-     * @Route("/view", name="receipts_view")
+     * @Route("/view", name="receipt_view")
      */
     public function viewShowReceipts(Defaults $defaults)
     {
@@ -119,29 +118,41 @@ class ReceiptController extends Controller
     /**
      * @Route("/select", name="receipt_select")
      */
-    public function selectReceipt(Defaults $defaults)
+    public function selectReceipt(Request $request, Defaults $defaults)
     {
         $show = $defaults->showDefault();
-        $receipt = new Receipt();
-        $form = $this->createForm(SelectReceiptType::class, $receipt, ['show' => $show]);
+        $form = $this->createForm(SelectReceiptType::class, null, ['show' => $show]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $id = $request->request->get('select_receipt')['receipt'];
 
-        return $this->render('Receipt/selectReceipt.html.twig', [
+            return $this->redirectToRoute('receipt_edit', ['id' => $id]);
+        }
+
+        return $this->render('default/selectEntity.html.twig', [
             'form' => $form->createView(),
+            'heading' => 'Select receipt',
         ]);
     }
 
     /**
      * @Route("/edit/{id}", name="receipt_edit")
      */
-    public function editReceiptAction(Request $request, Defaults $defaults, $id = null)
+    public function editReceiptAction(Defaults $defaults, $id = null)
     {
+        $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (null === $show) {
+            $flash->error('Set a show to active before adding a receipt!');
+
+            return $this->redirectToRoute("homepage");
+        }
         if (null !== $id) {
             $em = $this->getDoctrine()->getManager();
             $artist = $em->getRepository('AppBundle:Receipt')->find($id);
         } else {
             return $this->redirectToRoute('receipt_select');
         }
-        $show = $defaults->showDefault();
         $em = $this->getDoctrine()->getManager();
         $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['receiptNo' => $id]);
 

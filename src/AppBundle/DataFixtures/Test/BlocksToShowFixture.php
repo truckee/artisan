@@ -53,6 +53,6 @@ class BlocksToShowFixture extends AbstractFixture implements OrderedFixtureInter
 
     public function getOrder()
     {
-        return 3; // the order in which fixtures will be loaded
+        return 4; // the order in which fixtures will be loaded
     }
 }

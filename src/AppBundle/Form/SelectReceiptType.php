@@ -34,7 +34,7 @@ class SelectReceiptType extends AbstractType
             ->add('receipt', EntityType::class,
                 [
                     'class' => 'AppBundle:Receipt',
-                    'label' => 'Edit receipt',
+                    'label' => false,
                     'choice_label' => function($receipt, $key, $index) {
                         return $receipt->getReceiptNo();
                     },

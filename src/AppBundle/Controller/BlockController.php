@@ -38,13 +38,11 @@ class BlockController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Create a default show before adding a ticket block!');
+            $flash->error('Set a show to active before adding a ticket block!');
 
             return $this->redirectToRoute('homepage');
         }
         if (null === $id) {
-            $flash->error('Select an artist before adding a ticket block!');
-
             return $this->redirectToRoute('artist_select', ['target' => 'block']);
         }
         $em = $this->getDoctrine()->getManager();
@@ -82,20 +80,16 @@ class BlockController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Create a default show before adding a ticket block!');
+            $flash->error('Set a show to active before adding a ticket block!');
 
             return $this->redirectToRoute('homepage');
         }
         if (null === $id) {
-            $flash->error('Select an artist before editing a ticket block!');
-
             return $this->redirectToRoute('artist_select', ['target' => 'block edit']);
         }
         $em = $this->getDoctrine()->getManager();
         $artist = $em->getRepository('AppBundle:Artist')->find($id);
         if (null === $blockId) {
-            $flash->error('Select block to edit');
-
             return $this->redirectToRoute('block_select',
                     [
                         'artist' => $id,
@@ -131,20 +125,23 @@ class BlockController extends Controller
      */
     public function selectBlockAction(Request $request, $artist, $show)
     {
-        $block = new Block();
         $em = $this->getDoctrine()->getManager();
         $owner = $em->getRepository('AppBundle:Artist')->find($artist);
-        $form = $this->createForm(SelectBlockType::class, $block,
+        $form = $this->createForm(SelectBlockType::class, null,
             [
-            'artist' => $artist,
-            'show' => $show,
+                'artist' => $artist,
         ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $id = $request->request->get('select_block')['block'];
 
-        return $this->render('Block/selectBlock.html.twig',
+            return $this->redirectToRoute('block_edit', ['id' => $artist, 'blockId' => $id]);
+        }
+
+        return $this->render('default/selectEntity.html.twig',
                 [
                     'form' => $form->createView(),
-                    'block' => $block,
-                    'artist' => $owner,
+                    'heading' => 'Select block for ' . $owner->getFirstName() . ' ' . $owner->getLastName(),
         ]);
     }
 
@@ -157,9 +154,10 @@ class BlockController extends Controller
         $em = $this->getDoctrine()->getManager();
         $blocks = $em->getRepository('AppBundle:Block')->getBlocksByArtists($show);
 
-        return $this->render('Block/blocksByArtists.html.twig', [
-            'blocks' => $blocks,
-            'show' => $show,
+        return $this->render('Block/blocksByArtists.html.twig',
+                [
+                'blocks' => $blocks,
+                'show' => $show,
         ]);
     }
 
@@ -172,9 +170,10 @@ class BlockController extends Controller
         $em = $this->getDoctrine()->getManager();
         $blocks = $em->getRepository('AppBundle:Block')->getBlocksByBlock($show);
 
-        return $this->render('Block/blocksByBlock.html.twig', [
-            'blocks' => $blocks,
-            'show' => $show,
+        return $this->render('Block/blocksByBlock.html.twig',
+                [
+                'blocks' => $blocks,
+                'show' => $show,
         ]);
     }
 }

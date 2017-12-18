@@ -7,7 +7,8 @@
                 <div class="panel-heading"> <h4>Ticket Blocks by Block for {{ show.show }}</h4></div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-6  text-center">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-3">
                             <u>Block</u>
                         </div>
                         <div class="col-sm-6">
@@ -15,7 +16,7 @@
                         </div>
                     </div>
                     {% for block in blocks %}
-                        <div class="row" style="background-color: {{ cycle(['yellow', ''], loop.index)}}">
+                        <div class="row" style="background-color: {{ cycle(['aquamarine', ''], loop.index)}}">
                             <div class="col-sm-3 text-right">
                                 {{ block.lower }}
                             </div>

@@ -33,7 +33,7 @@ class SelectArtistType extends AbstractType
             ->add('artist', EntityType::class,
                 [
                     'class' => 'AppBundle:Artist',
-                    'label' => 'Select artist for ' . $target,
+                    'label' => false,
                     'choice_label' => function($artist, $key, $index) {
                         return $artist->getLastName() . ', ' . $artist->getFirstName();
                     },

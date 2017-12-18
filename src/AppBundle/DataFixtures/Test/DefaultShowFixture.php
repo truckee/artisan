@@ -36,6 +36,6 @@ class DefaultShowFixture extends AbstractFixture implements OrderedFixtureInterf
 
     public function getOrder()
     {
-        return 1; // the order in which fixtures will be loaded
+        return 2; // the order in which fixtures will be loaded
     }
 }

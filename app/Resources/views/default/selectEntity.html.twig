@@ -5,7 +5,7 @@
         </div>
         <div class="col-sm-4">
             <div class="panel panel-primary">
-                <div class="panel-heading"><h4>Select receipt</h4></div>
+                <div class="panel-heading"><h4>{{ heading }}</h4></div>
                 <div class="panel-body">
                     {{ form(form) }}
                 </div>
@@ -13,7 +13,4 @@
         </div>
     </div>
 {% endblock body %}
-{%  block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('js/project.js') }}"></script>
-{%  endblock %}
+

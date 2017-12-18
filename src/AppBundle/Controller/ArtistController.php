@@ -87,8 +87,8 @@ class ArtistController extends Controller
         }
         $form = $this->createForm(AddExistingArtistsType::class, $show,
             [
-            'show' => $show,
-            'query_bulider' => $someNotInShow,
+                'show' => $show,
+                'query_bulider' => $someNotInShow,
         ]);
         if (is_null($show)) {
             $flash->error('Create a default show before adding an artist!');
@@ -117,9 +117,8 @@ class ArtistController extends Controller
         }
 
         return $this->render(
-                'Artist/existingArtist.html.twig',
-                [
-                'form' => $form->createView(),
+                'Artist/existingArtist.html.twig', [
+                    'form' => $form->createView(),
                 ]
         );
     }
@@ -145,11 +144,28 @@ class ArtistController extends Controller
     {
         $artist = new Artist();
         $form = $this->createForm(SelectArtistType::class, $artist, ['target' => $target]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $id = $request->request->get('select_artist')['artist'];
+            switch ($target) {
+                case 'edit':
+                    return $this->redirectToRoute('artist_edit', ['id' => $id]);
+                case 'block':
+                    return $this->redirectToRoute('block_add', ['id' => $id]);
+                case 'tickets';
+                    return $this->redirectToRoute('single_artist_tickets', ['id' => $id]);
+                case 'block edit':
+                    return $this->redirectToRoute('block_edit', ['id' => $id]);
+                default:
+                    break;
+            }
+        }
 
-        return $this->render('Artist/selectArtist.html.twig',
+        return $this->render('default/selectEntity.html.twig',
                 [
                     'form' => $form->createView(),
-                    'artist' => $artist
+                    'artist' => $artist,
+                    'heading' => 'Select artist for ' . $target,
         ]);
     }
 
@@ -207,9 +223,10 @@ class ArtistController extends Controller
         $em = $this->getDoctrine()->getManager();
         $artists = $em->getRepository('AppBundle:Artist')->artistsShowTickets($show);
 
-        return $this->render('Artist/viewArtistTickets.html.twig', [
-            'artists' => $artists,
-            'show' => $show,
+        return $this->render('Artist/viewArtistTickets.html.twig',
+                [
+                'artists' => $artists,
+                'show' => $show,
         ]);
     }
 
@@ -226,9 +243,10 @@ class ArtistController extends Controller
         }
         $show = $defaults->showDefault();
 
-        return $this->render('Artist/singleArtistTickets.html.twig', [
-            'artist' => $artist,
-            'show' => $show,
+        return $this->render('Artist/singleArtistTickets.html.twig',
+                [
+                'artist' => $artist,
+                'show' => $show,
         ]);
     }
 }

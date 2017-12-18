@@ -12,6 +12,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Services\Defaults;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -25,16 +26,22 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class SelectBlockType extends AbstractType
 {
+    private $show;
+
+    public function __construct(Defaults $defaults)
+    {
+        $this->show = $defaults->showDefault();
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $artist = $options['artist'];
-        $show = $options['show'];
+        $show = $this->show;
         $builder
             ->add('block', EntityType::class,
                 [
                     'class' => 'AppBundle:Block',
-                    'label' => 'Select block',
+                    'label' => false,
                     'choice_label' => function($block, $key, $index) {
                         return $block->getLower() . ' to ' . $block->getUpper();
                     },
@@ -61,8 +68,6 @@ class SelectBlockType extends AbstractType
             'data_class' => 'AppBundle\Entity\Block',
             'required' => false,
             'artist' => null,
-            'show' => null,
         ));
-//        $resolver->setRequired('entity_manager');
     }
 }

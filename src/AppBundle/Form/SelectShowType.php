@@ -32,7 +32,7 @@ class SelectShowType extends AbstractType
             ->add('show', EntityType::class,
                 [
                     'class' => 'AppBundle:Show',
-                    'label' => 'Edit show',
+                    'label' => false,
                     'choice_label' => function($show, $key, $index) {
                         return $show->getShow();
                     },
