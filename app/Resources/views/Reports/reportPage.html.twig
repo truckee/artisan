@@ -1,0 +1,68 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <div class="row">
+        <div class="col-sm-12 text-center"><h3>UUFNN Artisan Show Reports</h3></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2">
+            <h4>Show</h4>
+        </div>
+        <div class="col-sm-2">
+            <h4>Artist</h4>
+        </div>
+        <div class="col-sm-2">
+            <h4>Receipt</h4>
+        </div>
+        <div class="col-sm-2">
+            <h4>Tickets</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2">
+            <a href="{{ path('show_summary') }}" style="text-decoration: none;">Show Summary</a>
+        </div>
+        <div class="col-sm-2">
+            <a href="{{ path('blocks_by_artist') }}" style="text-decoration: none;">Blocks by artist</a>
+        </div>
+        <div class="col-sm-2">
+            <a href="{{ path('receipt_view') }}" style="text-decoration: none;">Active show receipts</a>
+        </div>
+        <div class="col-sm-2">
+            <a href="{{ path('single_artist_tickets') }}" style="text-decoration: none;">Active show, single artist</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2">
+            {# show #}
+        </div>
+        <div class="col-sm-2">
+            {# artist #}
+        </div>
+        <div class="col-sm-2">
+            {# receipt #}
+        </div>
+        <div class="col-sm-2">
+            {# ticket #}
+            <a href="{{ path('blocks_by_block') }}" style="text-decoration: none;">Artists by block</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-2">
+            {# show #}
+        </div>
+        <div class="col-sm-2">
+            {# artist #}
+        </div>
+        <div class="col-sm-2">
+            {# receipt #}
+        </div>
+        <div class="col-sm-2">
+            {# ticket #}
+        </div>
+    </div>
+
+{% endblock body %}

@@ -36,12 +36,6 @@ class Builder implements ContainerAwareInterface
         $menu['Receipt']->addChild('Edit', [
             'route' => 'receipt_edit'
         ]);
-        $menu['Receipt']->addChild('Single artist', [
-                'route' => 'single_artist_tickets'
-        ]);
-        $menu['Receipt']->addChild('View', [
-            'route' => 'receipt_view'
-        ]);
 
         $menu->addChild('Artist');
         $menu['Artist']->addChild('Add', [
@@ -53,9 +47,6 @@ class Builder implements ContainerAwareInterface
         $menu['Artist']->addChild('Add existing', [
             'route' => 'existing_artists'
         ]);
-        $menu['Artist']->addChild('In show', [
-            'route' => 'show_view'
-        ]);
 
         $menu->addChild('Block');
         $menu['Block']->addChild('Add block', [
@@ -64,12 +55,7 @@ class Builder implements ContainerAwareInterface
         $menu['Block']->addChild('Edit block', [
             'route' => 'block_edit'
         ]);
-        $menu['Block']->addChild('View blocks by artist', [
-                'route' => 'blocks_by_artist'
-        ]);
-        $menu['Block']->addChild('View blocks by block', [
-                'route' => 'blocks_by_block'
-        ]);
+
 
         $menu->addChild('Show');
         $menu['Show']->addChild('Add', [
@@ -78,8 +64,9 @@ class Builder implements ContainerAwareInterface
         $menu['Show']->addChild('Edit', [
             'route' => 'show_edit'
         ]);
-        $menu['Show']->addChild('Summary', [
-            'route' => 'show_summary'
+
+        $menu->addChild('Reports', [
+            'route' => 'reports'
         ]);
 
         if ($checker->isGranted('ROLE_ADMIN')) {

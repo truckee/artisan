@@ -12,6 +12,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Services\Defaults;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -25,9 +26,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class SelectArtistType extends AbstractType
 {
+    private $show;
+
+    public function __construct(Defaults $defaults)
+    {
+        $this->show = $defaults->showDefault();
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $show = $this->show;
         $target = $options['target'];
         $builder
             ->add('artist', EntityType::class,
@@ -37,8 +45,10 @@ class SelectArtistType extends AbstractType
                     'choice_label' => function($artist, $key, $index) {
                         return $artist->getLastName() . ', ' . $artist->getFirstName();
                     },
-                    'query_builder' => function (EntityRepository $er) {
+                    'query_builder' => function (EntityRepository $er) use($show) {
                         return $er->createQueryBuilder('a')
+                            ->where(':showId MEMBER OF a.shows')
+                            ->setParameter('showId', $show->getId())
                             ->orderBy('a.firstName', 'ASC')
                             ->orderBy('a.lastName', 'ASC');
                     },

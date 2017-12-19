@@ -125,20 +125,6 @@ class ArtistController extends Controller
     }
 
     /**
-     * @Route("/view", name="show_view")
-     */
-    public function viewShowArtists(Request $request, Defaults $defaults)
-    {
-        $show = $defaults->showDefault();
-        $em = $this->getDoctrine()->getManager();
-        $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
-
-        return $this->render('Artist/inShow.html.twig', [
-                'artists' => $artists,
-        ]);
-    }
-
-    /**
      * @Route("/select/{target}", name="artist_select")
      */
     public function selectArtistAction(Request $request, $target)

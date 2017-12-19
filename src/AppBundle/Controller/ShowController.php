@@ -126,24 +126,4 @@ class ShowController extends Controller
                     'action' => 'Edit show'
         ]);
     }
-
-    /**
-     * @Route("/showSummary/{id}", name="show_summary")
-     */
-    public function showSummaryAction(Request $request, $id = null)
-    {
-        if (null !== $id) {
-            $em = $this->getDoctrine()->getManager();
-            $show = $em->getRepository('AppBundle:Show')->find($id);
-        } else {
-            return $this->redirectToRoute('show_select', ['target' => 'summary']);
-        }
-        $summary = $em->getRepository('AppBundle:Show')->getShowSummary($show);
-
-        return $this->render('Show/showSummary.html.twig',
-                [
-                    'artists' => $summary,
-                    'show' => $show,
-        ]);
-    }
 }
