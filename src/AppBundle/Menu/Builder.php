@@ -79,7 +79,7 @@ class Builder implements ContainerAwareInterface
             'route' => 'show_edit'
         ]);
         $menu['Show']->addChild('Summary', [
-            'route' => 'all_artists_show_tickets'
+            'route' => 'show_summary'
         ]);
 
         if ($checker->isGranted('ROLE_ADMIN')) {

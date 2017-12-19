@@ -15,6 +15,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Show;
 use AppBundle\Form\ShowType;
 use AppBundle\Form\SelectShowType;
+use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,22 +64,28 @@ class ShowController extends Controller
     }
 
     /**
-     * @Route("/select", name="show_select")
+     * @Route("/select/{target}", name="show_select")
      */
-    public function selectShowForEdit(Request $request)
+    public function selectShow(Request $request, $target)
     {
         $form = $this->createForm(SelectShowType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $id = $request->request->get('select_show')['show'];
-
-            return $this->redirectToRoute('show_edit', ['id' => $id]);
+            switch ($target) {
+                case 'edit':
+                    return $this->redirectToRoute('show_edit', ['id' => $id]);
+                case 'summary':
+                    return $this->redirectToRoute('show_summary', ['id' => $id]);
+                default:
+                    break;
+            }
         }
 
         return $this->render('default/selectEntity.html.twig',
                 [
-                'form' => $form->createView(),
-                'heading' => 'Select show',
+                    'form' => $form->createView(),
+                    'heading' => 'Select show',
         ]);
     }
 
@@ -91,7 +98,7 @@ class ShowController extends Controller
             $em = $this->getDoctrine()->getManager();
             $show = $em->getRepository('AppBundle:Show')->find($id);
         } else {
-            return $this->redirectToRoute('show_select');
+            return $this->redirectToRoute('show_select', ['target' => 'edit']);
         }
         $form = $this->createForm(ShowType::class, $show);
         $form->handleRequest($request);
@@ -117,6 +124,26 @@ class ShowController extends Controller
                     'form' => $form->createView(),
                     'show' => $show,
                     'action' => 'Edit show'
+        ]);
+    }
+
+    /**
+     * @Route("/showSummary/{id}", name="show_summary")
+     */
+    public function showSummaryAction(Request $request, $id = null)
+    {
+        if (null !== $id) {
+            $em = $this->getDoctrine()->getManager();
+            $show = $em->getRepository('AppBundle:Show')->find($id);
+        } else {
+            return $this->redirectToRoute('show_select', ['target' => 'summary']);
+        }
+        $summary = $em->getRepository('AppBundle:Show')->getShowSummary($show);
+
+        return $this->render('Show/showSummary.html.twig',
+                [
+                    'artists' => $summary,
+                    'show' => $show,
         ]);
     }
 }

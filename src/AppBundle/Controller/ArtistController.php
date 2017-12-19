@@ -215,22 +215,6 @@ class ArtistController extends Controller
     }
 
     /**
-     * @Route("/showTickets", name="all_artists_show_tickets")
-     */
-    public function viewArtistShowTickets(Request $request, Defaults $defaults)
-    {
-        $show = $defaults->showDefault();
-        $em = $this->getDoctrine()->getManager();
-        $artists = $em->getRepository('AppBundle:Artist')->artistsShowTickets($show);
-
-        return $this->render('Artist/viewArtistTickets.html.twig',
-                [
-                'artists' => $artists,
-                'show' => $show,
-        ]);
-    }
-
-    /**
      * @Route("/tickets/{id}", name="single_artist_tickets")
      */
     public function viewSingleArtistTickets(Request $request, Defaults $defaults, $id = null)

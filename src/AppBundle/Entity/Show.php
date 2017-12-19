@@ -23,6 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="art_show")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\ShowRepository")
  * @UniqueEntity("show", message = "Show already exists")
  */
 class Show

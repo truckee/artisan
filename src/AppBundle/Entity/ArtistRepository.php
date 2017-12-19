@@ -76,21 +76,4 @@ class ArtistRepository extends EntityRepository
             return $maybe;
         }
     }
-
-    public function artistsShowTickets($show)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-                ->select('a')
-                ->from('AppBundle:Artist', 'a')
-                ->join('a.shows', 's')
-                ->join('a.tickets', 't')
-                ->where('s.show = ?1')
-                ->orderBy('a.firstName')
-                ->orderBy('a.lastName')
-                ->setParameter(1, $show->getShow())
-                ->getQuery()
-                ->getResult();;
-
-        return $qb;
-    }
 }

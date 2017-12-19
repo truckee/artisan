@@ -28,6 +28,7 @@ class SelectShowType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $target = $options['target'];
         $builder
             ->add('show', EntityType::class,
                 [
@@ -43,7 +44,7 @@ class SelectShowType extends AbstractType
             ])
             ->add('save', SubmitType::class,
                 array(
-                    'label' => 'Edit',
+                    'label' => 'Select',
                     'label_format' => ['class' => 'text-bold']
         ));
     }
@@ -53,6 +54,7 @@ class SelectShowType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Show',
             'required' => false,
+            'target' => null,
         ));
     }
 }
