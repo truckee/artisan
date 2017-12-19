@@ -14,7 +14,7 @@ var $newLinkLi = $('<div class="row"></div>').append(addticketLink);
 jQuery(document).ready(function () {
     $collectionHolder = $('div.tickets');
     $collectionHolder.append($newLinkLi);
-    $collectionHolder.data('index', $collectionHolder.find(':input').length);
+    $collectionHolder.data('index', ($collectionHolder.find(':input').length)/3);
     addticketLink.on('click', function (e) {
         e.preventDefault();
         addticketForm($collectionHolder, $newLinkLi);

@@ -44,7 +44,6 @@ class ReceiptControllerTest extends WebTestCase
         return $crawler;
     }
 
-
     public function testFindExistingTicket()
     {
         $crawler = $this->login();
@@ -69,5 +68,37 @@ class ReceiptControllerTest extends WebTestCase
         $crawler = $this->client->submit($form);
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("At least one ticket is required")')->count());
+    }
+
+    public function testNewReceiptWithTickets()
+    {
+        $crawler = $this->login();
+        $crawler = $this->client->request('GET', '/receipt/new');
+        $form = $crawler->selectButton('Add receipt')->form();
+        $values = $form->getPhpValues();
+        $values['receipt']['tickets'][0]['ticket'] = 1;
+        $values['receipt']['tickets'][0]['amount'] = 50;
+        $crawler = $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Receipt added")')->count());
+
+        $crawler = $this->client->request('GET', '/receipt/edit');
+        $form = $crawler->selectButton('Edit')->form();
+        $form['select_receipt[receipt]']->select(1125);
+        $crawler = $this->client->submit($form);
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("50")')->count());
+
+        $crawler = $this->client->request('GET', '/receipt/view');
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("$55")')->count());
+
+        $crawler = $this->client->request('GET', '/artist/tickets');
+        $form = $crawler->selectButton('Select')->form();
+        $form['select_artist[artist]']->select(1);
+        $crawler = $this->client->submit($form);
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("$55")')->count());
+
     }
 }

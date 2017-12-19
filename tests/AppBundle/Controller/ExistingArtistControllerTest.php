@@ -72,6 +72,11 @@ class ExistingArtistControllerTest extends WebTestCase
 
         $this->assertGreaterThan(0,
             $crawler->filter('html:contains("All artists are participating in the show")')->count());
+
+        $crawler = $this->client->request('GET', '/artist/view');
+
+         $this->assertGreaterThan(0,
+            $crawler->filter('html:contains("Borko, Benny")')->count());
     }
 
     public function testEditArtistSelect()
@@ -93,8 +98,26 @@ class ExistingArtistControllerTest extends WebTestCase
         $this->assertEquals(1, $crawler->filter('html:contains("First name:")')->count());
 
         $form = $crawler->selectButton('Edit artist')->form();
+        $form['artist[inShow]']->tick();
         $crawler = $this->client->submit($form);
 
         $this->assertEquals(1, $crawler->filter('html:contains("Benny Borko updated!")')->count());
+
+        $crawler = $this->client->request('GET', '/artist/existing');
+
+        $this->assertGreaterThan(0,
+            $crawler->filter('html:contains("All artists are participating in the show")')->count());
+
+        $crawler = $this->client->request('GET', '/artist/edit');
+        $form = $crawler->selectButton('Select')->form();
+        $form['select_artist[artist]']->select(1);
+        $crawler = $this->client->submit($form);
+        $form = $crawler->selectButton('Edit artist')->form();
+        $form['artist[inShow]']->untick();
+        $crawler = $this->client->submit($form);
+        $crawler = $this->client->request('GET', '/artist/existing');
+        
+        $this->assertGreaterThan(0,
+            $crawler->filter('html:contains("Borko, Benny")')->count());
     }
 }

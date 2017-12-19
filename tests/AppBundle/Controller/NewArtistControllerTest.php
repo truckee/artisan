@@ -25,7 +25,7 @@ class NewArtistControllerTest extends WebTestCase
             'AppBundle\DataFixtures\Test\UsersFixture',
             'AppBundle\DataFixtures\Test\DefaultShowFixture',
         ]);
-//        file_put_contents("G:\\Documents\\response.html", $this->client->getResponse()->getContent());
+    //        file_put_contents("G:\\Documents\\response.html", $this->client->getResponse()->getContent());
     }
 
     public function login()
@@ -68,6 +68,7 @@ class NewArtistControllerTest extends WebTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Add artist")')->count());
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Artisan Show 2017")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("In show?")')->count());
 
         $form = $crawler->selectButton('Add artist')->form();
         $form['artist[firstName]'] = 'Benny';

@@ -120,4 +120,11 @@ class NoDefaultShowTest extends WebTestCase
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("UUFNN Artisan Show Management")')->count());
     }
+
+    public function testNewArtistNoShow()
+    {
+        $crawler = $this->client->request('GET', '/artist/new');
+
+        $this->assertEquals(0, $crawler->filter('html:contains("In show?")')->count());
+    }
 }

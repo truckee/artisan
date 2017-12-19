@@ -27,6 +27,8 @@ class DefaultShowFixture extends AbstractFixture implements OrderedFixtureInterf
     {
         $show = new Show();
         $show->setShow('Artisan Show 2017');
+        $show->setTax(0.1);
+        $show->setPercent(0.5);
         $show->setDefault(true);
         $manager->persist($show);
         $this->setReference('show', $show);

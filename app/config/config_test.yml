@@ -21,4 +21,5 @@ doctrine:
         path: '%kernel.project_dir%/var/cache/test/sqlite.db'
         charset: UTF8
 
-liip_functional_test: ~
+liip_functional_test:
+    cache_sqlite_db: true

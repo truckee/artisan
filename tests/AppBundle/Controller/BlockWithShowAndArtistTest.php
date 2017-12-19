@@ -61,8 +61,49 @@ class BlockWithShowAndArtistTest extends WebTestCase
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/block/new');
 
-        $this->assertGreaterThan(0,
-            $crawler->filter('html:contains("Select artist for block")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Select artist for block")')->count());
+
+        $form = $crawler->selectButton('Select')->form();
+        $form['select_artist[artist]']->select(1);
+        $crawler = $this->client->submit($form);
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Add block for Benny")')->count());
+
+        $form = $crawler->selectButton('Add')->form();
+        $form['block[lower]'] = 1000;
+        $form['block[upper]'] = 1050;
+        $crawler = $this->client->submit($form);
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Block added")')->count());
+
+        $crawler = $this->client->request('GET', '/block/byBlock');
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("1050")')->count());
+    }
+
+    public function testSelectAndEditBlock()
+    {
+        $crawler = $this->login();
+        $crawler = $this->client->request('GET', '/block/edit');
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Select artist for block edit")')->count());
+
+        $form = $crawler->selectButton('Select')->form();
+        $form['select_artist[artist]']->select(1);
+        $crawler = $this->client->submit($form);
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Select block for Benny")')->count());
+
+        $form = $crawler->selectButton('Select')->form();
+        $form['select_block[block]']->select(1);
+        $crawler = $this->client->submit($form);
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Edit block")')->count());
+
+        $form = $crawler->selectButton('Edit')->form();
+        $crawler = $this->client->submit($form);
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Block updated")')->count());
     }
 
     public function testNewBlockForArtist()
@@ -112,5 +153,13 @@ class BlockWithShowAndArtistTest extends WebTestCase
         $crawler = $this->client->request('GET', '/receipt/findTicket/1');
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Benny Borko")')->count());
+    }
+
+    public function testBlockByArtist()
+    {
+        $crawler = $this->login();
+        $crawler = $this->client->request('GET', '/block/byArtist');
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Borko, Benny")')->count());
     }
 }
