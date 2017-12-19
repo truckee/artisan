@@ -45,8 +45,8 @@ class Ticket
     
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Type(type="float", message = "Must be a number")
      * @Assert\GreaterThan(value = 0, message = "Must be > 0")
-     * @Assert\NotBlank(message = "May not be empty")
      * @AppAssert\TicketUsed(groups={"Default"})
      * @AppAssert\TicketExists(groups={"Default", "edit"})
      */
@@ -111,8 +111,8 @@ class Ticket
 
     /**
      * @ORM\Column(type="decimal", precision=8, scale=2)
-     * @Assert\GreaterThan(value = 0, message = "Must be > 0")
      * @Assert\NotBlank(message = "May not be empty")
+     * @Assert\Type(type="float", message = "Must be a number")
      */
     private $amount;
 

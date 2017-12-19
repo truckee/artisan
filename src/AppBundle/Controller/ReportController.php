@@ -1,9 +1,9 @@
 <?php
 /*
  * This file is part of the UUFNN Artisan package.
- * 
+ *
  * (c) UUFNN
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -59,11 +59,12 @@ class ReportController extends Controller
         }
         $summary = $em->getRepository('AppBundle:Show')->getShowSummary($show);
 
-        return $this->render('Show/showSummary.html.twig',
+        return $this->render(
+            'Show/showSummary.html.twig',
                 [
                     'artists' => $summary,
                     'show' => $show,
-        ]);
+        ]
+        );
     }
-    
 }

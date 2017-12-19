@@ -29,13 +29,18 @@ class ShowType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('show', TextType::class)
+            ->add('show', TextType::class, [
+                'label' => 'Show',
+                'label_attr' => ['style' => 'color: red;'],
+                ])
             ->add('tax', PercentType::class, [
                 'label' => 'Local tax rate',
+                'label_attr' => ['style' => 'color: red;'],
                 'scale' => 3
                 ])
             ->add('percent', PercentType::class, [
                 'label' => 'UUFNN percentage',
+                'label_attr' => ['style' => 'color: red;'],
                 'scale' => 1
                 ])
             ->add('default', CheckboxType::class, [

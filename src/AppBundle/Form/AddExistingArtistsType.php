@@ -1,9 +1,9 @@
 <?php
 /*
  * This file is part of the UUFNN Artisan package.
- * 
+ *
  * (c) UUFNN
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -26,26 +26,31 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class AddExistingArtistsType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $show = $options['show'];
         $qbA = $options['query_bulider'];
-        $builder->add('artists', EntityType::class,
+        $builder->add(
+            'artists',
+            EntityType::class,
                 [
                     'class' => Artist::class,
-                    'choice_label' => function($artist, $key, $index) {
+                    'choice_label' => function ($artist, $key, $index) {
                         return $artist->getLastName() . ', ' . $artist->getFirstName();
                     },
                     'query_builder' => $qbA,
                     'expanded' => true,
                     'multiple' => true,
-            ])
-            ->add('save', SubmitType::class,
+            ]
+        )
+            ->add(
+                'save',
+                SubmitType::class,
                 array(
                     'label' => 'Add artist(s)',
                     'label_format' => ['class' => 'text-bold']
-        ));
+        )
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)

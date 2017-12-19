@@ -29,15 +29,22 @@ class TicketType extends AbstractType
     {
         $builder
             ->add('ticket', TextType::class, [
-            ])
+                'label' => 'Ticket',
+                'label_attr' => ['style' => 'color: red;'],
+                ])
             ->add('amount', NumberType::class, [
+                'label' => 'Amount',
+                'label_attr' => ['style' => 'color: red;'],
                 'scale' => 2,
             ])
-            ->add('artist', TextType::class,
+            ->add(
+                'artist',
+                TextType::class,
                 [
                 'mapped' => false,
                 'disabled' => true,
-            ])
+            ]
+            )
 //            ->add('save', SubmitType::class,
 //                [
 //                'label' => 'Save',

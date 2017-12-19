@@ -1,9 +1,9 @@
 <?php
 /*
  * This file is part of the UUFNN Artisan package.
- * 
+ *
  * (c) UUFNN
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -25,28 +25,33 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class SelectShowType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $target = $options['target'];
         $builder
-            ->add('show', EntityType::class,
+            ->add(
+                'show',
+                EntityType::class,
                 [
                     'class' => 'AppBundle:Show',
                     'label' => false,
-                    'choice_label' => function($show, $key, $index) {
+                    'choice_label' => function ($show, $key, $index) {
                         return $show->getShow();
                     },
                     'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('s')
                             ->orderBy('s.show', 'ASC');
                     }
-            ])
-            ->add('save', SubmitType::class,
+            ]
+            )
+            ->add(
+                'save',
+                SubmitType::class,
                 array(
                     'label' => 'Select',
                     'label_format' => ['class' => 'text-bold']
-        ));
+        )
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)

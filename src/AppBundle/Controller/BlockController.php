@@ -1,9 +1,9 @@
 <?php
 /*
  * This file is part of the UUFNN Artisan package.
- * 
+ *
  * (c) UUFNN
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -62,12 +62,14 @@ class BlockController extends Controller
             $flash->error($form->getErrors());
         }
 
-        return $this->render('Block/blockForm.html.twig',
+        return $this->render(
+            'Block/blockForm.html.twig',
                 [
                     'form' => $form->createView(),
                     'artist' => $artist,
                     'action' => 'Add'
-        ]);
+        ]
+        );
     }
 
     /**
@@ -90,11 +92,13 @@ class BlockController extends Controller
         $em = $this->getDoctrine()->getManager();
         $artist = $em->getRepository('AppBundle:Artist')->find($id);
         if (null === $blockId) {
-            return $this->redirectToRoute('block_select',
+            return $this->redirectToRoute(
+                'block_select',
                     [
                         'artist' => $id,
                         'show' => $show->getId(),
-            ]);
+            ]
+            );
         }
         $block = $em->getRepository('AppBundle:Block')->find($blockId);
         $form = $this->createForm(BlockType::class, $block, [
@@ -111,13 +115,15 @@ class BlockController extends Controller
             $flash->error($form->getErrors());
         }
 
-        return $this->render('Block/blockForm.html.twig',
+        return $this->render(
+            'Block/blockForm.html.twig',
                 [
                     'form' => $form->createView(),
                     'block' => $block,
                     'artist' => $artist,
                     'action' => 'Edit',
-        ]);
+        ]
+        );
     }
 
     /**
@@ -127,10 +133,13 @@ class BlockController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $owner = $em->getRepository('AppBundle:Artist')->find($artist);
-        $form = $this->createForm(SelectBlockType::class, null,
+        $form = $this->createForm(
+            SelectBlockType::class,
+            null,
             [
                 'artist' => $artist,
-        ]);
+        ]
+        );
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $id = $request->request->get('select_block')['block'];
@@ -138,11 +147,13 @@ class BlockController extends Controller
             return $this->redirectToRoute('block_edit', ['id' => $artist, 'blockId' => $id]);
         }
 
-        return $this->render('default/selectEntity.html.twig',
+        return $this->render(
+            'default/selectEntity.html.twig',
                 [
                     'form' => $form->createView(),
                     'heading' => 'Select block for ' . $owner->getFirstName() . ' ' . $owner->getLastName(),
-        ]);
+        ]
+        );
     }
 
     /**
@@ -154,11 +165,13 @@ class BlockController extends Controller
         $em = $this->getDoctrine()->getManager();
         $blocks = $em->getRepository('AppBundle:Block')->getBlocksByArtists($show);
 
-        return $this->render('Block/blocksByArtists.html.twig',
+        return $this->render(
+            'Block/blocksByArtists.html.twig',
                 [
                 'blocks' => $blocks,
                 'show' => $show,
-        ]);
+        ]
+        );
     }
 
     /**
@@ -170,10 +183,12 @@ class BlockController extends Controller
         $em = $this->getDoctrine()->getManager();
         $blocks = $em->getRepository('AppBundle:Block')->getBlocksByBlock($show);
 
-        return $this->render('Block/blocksByBlock.html.twig',
+        return $this->render(
+            'Block/blocksByBlock.html.twig',
                 [
                 'blocks' => $blocks,
                 'show' => $show,
-        ]);
+        ]
+        );
     }
 }

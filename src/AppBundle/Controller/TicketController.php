@@ -1,9 +1,9 @@
 <?php
 /*
  * This file is part of the UUFNN Artisan package.
- * 
+ *
  * (c) UUFNN
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -34,15 +34,15 @@ class TicketController extends Controller
         $flash = $this->get('braincrafted_bootstrap.flash');
         $em = $this->getDoctrine()->getManager();
         $ticket = $em->getRepository('AppBundle:Ticket')->find($id);
-        $form = $this->createForm(TicketType::class, $ticket,[
+        $form = $this->createForm(TicketType::class, $ticket, [
             'validation_groups' => ['edit'],
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton() && 'delete' === $form->getClickedButton()->getName()) {
                 $flash->danger('delete');
-            }  else {
-            $flash->success('valid');
+            } else {
+                $flash->success('valid');
             }
             $em->persist($ticket);
             $em->flush();

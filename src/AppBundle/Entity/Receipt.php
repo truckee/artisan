@@ -25,7 +25,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Receipt
 {
-
     public function __construct()
     {
         $this->tickets = new ArrayCollection();

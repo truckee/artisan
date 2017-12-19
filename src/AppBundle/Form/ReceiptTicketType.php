@@ -41,7 +41,7 @@ class ReceiptTicketType extends AbstractType
                 'data' => $options['next'],
                 'label' => false,
                 ])
-            ->add('tickets', CollectionType::class,[
+            ->add('tickets', CollectionType::class, [
                 'label' => false,
                 'entry_type'   => TicketType::class,
                 'allow_add' => true,

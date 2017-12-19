@@ -1,9 +1,9 @@
 <?php
 /*
  * This file is part of the UUFNN Artisan package.
- * 
+ *
  * (c) UUFNN
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -24,18 +24,25 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 class BlockType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('lower', TextType::class,
+            ->add(
+                'lower',
+                TextType::class,
                 [
                     'label' => 'Lower end',
-            ])
-            ->add('upper', TextType::class,
+                    'label_attr' => ['style' => 'color: red;']
+            ]
+            )
+            ->add(
+                'upper',
+                TextType::class,
                 [
-                'label' => 'Upper end'
-            ])
+                    'label' => 'Upper end',
+                    'label_attr' => ['style' => 'color: red;']
+            ]
+            )
             ->add('save', SubmitType::class, [
                 'label' => false,
             ])

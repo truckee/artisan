@@ -82,11 +82,13 @@ class ShowController extends Controller
             }
         }
 
-        return $this->render('default/selectEntity.html.twig',
+        return $this->render(
+            'default/selectEntity.html.twig',
                 [
                     'form' => $form->createView(),
                     'heading' => 'Select show',
-        ]);
+        ]
+        );
     }
 
     /**
@@ -119,11 +121,13 @@ class ShowController extends Controller
             return $this->redirectToRoute("homepage");
         }
 
-        return $this->render('Show/showForm.html.twig',
+        return $this->render(
+            'Show/showForm.html.twig',
                 [
                     'form' => $form->createView(),
                     'show' => $show,
                     'action' => 'Edit show'
-        ]);
+        ]
+        );
     }
 }

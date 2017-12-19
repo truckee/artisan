@@ -9,7 +9,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ArtistType extends AbstractType
@@ -24,9 +23,11 @@ class ArtistType extends AbstractType
         $builder
             ->add('firstName', TextType::class, [
                 'label' => 'First name:',
-            ])
+                'label_attr' => ['style' => 'color: red;']
+                ])
             ->add('lastName', TextType::class, [
                 'label' => 'Last name:',
+                'label_attr' => ['style' => 'color: red;']
             ])
             ->add('address', TextType::class, [
                 'label' => 'Address:',
@@ -61,27 +62,35 @@ class ArtistType extends AbstractType
             ->add('tax_form', CheckboxType::class, [
                 'label' => false,
             ])
-            ->add('save', SubmitType::class,
+            ->add(
+                'save',
+                SubmitType::class,
                 array(
                     'label' => false,
                     'label_format' => ['class' => 'text-bold']
-        ));
+        )
+            );
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use($show, $options) {
-            $artist = $event->getData();
-            $form = $event->getForm();
-            $em = $options['entity_manager'];
-            $isInShow = (null !== $artist->getId()) ? $em->getRepository('AppBundle:Artist')->isArtistInShow($show, $artist) : false;
-            if (null !== $show) {
-                $form->add('inShow', CheckboxType::class,
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use ($show, $options) {
+                $artist = $event->getData();
+                $form = $event->getForm();
+                $em = $options['entity_manager'];
+                $isInShow = (null !== $artist->getId()) ? $em->getRepository('AppBundle:Artist')->isArtistInShow($show, $artist) : false;
+                if (null !== $show) {
+                    $form->add(
+                    'inShow',
+                    CheckboxType::class,
                     [
                         'label' => false,
                         'data' => $isInShow,
                         'mapped' => false
-                ]);
+                ]
+                );
+                }
             }
-        });
+        );
     }
 
     /**

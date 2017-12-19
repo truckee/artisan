@@ -40,12 +40,15 @@ class ArtistController extends Controller
         $artist = new Artist();
         $flash = $this->get('braincrafted_bootstrap.flash');
         $em = $this->getDoctrine()->getManager();
-        $form = $this->createForm(ArtistType::class, $artist,
+        $form = $this->createForm(
+            ArtistType::class,
+            $artist,
             [
                 'show' => $show,
                 'entity_manager' => $em,
                 'validation_groups' => ['add'],
-        ]);
+        ]
+        );
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $inShow = ($form->has('inShow')) ? $form->get('inShow')->getData() : null;
@@ -85,11 +88,14 @@ class ArtistController extends Controller
 
             return $this->redirectToRoute('homepage');
         }
-        $form = $this->createForm(AddExistingArtistsType::class, $show,
+        $form = $this->createForm(
+            AddExistingArtistsType::class,
+            $show,
             [
                 'show' => $show,
                 'query_bulider' => $someNotInShow,
-        ]);
+        ]
+        );
         if (is_null($show)) {
             $flash->error('Create a default show before adding an artist!');
 
@@ -139,7 +145,7 @@ class ArtistController extends Controller
                     return $this->redirectToRoute('artist_edit', ['id' => $id]);
                 case 'block':
                     return $this->redirectToRoute('block_add', ['id' => $id]);
-                case 'tickets';
+                case 'tickets':
                     return $this->redirectToRoute('single_artist_tickets', ['id' => $id]);
                 case 'block edit':
                     return $this->redirectToRoute('block_edit', ['id' => $id]);
@@ -148,12 +154,14 @@ class ArtistController extends Controller
             }
         }
 
-        return $this->render('default/selectEntity.html.twig',
+        return $this->render(
+            'default/selectEntity.html.twig',
                 [
                     'form' => $form->createView(),
                     'artist' => $artist,
                     'heading' => 'Select artist for ' . $target,
-        ]);
+        ]
+        );
     }
 
     /**
@@ -168,12 +176,15 @@ class ArtistController extends Controller
             return $this->redirectToRoute('artist_select', ['target' => 'edit']);
         }
         $show = $defaults->showDefault();
-        $form = $this->createForm(ArtistType::class, $artist,
+        $form = $this->createForm(
+            ArtistType::class,
+            $artist,
             [
                 'show' => $show,
                 'entity_manager' => $em,
                 'validation_groups' => ['edit'],
-        ]);
+        ]
+        );
         $flash = $this->get('braincrafted_bootstrap.flash');
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -193,12 +204,14 @@ class ArtistController extends Controller
             $flash->error($form->getErrors());
         }
 
-        return $this->render('Artist/artistForm.html.twig',
+        return $this->render(
+            'Artist/artistForm.html.twig',
                 [
                     'form' => $form->createView(),
                     'artist' => $artist,
                     'action' => 'Edit artist',
-        ]);
+        ]
+        );
     }
 
     /**
@@ -215,11 +228,13 @@ class ArtistController extends Controller
             return $this->redirectToRoute('artist_select', ['target' => 'tickets']);
         }
 
-        return $this->render('Artist/singleArtistTickets.html.twig',
+        return $this->render(
+            'Artist/singleArtistTickets.html.twig',
                 [
                     'artist' => $artist,
                     'tickets' => $tickets,
                     'show' => $show,
-        ]);
+        ]
+        );
     }
 }

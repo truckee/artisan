@@ -1,9 +1,9 @@
 <?php
 /*
  * This file is part of the UUFNN Artisan package.
- * 
+ *
  * (c) UUFNN
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -26,33 +26,38 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class SelectReceiptType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $show = $options['show'];
         $builder
-            ->add('receipt', EntityType::class,
+            ->add(
+                'receipt',
+                EntityType::class,
                 [
                     'class' => 'AppBundle:Receipt',
                     'label' => false,
-                    'choice_label' => function($receipt, $key, $index) {
+                    'choice_label' => function ($receipt, $key, $index) {
                         return $receipt->getReceiptNo();
                     },
                     'choice_value' => function (Receipt $receipt = null) {
                         return $receipt ? $receipt->getReceiptNo() : '';
                     }, 'mapped' => false,
-                    'query_builder' => function (EntityRepository $er) use($show) {
+                    'query_builder' => function (EntityRepository $er) use ($show) {
                         return $er->createQueryBuilder('r')
                             ->where('r.show = :show')
                             ->setParameter(':show', $show)
                             ->orderBy('r.receiptNo', 'ASC');
                     }
-            ])
-            ->add('save', SubmitType::class,
+            ]
+            )
+            ->add(
+                'save',
+                SubmitType::class,
                 array(
                     'label' => 'Edit',
                     'label_format' => ['class' => 'text-bold']
-        ));
+        )
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)

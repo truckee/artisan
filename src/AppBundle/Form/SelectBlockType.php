@@ -1,9 +1,9 @@
 <?php
 /*
  * This file is part of the UUFNN Artisan package.
- * 
+ *
  * (c) UUFNN
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -38,14 +38,16 @@ class SelectBlockType extends AbstractType
         $artist = $options['artist'];
         $show = $this->show;
         $builder
-            ->add('block', EntityType::class,
+            ->add(
+                'block',
+                EntityType::class,
                 [
                     'class' => 'AppBundle:Block',
                     'label' => false,
-                    'choice_label' => function($block, $key, $index) {
+                    'choice_label' => function ($block, $key, $index) {
                         return $block->getLower() . ' to ' . $block->getUpper();
                     },
-                    'query_builder' => function (EntityRepository $er) use($artist, $show) {
+                    'query_builder' => function (EntityRepository $er) use ($artist, $show) {
                         return $er->createQueryBuilder('b')
                             ->where('b.artist = :artist')
                             ->andWhere('b.show = :show')
@@ -54,12 +56,16 @@ class SelectBlockType extends AbstractType
                             ->orderBy('b.lower', 'ASC');
                     },
                     'mapped' => false,
-            ])
-            ->add('save', SubmitType::class,
+            ]
+            )
+            ->add(
+                'save',
+                SubmitType::class,
                 array(
                     'label' => 'Select',
                     'label_format' => ['class' => 'text-bold']
-        ));
+        )
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)
