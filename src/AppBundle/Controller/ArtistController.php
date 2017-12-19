@@ -117,8 +117,9 @@ class ArtistController extends Controller
         }
 
         return $this->render(
-                'Artist/existingArtist.html.twig', [
-                    'form' => $form->createView(),
+                'Artist/existingArtist.html.twig',
+                [
+                'form' => $form->createView(),
                 ]
         );
     }
@@ -219,18 +220,20 @@ class ArtistController extends Controller
      */
     public function viewSingleArtistTickets(Request $request, Defaults $defaults, $id = null)
     {
+        $show = $defaults->showDefault();
         if (null !== $id) {
             $em = $this->getDoctrine()->getManager();
             $artist = $em->getRepository('AppBundle:Artist')->find($id);
+            $tickets = $em->getRepository('AppBundle:Show')->getSingleArtist($show, $artist);
         } else {
             return $this->redirectToRoute('artist_select', ['target' => 'tickets']);
         }
-        $show = $defaults->showDefault();
 
         return $this->render('Artist/singleArtistTickets.html.twig',
                 [
-                'artist' => $artist,
-                'show' => $show,
+                    'artist' => $artist,
+                    'tickets' => $tickets,
+                    'show' => $show,
         ]);
     }
 }

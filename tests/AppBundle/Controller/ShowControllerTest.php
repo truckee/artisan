@@ -49,7 +49,7 @@ class ShowControllerTest extends WebTestCase
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $form = $crawler->selectButton('Edit')->form();
+        $form = $crawler->selectButton('Select')->form();
         $form['select_show[show]']->select(1);
         $crawler = $this->client->submit($form);
 
