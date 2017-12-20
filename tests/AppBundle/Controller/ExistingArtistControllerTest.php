@@ -28,7 +28,7 @@ class ExistingArtistControllerTest extends WebTestCase
         $this->fixtures = $this->loadFixtures([
             'AppBundle\DataFixtures\Test\UsersFixture',
             'AppBundle\DataFixtures\Test\DefaultShowFixture',
-            'AppBundle\DataFixtures\Test\OneArtistFixture',
+            'AppBundle\DataFixtures\Test\TwoArtistFixture',
         ]);
     }
 
@@ -48,7 +48,7 @@ class ExistingArtistControllerTest extends WebTestCase
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/artist/existing');
 
-        $this->assertEquals(1, $crawler->filter('html:contains("Benny")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("Al")')->count());
 
         $form = $crawler->selectButton('Add artist(s)')->form();
         $form['show_artists[artists][0]']->tick();
@@ -62,7 +62,7 @@ class ExistingArtistControllerTest extends WebTestCase
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/artist/existing');
 
-        $this->assertEquals(1, $crawler->filter('html:contains("Benny")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("Al")')->count());
 
         $form = $crawler->selectButton('Add artist(s)')->form();
         $form['show_artists[artists][0]']->tick();
@@ -103,10 +103,10 @@ class ExistingArtistControllerTest extends WebTestCase
 
         $this->assertEquals(1, $crawler->filter('html:contains("Benny Borko updated!")')->count());
 
-        $crawler = $this->client->request('GET', '/artist/existing');
+        $crawler = $this->client->request('GET', '/artist/view');
 
         $this->assertGreaterThan(0,
-            $crawler->filter('html:contains("All artists are participating in the show")')->count());
+            $crawler->filter('html:contains("Borko, Benny")')->count());
 
         $crawler = $this->client->request('GET', '/artist/edit');
         $form = $crawler->selectButton('Select')->form();
@@ -115,9 +115,9 @@ class ExistingArtistControllerTest extends WebTestCase
         $form = $crawler->selectButton('Edit artist')->form();
         $form['artist[inShow]']->untick();
         $crawler = $this->client->submit($form);
-        $crawler = $this->client->request('GET', '/artist/existing');
+        $crawler = $this->client->request('GET', '/artist/view');
         
-        $this->assertGreaterThan(0,
+        $this->assertEquals(0,
             $crawler->filter('html:contains("Borko, Benny")')->count());
     }
 }

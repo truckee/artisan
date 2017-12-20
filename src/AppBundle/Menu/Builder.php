@@ -29,21 +29,21 @@ class Builder implements ContainerAwareInterface
         $menu->addChild('Home', array('route' => 'homepage'));
 
         $menu->addChild('Receipt');
-        $menu['Receipt']->addChild('Add', [
+        $menu['Receipt']->addChild('Add receipt', [
             'route' => 'receipt_add'
         ]);
-        $menu['Receipt']->addChild('Edit', [
+        $menu['Receipt']->addChild('Edit receipt', [
             'route' => 'receipt_edit'
         ]);
 
         $menu->addChild('Artist');
-        $menu['Artist']->addChild('Add', [
+        $menu['Artist']->addChild('Add artist', [
             'route' => 'artist_add'
         ]);
-        $menu['Artist']->addChild('Edit', [
+        $menu['Artist']->addChild('Edit artist', [
             'route' => 'artist_edit'
         ]);
-        $menu['Artist']->addChild('Add existing', [
+        $menu['Artist']->addChild('Add existing to show', [
             'route' => 'existing_artists'
         ]);
 
@@ -57,10 +57,10 @@ class Builder implements ContainerAwareInterface
 
 
         $menu->addChild('Show');
-        $menu['Show']->addChild('Add', [
+        $menu['Show']->addChild('Add show', [
             'route' => 'show_add'
         ]);
-        $menu['Show']->addChild('Edit', [
+        $menu['Show']->addChild('Edit show', [
             'route' => 'show_edit'
         ]);
 

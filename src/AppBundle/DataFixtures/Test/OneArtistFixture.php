@@ -29,6 +29,8 @@ class OneArtistFixture extends AbstractFixture implements OrderedFixtureInterfac
         $artist->setFirstName('Benny');
         $artist->setLastName('Borko');
         $this->setReference('artist', $artist);
+        $show = $this->getReference('show');
+        $artist->addShow($show);
         $manager->persist($artist);
 
         $manager->flush();
