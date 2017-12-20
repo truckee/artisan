@@ -146,7 +146,7 @@ class ArtistController extends Controller
                 case 'tickets':
                     return $this->redirectToRoute('single_artist_tickets', ['id' => $id]);
                 case 'block edit':
-                    return $this->redirectToRoute('block_edit', ['id' => $id]);
+                    return $this->redirectToRoute('block_select', ['id' => $id]);
                 default:
                     break;
             }
@@ -214,7 +214,7 @@ class ArtistController extends Controller
     /**
      * @Route("/tickets/{id}", name="single_artist_tickets")
      */
-    public function viewSingleArtistTickets(Request $request, Defaults $defaults, $id = null)
+    public function viewSingleArtistTickets(Defaults $defaults, $id = null)
     {
         $show = $defaults->showDefault();
         if (null !== $id) {
@@ -233,5 +233,19 @@ class ArtistController extends Controller
                     'show' => $show,
         ]
         );
+    }
+
+    /**
+     * @Route("/view", name="view_artists")
+     */
+    public function viewArtistsAction(Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $em = $this->getDoctrine()->getManager();
+        $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
+
+        return $this->render('Artist/inShow.html.twig', [
+            'artists' => $artists,
+        ]);
     }
 }
