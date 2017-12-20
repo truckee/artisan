@@ -13,6 +13,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Artist;
+use AppBundle\Services\Defaults;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -26,9 +27,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ShowArtistsType extends AbstractType
 {
+    private $show;
+
+    public function __construct(Defaults $defaults)
+    {
+        $this->show = $defaults->showDefault();
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $show = $options['show'];
+        $show = $this->show;
         $builder->add(
             'artists',
             EntityType::class,

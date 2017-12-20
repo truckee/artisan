@@ -28,33 +28,31 @@ class TicketType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('ticket', TextType::class, [
+            ->add(
+                'ticket',
+                TextType::class,
+                [
                 'label' => 'Ticket',
                 'label_attr' => ['style' => 'color: red;'],
-                ])
-            ->add('amount', NumberType::class, [
+            ]
+            )
+            ->add(
+                'amount',
+                NumberType::class,
+                [
                 'label' => 'Amount',
                 'label_attr' => ['style' => 'color: red;'],
                 'scale' => 2,
-            ])
+            ]
+            )
             ->add(
                 'artist',
                 TextType::class,
                 [
-                'mapped' => false,
-                'disabled' => true,
-            ]
+                    'mapped' => false,
+                    'disabled' => true,
+                ]
             )
-//            ->add('save', SubmitType::class,
-//                [
-//                'label' => 'Save',
-//                'attr' => ['class' => 'btn-sm btn-info']
-//            ])
-//            ->add('delete', SubmitType::class,
-//                [
-//                'label' => 'Delete',
-//                'attr' => ['class' => 'btn-sm btn-warning']
-//            ])
         ;
     }
 

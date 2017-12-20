@@ -116,7 +116,7 @@ class BlockController extends Controller
         }
 
         return $this->render(
-            'Block/blockForm.html.twig',
+            'Block/editBlock.html.twig',
                 [
                     'form' => $form->createView(),
                     'block' => $block,
@@ -127,9 +127,9 @@ class BlockController extends Controller
     }
 
     /**
-     * @Route("/select/{artist}/{show}", name="block_select")
+     * @Route("/select/{artist}", name="block_select")
      */
-    public function selectBlockAction(Request $request, $artist, $show)
+    public function selectBlockAction(Request $request, $artist)
     {
         $em = $this->getDoctrine()->getManager();
         $owner = $em->getRepository('AppBundle:Artist')->find($artist);
@@ -190,5 +190,31 @@ class BlockController extends Controller
                 'show' => $show,
         ]
         );
+    }
+
+    /**
+     * @Route("/delete/{id}", name="block_delete")
+     */
+    public function deleteBlockAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $block = $em->getRepository('AppBundle:Block')->find($id);
+        $form = $this->createForm(BlockType::class, $block);
+        $form->handleRequest($request);
+        if ($request->isMethod('POST')) {
+            $artist = $block->getArtist();
+            $artist->removeBlock($block);
+            $em->persist($artist);
+            $em->flush();
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            $flash->success('Block deleted!');
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('Block/deleteBlock.html.twig', [
+            'block' => $block,
+            'form' => $form->createView(),
+            ]);
     }
 }

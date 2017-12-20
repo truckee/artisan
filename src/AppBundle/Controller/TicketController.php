@@ -71,11 +71,9 @@ class TicketController extends Controller
         }
         $form = $this->createForm(TicketType::class, $ticket);
         $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
         if ($request->isMethod('POST')) {
             $artist = $ticket->getArtist();
             $artist->removeTicket($ticket);
-//            $em->remove($artist);
             $em->persist($artist);
             $em->flush();
             $flash->alert('Ticket has been deleted');

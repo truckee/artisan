@@ -116,17 +116,23 @@ class ReceiptController extends Controller
     }
 
     /**
-     * @Route("/select", name="receipt_select")
+     * @Route("/select/{target}", name="receipt_select")
      */
-    public function selectReceipt(Request $request, Defaults $defaults)
+    public function selectReceipt(Request $request, Defaults $defaults, $target)
     {
         $show = $defaults->showDefault();
-        $form = $this->createForm(SelectReceiptType::class, null, ['show' => $show]);
+        $form = $this->createForm(SelectReceiptType::class, null, ['target' => $target]);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $id = $request->request->get('select_receipt')['receipt'];
-
-            return $this->redirectToRoute('receipt_edit', ['id' => $id]);
+            switch ($target) {
+                case 'edit':
+                    return $this->redirectToRoute('receipt_edit', ['id' => $id]);
+                case 'single':
+                    return $this->redirectToRoute('view_single_receipt', ['id' => $id]);
+                default:
+                    break;
+            }
         }
 
         return $this->render('default/selectEntity.html.twig', [
@@ -147,17 +153,32 @@ class ReceiptController extends Controller
 
             return $this->redirectToRoute("homepage");
         }
-        if (null !== $id) {
-            $em = $this->getDoctrine()->getManager();
-            $artist = $em->getRepository('AppBundle:Receipt')->find($id);
-        } else {
-            return $this->redirectToRoute('receipt_select');
+        if (null === $id) {
+            return $this->redirectToRoute('receipt_select', ['target' => 'edit']);
         }
         $em = $this->getDoctrine()->getManager();
         $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['receiptNo' => $id]);
 
         return $this->render('Receipt/editReceipt.html.twig', [
             'receipt' => $receipt,
+        ]);
+    }
+
+    /**
+     * @Route("/viewSingleReceipt/{id}", name="view_single_receipt")
+     */
+    public function viewSingleReceiptAction(Request $request, Defaults $defaults, $id = null)
+    {
+        $show = $defaults->showDefault();
+        if (null === $id) {
+            return $this->redirectToRoute('receipt_select', ['target' => 'single']);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['receiptNo' => $id]);
+
+        return $this->render('Receipt/viewSingleReceipt.html.twig', [
+            'receipt' => $receipt,
+            'show' => $show,
         ]);
     }
 }

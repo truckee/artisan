@@ -44,7 +44,6 @@ class ArtistController extends Controller
             ArtistType::class,
             $artist,
             [
-                'show' => $show,
                 'entity_manager' => $em,
                 'validation_groups' => ['add'],
         ]
@@ -92,7 +91,6 @@ class ArtistController extends Controller
             AddExistingArtistsType::class,
             $show,
             [
-                'show' => $show,
                 'query_bulider' => $someNotInShow,
         ]
         );
@@ -180,7 +178,6 @@ class ArtistController extends Controller
             ArtistType::class,
             $artist,
             [
-                'show' => $show,
                 'entity_manager' => $em,
                 'validation_groups' => ['edit'],
         ]

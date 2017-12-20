@@ -13,6 +13,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Receipt;
+use AppBundle\Services\Defaults;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -26,9 +27,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class SelectReceiptType extends AbstractType
 {
+    private $show;
+
+    public function __construct(Defaults $defaults)
+    {
+        $this->show = $defaults->showDefault();
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $show = $options['show'];
+        $show = $this->show;
+        $target = $options['target'];
         $builder
             ->add(
                 'receipt',
@@ -65,7 +74,7 @@ class SelectReceiptType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Receipt',
             'required' => false,
-            'show' => null,
+            'target' => null,
         ));
     }
 }

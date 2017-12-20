@@ -13,7 +13,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Artist;
-use Doctrine\ORM\EntityRepository;
+use AppBundle\Services\Defaults;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -26,9 +26,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class AddExistingArtistsType extends AbstractType
 {
+    private $show;
+
+    public function __construct(Defaults $defaults)
+    {
+        $this->show = $defaults->showDefault();
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $show = $options['show'];
+        $show = $this->show;
         $qbA = $options['query_bulider'];
         $builder->add(
             'artists',
@@ -58,7 +65,6 @@ class AddExistingArtistsType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Show',
             'required' => false,
-            'show' => null,
             'query_bulider' => null,
         ));
     }

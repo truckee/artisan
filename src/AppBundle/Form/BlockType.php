@@ -33,7 +33,7 @@ class BlockType extends AbstractType
                 [
                     'label' => 'Lower end',
                     'label_attr' => ['style' => 'color: red;']
-            ]
+                ]
             )
             ->add(
                 'upper',
@@ -41,10 +41,11 @@ class BlockType extends AbstractType
                 [
                     'label' => 'Upper end',
                     'label_attr' => ['style' => 'color: red;']
-            ]
+                ]
             )
             ->add('save', SubmitType::class, [
-                'label' => false,
+                'label' => 'Save',
+                'attr' => ['class' => 'btn-sm ']
             ])
         ;
     }
@@ -54,7 +55,6 @@ class BlockType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Block',
             'required' => false,
-//            'validation_groups' => ['add'],
         ));
     }
 
