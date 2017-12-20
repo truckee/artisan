@@ -73,11 +73,11 @@ class BlockController extends Controller
     }
 
     /**
-     * @Route("/edit/{id}/{blockId}", name="block_edit")
+     * @Route("/edit/{id}", name="block_edit")
      * @param Request $request
      * @param Defaults $defaults
      */
-    public function editBlockAction(Request $request, Defaults $defaults, $id = null, $blockId = null)
+    public function editBlockAction(Request $request, Defaults $defaults, $id = null)
     {
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
@@ -90,19 +90,8 @@ class BlockController extends Controller
             return $this->redirectToRoute('artist_select', ['target' => 'block edit']);
         }
         $em = $this->getDoctrine()->getManager();
-        $artist = $em->getRepository('AppBundle:Artist')->find($id);
-        if (null === $blockId) {
-            return $this->redirectToRoute(
-                'block_select',
-                    [
-                        'artist' => $id,
-                        'show' => $show->getId(),
-            ]
-            );
-        }
-        $block = $em->getRepository('AppBundle:Block')->find($blockId);
-        $form = $this->createForm(BlockType::class, $block, [
-        ]);
+        $block = $em->getRepository('AppBundle:Block')->find($id);
+        $form = $this->createForm(BlockType::class, $block);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($block);
@@ -120,19 +109,19 @@ class BlockController extends Controller
                 [
                     'form' => $form->createView(),
                     'block' => $block,
-                    'artist' => $artist,
+//                    'artist' => $artist,
                     'action' => 'Edit',
         ]
         );
     }
 
     /**
-     * @Route("/select/{artist}", name="block_select")
+     * @Route("/select/{id}", name="block_select")
      */
-    public function selectBlockAction(Request $request, $artist)
+    public function selectBlockAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $owner = $em->getRepository('AppBundle:Artist')->find($artist);
+        $artist = $em->getRepository('AppBundle:Artist')->find($id);
         $form = $this->createForm(
             SelectBlockType::class,
             null,
@@ -144,14 +133,14 @@ class BlockController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $id = $request->request->get('select_block')['block'];
 
-            return $this->redirectToRoute('block_edit', ['id' => $artist, 'blockId' => $id]);
+            return $this->redirectToRoute('block_edit', ['id' => $id]);
         }
 
         return $this->render(
             'default/selectEntity.html.twig',
                 [
                     'form' => $form->createView(),
-                    'heading' => 'Select block for ' . $owner->getFirstName() . ' ' . $owner->getLastName(),
+                    'heading' => 'Select block for ' . $artist->getFirstName() . ' ' . $artist->getLastName(),
         ]
         );
     }

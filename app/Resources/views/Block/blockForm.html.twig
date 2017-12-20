@@ -8,20 +8,11 @@
                 <div class="panel-heading"><h4>{{ action }} block for {{ artist.firstName~' '~artist.lastName }}</h4></div>
                 <div class="panel-body">
                     {{ form_start(form) }}
-                    <div class="row">
-                        <div class="col-sm-12">
-                            {{ form_row(form.lower) }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            {{ form_row(form.upper) }}
-                        </div>
-                    </div>
+                    {%  include 'Block/blockRows.html.twig' %}
                     <div class="row">
                         <div class="col-sm-4"></div>
-                        <div class="col-sm-4">
-                            {{ form_row(form.save, {'label': action}) }}{{ form_rest(form) }}
+                        <div class="col-sm-4">{{ form_rest(form) }}
+                            <input type="submit" value="Save" class="btn-sm btn-info">
                         </div>
                     </div>
                 </div>

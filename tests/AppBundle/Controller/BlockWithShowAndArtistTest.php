@@ -51,7 +51,7 @@ class BlockWithShowAndArtistTest extends WebTestCase
         $artistId = $artist->getId();
         $block = $this->fixtures->getReference('block');
         $blockId = $block->getId();
-        $crawler = $this->client->request('GET', '/block/edit/' . $artistId . '/' . $blockId);
+        $crawler = $this->client->request('GET', '/block/edit/' . $blockId);
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Edit block for Benny")')->count());
     }
@@ -69,7 +69,7 @@ class BlockWithShowAndArtistTest extends WebTestCase
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Add block for Benny")')->count());
 
-        $form = $crawler->selectButton('Add')->form();
+        $form = $crawler->selectButton('Save')->form();
         $form['block[lower]'] = 1000;
         $form['block[upper]'] = 1050;
         $crawler = $this->client->submit($form);
@@ -100,7 +100,7 @@ class BlockWithShowAndArtistTest extends WebTestCase
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Edit block")')->count());
 
-        $form = $crawler->selectButton('Edit')->form();
+        $form = $crawler->selectButton('Save')->form();
         $crawler = $this->client->submit($form);
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Block updated")')->count());
@@ -122,7 +122,7 @@ class BlockWithShowAndArtistTest extends WebTestCase
         $artist = $this->fixtures->getReference('artist2');
         $artist2Id = $artist->getId();
         $crawler = $this->client->request('GET', '/block/new/' . $artist2Id);
-        $form = $crawler->selectButton('Add')->form();
+        $form = $crawler->selectButton('Save')->form();
         $form['block[lower]'] = 5;
         $form['block[upper]'] = 15;
         $crawler = $this->client->submit($form);
@@ -138,8 +138,8 @@ class BlockWithShowAndArtistTest extends WebTestCase
         $artistId = $artist->getId();
         $block = $this->fixtures->getReference('block');
         $blockId = $block->getId();
-        $crawler = $this->client->request('GET', '/block/edit/' . $artistId . '/' . $blockId);
-        $form = $crawler->selectButton('Edit')->form();
+        $crawler = $this->client->request('GET', '/block/edit/' . $blockId);
+        $form = $crawler->selectButton('Save')->form();
         $form['block[lower]'] = 5;
         $form['block[upper]'] = 10;
         $crawler = $this->client->submit($form);

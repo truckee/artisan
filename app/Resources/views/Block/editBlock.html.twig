@@ -1,0 +1,30 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <div class="row">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h4>Edit block for {{ block.artist.firstName~' '~block.artist.lastName }}</h4></div>
+                <div class="panel-body">
+                    <form action="{{ path('block_edit', { 'id': block.id }) }}" method="post">
+                    {%  include 'Block/blockRows.html.twig' %}
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <input type="submit" value="Save" class="btn-sm btn-info">
+                        </div>
+                        <div class="col-sm-3">
+                            <a class="btn-sm btn-warning" href="{{ path('block_delete', { 'id': block.id }) }}">Delete</a>
+                        </div>{{ form_rest(form) }}{{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+{%  block javascripts %}
+    {{ parent() }}
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script src="/js/ticketEdit.js"></script>
+    <script src="/js/project.js"></script>
+{%  endblock javascripts %}

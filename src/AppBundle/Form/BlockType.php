@@ -43,10 +43,6 @@ class BlockType extends AbstractType
                     'label_attr' => ['style' => 'color: red;']
                 ]
             )
-            ->add('save', SubmitType::class, [
-                'label' => 'Save',
-                'attr' => ['class' => 'btn-sm ']
-            ])
         ;
     }
 
