@@ -86,14 +86,11 @@ class ReceiptControllerTest extends WebTestCase
         $form = $crawler->selectButton('Edit')->form();
         $form['select_receipt[receipt]']->select(1125);
         $crawler = $this->client->submit($form);
-
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("50")')->count());
-
         $crawler = $this->client->request('GET', '/receipt/view');
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("$55")')->count());
 
-        $crawler = $this->client->request('GET', '/artist/tickets');
+        $crawler = $this->client->request('GET', '/reports/singleArtistTickets');
         $form = $crawler->selectButton('Select')->form();
         $form['select_artist[artist]']->select(1);
         $crawler = $this->client->submit($form);

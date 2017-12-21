@@ -35,7 +35,7 @@ class ReportController extends Controller
     /**
      * @Route("/artistsInShow", name="report_artists_in_show")
      */
-    public function viewShowArtists(Request $request, Defaults $defaults)
+    public function viewShowArtistsAction(Request $request, Defaults $defaults)
     {
         $show = $defaults->showDefault();
         $em = $this->getDoctrine()->getManager();
@@ -66,5 +66,115 @@ class ReportController extends Controller
                     'show' => $show,
         ]
         );
+    }
+
+    /**
+     * @Route("/blocksByArtist", name="blocks_by_artist")
+     */
+    public function showBlocksByArtistAction(Request $request, Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $em = $this->getDoctrine()->getManager();
+        $blocks = $em->getRepository('AppBundle:Block')->getBlocksByArtists($show);
+
+        return $this->render(
+            'Block/blocksByArtists.html.twig',
+                [
+                'blocks' => $blocks,
+                'show' => $show,
+        ]
+        );
+    }
+
+    /**
+     * @Route("/viewReceipts", name="receipt_view")
+     */
+    public function viewShowReceiptsAction(Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $em = $this->getDoctrine()->getManager();
+        $receipts = $em->getRepository('AppBundle:Receipt')->findBy(['show' => $show], ['receiptNo' => 'ASC']);
+
+        return $this->render('Receipt/viewShowReceipts.html.twig',
+                [
+                'receipts' => $receipts,
+                'show' => $show,
+        ]);
+    }
+
+    /**
+     * @Route("/singleArtistTickets/{id}", name="single_artist_tickets")
+     */
+    public function viewSingleArtistTicketsAction(Defaults $defaults, $id = null)
+    {
+        $show = $defaults->showDefault();
+        if (null !== $id) {
+            $em = $this->getDoctrine()->getManager();
+            $artist = $em->getRepository('AppBundle:Artist')->find($id);
+            $tickets = $em->getRepository('AppBundle:Show')->getSingleArtist($show, $artist);
+        } else {
+            return $this->redirectToRoute('artist_select', ['target' => 'tickets']);
+        }
+
+        return $this->render(
+            'Artist/singleArtistTickets.html.twig',
+                [
+                    'artist' => $artist,
+                    'tickets' => $tickets,
+                    'show' => $show,
+        ]
+        );
+    }
+
+    /**
+     * @Route("/viewArtists", name="view_artists")
+     */
+    public function viewArtistsAction(Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $em = $this->getDoctrine()->getManager();
+        $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
+
+        return $this->render('Artist/inShow.html.twig', [
+            'artists' => $artists,
+        ]);
+    }
+
+    /**
+     * @Route("/ArtistsByBlock", name="blocks_by_block")
+     */
+    public function showArtistByBlocksAction(Request $request, Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $em = $this->getDoctrine()->getManager();
+        $blocks = $em->getRepository('AppBundle:Block')->getBlocksByBlock($show);
+
+        return $this->render(
+            'Block/blocksByBlock.html.twig',
+                [
+                'blocks' => $blocks,
+                'show' => $show,
+        ]
+        );
+    }
+
+    /**
+     * @Route("/viewSingleReceipt/{id}", name="view_single_receipt")
+     */
+    public function viewSingleReceiptAction(Request $request, Defaults $defaults, $id = null)
+    {
+        $show = $defaults->showDefault();
+        if (null === $id) {
+            return $this->redirectToRoute('receipt_select', ['target' => 'single']);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['receiptNo' => $id]);
+
+
+        return $this->render('Receipt/viewSingleReceipt.html.twig',
+                [
+                'receipt' => $receipt,
+                'show' => $show,
+        ]);
     }
 }

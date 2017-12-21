@@ -103,22 +103,6 @@ class ReceiptController extends Controller
     }
 
     /**
-     * @Route("/view", name="receipt_view")
-     */
-    public function viewShowReceipts(Defaults $defaults)
-    {
-        $show = $defaults->showDefault();
-        $em = $this->getDoctrine()->getManager();
-        $receipts = $em->getRepository('AppBundle:Receipt')->findBy(['show' => $show], ['receiptNo' => 'ASC']);
-
-        return $this->render('Receipt/viewShowReceipts.html.twig',
-                [
-                'receipts' => $receipts,
-                'show' => $show,
-        ]);
-    }
-
-    /**
      * @Route("/select/{target}", name="receipt_select")
      */
     public function selectReceipt(Request $request, Defaults $defaults, $target)
@@ -194,26 +178,6 @@ class ReceiptController extends Controller
                 'receipt' => $receipt,
                 'form' => $form->createView(),
                 'nextId' => $receipt->getReceiptNo(),
-        ]);
-    }
-
-    /**
-     * @Route("/viewSingleReceipt/{id}", name="view_single_receipt")
-     */
-    public function viewSingleReceiptAction(Request $request, Defaults $defaults, $id = null)
-    {
-        $show = $defaults->showDefault();
-        if (null === $id) {
-            return $this->redirectToRoute('receipt_select', ['target' => 'single']);
-        }
-        $em = $this->getDoctrine()->getManager();
-        $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['receiptNo' => $id]);
-
-
-        return $this->render('Receipt/viewSingleReceipt.html.twig',
-                [
-                'receipt' => $receipt,
-                'show' => $show,
         ]);
     }
 }

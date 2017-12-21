@@ -154,12 +154,4 @@ class BlockWithShowAndArtistTest extends WebTestCase
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Benny Borko")')->count());
     }
-
-    public function testBlockByArtist()
-    {
-        $crawler = $this->login();
-        $crawler = $this->client->request('GET', '/block/byArtist');
-
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Borko, Benny")')->count());
-    }
 }
