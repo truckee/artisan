@@ -50,7 +50,7 @@ class ReceiptTicketType extends AbstractType
                 'prototype' => true,
                 ])
             ->add('save', SubmitType::class, array(
-                'label' => 'Add receipt',
+                'label' => $options['save_label'],
         ));
     }
 
@@ -63,6 +63,8 @@ class ReceiptTicketType extends AbstractType
             'data_class' => 'AppBundle\Entity\Receipt',
             'required' => false,
             'next' => null,
+            'save_label' => null,
+            'validation_groups' => null,
         ));
     }
 

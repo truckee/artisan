@@ -9,12 +9,12 @@
 var $currInput;
 var $collectionHolder;
 var addticketLink = $('<div class="col-sm-6"><a href="#" class="add_ticket_link btn-info btn-sm">Add ticket</a></div>');
-var $newLinkLi = $('<div class="row"></div>').append(addticketLink);
+var $newLinkLi = $('<div class="row" style="margin-bottom: 5px;"></div>').append(addticketLink);
 
 jQuery(document).ready(function () {
     $collectionHolder = $('div.tickets');
     $collectionHolder.append($newLinkLi);
-    $collectionHolder.data('index', ($collectionHolder.find(':input').length)/3);
+    $collectionHolder.data('index', Math.floor(($collectionHolder.find(':input').length)/3));
     addticketLink.on('click', function (e) {
         e.preventDefault();
         addticketForm($collectionHolder, $newLinkLi);
@@ -30,19 +30,7 @@ jQuery(document).ready(function () {
     $(document).on("blur", 'input[name$="[ticket]"]' + '', function () {
         $ticket = $currInput.val();
         nowAt = $(location).attr('pathname');
-        receiptAt = nowAt.indexOf('/receipt/new');
-        url = nowAt.slice(0, receiptAt) + '/receipt/findTicket/' + $ticket;
-        $.get(url, function (data) {
-            $('#' + $artistId).val(data);
-        });
-    });
-
-    $('input[id$="ticket"]').each(function (key, value) {
-        $ticket = $(value).val()
-        $rowId = $(this).attr('id').replace('receipt_tickets_', '').replace('_ticket', '');
-        $artistId = "receipt_tickets_" + $rowId + "_artist";
-        nowAt = $(location).attr('pathname');
-        receiptAt = nowAt.indexOf('/receipt/new');
+        receiptAt = nowAt.indexOf('/receipt');
         url = nowAt.slice(0, receiptAt) + '/receipt/findTicket/' + $ticket;
         $.get(url, function (data) {
             $('#' + $artistId).val(data);
@@ -58,6 +46,14 @@ jQuery(document).ready(function () {
         if ($.isNumeric(($(this).html()))) {
             $(this).parent().parent().remove();
         }
+    });
+
+    $('a.btn-warning').on('click', function() {
+        goahead = confirm('Click OK to confirm deletion');
+        if (true === goahead) {
+            $(this).parent().parent().remove();
+        }
+        return false;
     });
 });
 

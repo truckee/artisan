@@ -8,7 +8,8 @@
             <div class="row">
                 <div class="col-sm-3">
                     <div class="form-group">
-                        {{ form_row(item.ticket) }}
+                        {{ form_row(item.ticket, {'value':item.vars.value.ticket, 'disabled':'disabled'}) }}
+                        <input type="hidden" name="receipt[tickets][{{ loop.index0 }}][ticket]" value="{{ item.vars.value.ticket }}">
                     </div>
                 </div>
                 <div class="col-sm-3">
@@ -18,8 +19,11 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        {{ form_row(item.artist) }}
+                        {{ form_row(item.artist, {'value':item.vars.value.artist.lastName~', '~item.vars.value.artist.firstName }) }}
                     </div>
+                </div>
+                    <div class="col-sm-1"><br>
+                        <a href="#" class="btn-sm btn-warning" style="text-decoration: none;">Delete</a>
                 </div>
             </div>
         {% endfor %}

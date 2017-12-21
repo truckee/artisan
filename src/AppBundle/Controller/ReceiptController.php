@@ -66,9 +66,11 @@ class ReceiptController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $nextId = $em->getRepository('AppBundle:Receipt')->getNewReceiptNo();
-        $form = $this->createForm(ReceiptTicketType::class, $receipt, [
+        $form = $this->createForm(ReceiptTicketType::class, $receipt,
+            [
             'next' => $nextId,
-            ]);
+            'save_label' => 'Add receipt',
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
@@ -90,12 +92,12 @@ class ReceiptController extends Controller
                 $flash->error('At least one ticket is required');
             }
         }
-        
+
         return $this->render(
                 'Receipt/receiptForm.html.twig',
                 [
-                'form' => $form->createView(),
-                'nextId' => $nextId,
+                    'form' => $form->createView(),
+                    'nextId' => $nextId,
                 ]
         );
     }
@@ -109,9 +111,10 @@ class ReceiptController extends Controller
         $em = $this->getDoctrine()->getManager();
         $receipts = $em->getRepository('AppBundle:Receipt')->findBy(['show' => $show], ['receiptNo' => 'ASC']);
 
-        return $this->render('Receipt/viewShowReceipts.html.twig', [
-            'receipts' => $receipts,
-            'show' => $show,
+        return $this->render('Receipt/viewShowReceipts.html.twig',
+                [
+                'receipts' => $receipts,
+                'show' => $show,
         ]);
     }
 
@@ -135,16 +138,17 @@ class ReceiptController extends Controller
             }
         }
 
-        return $this->render('default/selectEntity.html.twig', [
-            'form' => $form->createView(),
-            'heading' => 'Select receipt',
+        return $this->render('default/selectEntity.html.twig',
+                [
+                'form' => $form->createView(),
+                'heading' => 'Select receipt',
         ]);
     }
 
     /**
      * @Route("/edit/{id}", name="receipt_edit")
      */
-    public function editReceiptAction(Defaults $defaults, $id = null)
+    public function editReceiptAction(Request $request, Defaults $defaults, TicketArtist $artist, $id = null)
     {
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
@@ -158,9 +162,38 @@ class ReceiptController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['receiptNo' => $id]);
+        $form = $this->createForm(ReceiptTicketType::class, $receipt, [
+            'save_label' => 'Save',
+            'next' => $id,
+            'validation_groups' => 'edit',
+            ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $tickets = $form->get('tickets')->getData();
+                foreach ($tickets as $ticket) {
+                    $ticketNumber = $ticket->getTicket();
+                    $owner = $artist->getTicketArtist($ticketNumber);
+                    $ticket->setArtist($owner);
+                    $receipt->addTicket($ticket);
+                }
+                $receipt->setShow($show);
 
-        return $this->render('Receipt/editReceipt.html.twig', [
-            'receipt' => $receipt,
+                $em->persist($receipt);
+                $em->flush();
+                $flash->success('Receipt updated!');
+
+                return $this->redirectToRoute("homepage");
+            } else {
+                $flash->error('At least one ticket is required');
+            }
+        }
+
+        return $this->render('Receipt/receiptEditForm.html.twig',
+                [
+                'receipt' => $receipt,
+                'form' => $form->createView(),
+                'nextId' => $receipt->getReceiptNo(),
         ]);
     }
 
@@ -176,9 +209,11 @@ class ReceiptController extends Controller
         $em = $this->getDoctrine()->getManager();
         $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['receiptNo' => $id]);
 
-        return $this->render('Receipt/viewSingleReceipt.html.twig', [
-            'receipt' => $receipt,
-            'show' => $show,
+
+        return $this->render('Receipt/viewSingleReceipt.html.twig',
+                [
+                'receipt' => $receipt,
+                'show' => $show,
         ]);
     }
 }
