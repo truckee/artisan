@@ -36,6 +36,11 @@ class Receipt
      */
     private $id;
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      *

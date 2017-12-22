@@ -86,7 +86,11 @@ class ReceiptController extends Controller
                 $em->persist($receipt);
                 $em->flush();
                 $flash->success('Receipt added!');
-
+                if ($form->get('view')->isClicked()) {
+                    $id = $receipt->getReceiptNo();
+                    
+                    return $this->redirectToRoute('view_single_receipt', ['id' => $id]);
+                }
                 return $this->redirectToRoute("homepage");
             } else {
                 $flash->error('At least one ticket is required');

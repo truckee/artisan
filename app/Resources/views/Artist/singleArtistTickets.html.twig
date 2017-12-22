@@ -2,9 +2,12 @@
 {% block body %}
     <div class="text-center text-info"><h3>Tickets for {{ artist.firstName~' '~artist.lastName }} </h3></div>
     <div class="row">
-        <div class="col-sm-4"></div>
+        <div class="col-sm-3"></div>
         <div class="col-sm-1">
             <u>Ticket</u>
+        </div>
+        <div class="col-sm-1">
+            <u>Receipt</u>
         </div>
         <div class="col-sm-1 text-right">
             <u>Amount</u>
@@ -19,9 +22,12 @@
     {% set total = 0 %}{% set taxTotal = 0 %}
     {% for ticket in tickets %}
         <div class="row">
-            <div class="col-sm-4"></div>
+            <div class="col-sm-3"></div>
             <div class="col-sm-1">
                 {{ ticket.ticket }}
+            </div>
+            <div class="col-sm-1 text-right">
+                {{ ticket.receiptNo }}
             </div>
             <div class="col-sm-1 text-right">
                 {{ ticket.amount|number_format(2) }}

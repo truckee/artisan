@@ -30,28 +30,35 @@ class ReceiptTicketType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('salesDate', DateType::class, [
+            ->add('salesDate', DateType::class,
+                [
                 'widget' => 'single_text',
                 'data' => new \DateTime(),
                 'html5' => false,
                 'attr' => ['class' => 'js-datepicker'],
                 'format' => 'MM/dd/yyyy',
-                ])
-            ->add('receiptNo', HiddenType::class, [
+            ])
+            ->add('receiptNo', HiddenType::class,
+                [
                 'data' => $options['next'],
                 'label' => false,
-                ])
-            ->add('tickets', CollectionType::class, [
+            ])
+            ->add('tickets', CollectionType::class,
+                [
                 'label' => false,
-                'entry_type'   => TicketType::class,
+                'entry_type' => TicketType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
-                ])
+            ])
             ->add('save', SubmitType::class, array(
                 'label' => $options['save_label'],
-        ));
+            ))
+            ->add('view', SubmitType::class, array(
+                'label' => 'Add & view',
+            ))
+        ;
     }
 
     /**

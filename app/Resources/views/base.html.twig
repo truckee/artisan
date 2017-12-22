@@ -5,19 +5,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}{% endblock %}</title>
         {% block stylesheets %}
-            <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet" media="screen">
+            <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet" media="all">
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
         <div class="container">
             {% if app.user %}
-            <div class="row">
-                <div class="col-sm-2 text-center"><img src="/images/logo.jpg" alt="UUFNN logo"></div>
-                <div class="col-sm-8 text-center"><h2>{{  label_success(render(controller('AppBundle:Default:defaultShow'))) }}</h2></div>
-            </div>
-                        {% block nav %}
-                            {% spaceless %}
+                <div class="row">
+                    <div class="col-sm-2 text-center"><img src="/images/logo.jpg" alt="UUFNN logo"></div>
+                    <div class="col-sm-8 text-center"><h2>{{  label_success(render(controller('AppBundle:Default:defaultShow'))) }}</h2></div>
+                </div>
+                <div class="menu hidden-print">
+                {% block nav %}
+                    {% spaceless %}
                         <nav class="navbar navbar-default">
                             <div class="navbar-header">
                                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -35,12 +36,13 @@
                         </nav>
                     {% endspaceless %}
                 {% endblock nav %}
+                </div>
             {% else %}
-            <div class="row">
-                <div class="col-sm-4 text-right"><img src="/images/logo.jpg" alt="UUFNN logo"></div>
-                <div class="col-sm-4 text-center"><h3>{{ label_primary('UUFNN Artisan Show Management') }}</h3></div>
-            </div>
-                    {% endif %}
+                <div class="row">
+                    <div class="col-sm-4 text-right"><img src="/images/logo.jpg" alt="UUFNN logo"></div>
+                    <div class="col-sm-4 text-center"><h3>{{ label_primary('UUFNN Artisan Show Management') }}</h3></div>
+                </div>
+            {% endif %}
             <div class=" row text-center">
                 <div class="col-sm-4"></div>
                 <div class="col-sm-4">

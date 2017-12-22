@@ -40,7 +40,7 @@ class ShowRepository extends EntityRepository
     public function getSingleArtist($show, $artist)
     {
         $qb = $this->getEntityManager()->createQueryBuilder('r')
-            ->select('t. ticket, t.amount')
+            ->select('t. ticket, t.amount, r.receiptNo')
             ->from('AppBundle:Receipt', 'r')
             ->join('AppBundle:Ticket', 't', 'WITH', 't.receipt = r')
             ->join('AppBundle:Artist', 'a', 'WITH', 't.artist = a')

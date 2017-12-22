@@ -11,4 +11,17 @@ $(document).ready(function () {
     if (false === $flashError.text().includes("ERROR")) {
         $flashError.remove();
     }
-})
+
+    $('#menuToggle').click(function () {
+//        if ($("#menuToggle").text() === 'Printable view') {
+//            $("#menuToggle").text('Menu');
+//            $(".menu").hide();
+//            $("html>body #content").css('margin-left', 10 + 'px');
+            window.print();
+//        } else {
+//            $("#menuToggle").text('Printable view');
+//            $(".menu").show();
+//            $("html>body #content").css('margin-left', 180 + 'px');
+//        }
+    });
+});
