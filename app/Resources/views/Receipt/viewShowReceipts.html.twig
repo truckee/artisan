@@ -37,7 +37,7 @@
                 <div class="col-sm-1">
                     {{ receipt.salesDate|date('m/d/Y') }}
                 </div>
-                <div class="col-sm-1">
+                <div class="col-sm-1 text-right">
                     {{ ticket.ticket }}
                 </div>
                 <div class="col-sm-1 text-right">
@@ -74,9 +74,9 @@
     {%  endfor  %}
     <div class="row">
         <div class="col-sm-3"></div>
-        <div class="col-sm-2">
+        <div class="col-sm-1">
         </div>
-        <div class="col-sm-1 text-right">
+        <div class="col-sm-2 text-right">
             Grand total
         </div>
         <div class="col-sm-1 text-right">
