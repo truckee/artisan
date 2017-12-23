@@ -37,6 +37,18 @@ jQuery(document).ready(function () {
         });
     });
 
+    $('input[id$="ticket"]').each(function (key, value) {
+        $ticket = $(value).val()
+        $rowId = $(this).attr('id').replace('receipt_tickets_', '').replace('_ticket', '');
+        $artistId = "receipt_tickets_" + $rowId + "_artist";
+        nowAt = $(location).attr('pathname');
+        receiptAt = nowAt.indexOf('/receipt/new');
+        url = nowAt.slice(0, receiptAt) + '/receipt/findTicket/' + $ticket;
+        $.get(url, function (data) {
+            $('#' + $artistId).val(data);
+        });
+    });
+
     $('.js-datepicker').datepicker({
         format: 'mm/dd/yyyy'
     });
