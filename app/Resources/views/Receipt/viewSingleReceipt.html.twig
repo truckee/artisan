@@ -3,7 +3,7 @@
     {% include 'default/printButton.html.twig' %}
     <div class="row">
         <div class="col-sm-2"></div>
-        <div class="col-sm-8 text-center text-bold text-info"><h3>Receipt {{ receipt.receiptNo }}</h3></div>
+        <div class="col-sm-8 text-center text-bold text-info"><h3>Receipt {{ receipt.id }}</h3></div>
     </div>
     <div class="row">
         <div class="col-sm-2"></div>
@@ -11,7 +11,7 @@
     </div>
     <div class="row">
         <div class="col-sm-2"></div>
-        <div class="col-sm-1">
+        <div class="col-sm-1 text-right">
             <u>Ticket</u>
         </div>
         <div class="col-sm-4">
@@ -31,7 +31,7 @@
     {% for ticket in receipt.tickets %}
         <div class="row">
             <div class="col-sm-2"></div>
-            <div class="col-sm-1">
+            <div class="col-sm-1 text-right">
                 {{ ticket.ticket }}
             </div>
             <div class="col-sm-4">

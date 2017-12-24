@@ -93,7 +93,7 @@ class ReportController extends Controller
     {
         $show = $defaults->showDefault();
         $em = $this->getDoctrine()->getManager();
-        $receipts = $em->getRepository('AppBundle:Receipt')->findBy(['show' => $show], ['receiptNo' => 'ASC']);
+        $receipts = $em->getRepository('AppBundle:Receipt')->findBy(['show' => $show], ['id' => 'ASC']);
 
         return $this->render('Receipt/viewShowReceipts.html.twig',
                 [
@@ -168,8 +168,7 @@ class ReportController extends Controller
             return $this->redirectToRoute('receipt_select', ['target' => 'single']);
         }
         $em = $this->getDoctrine()->getManager();
-        $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['receiptNo' => $id]);
-
+        $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['id' => $id]);
 
         return $this->render('Receipt/viewSingleReceipt.html.twig',
                 [

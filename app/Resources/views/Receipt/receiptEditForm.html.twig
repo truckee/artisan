@@ -1,37 +1,57 @@
 {% extends "base.html.twig" %}
-{% form_theme form with ['Form/artisan_prototype.html.twig'] %}
-
 {% block body %}
-    {% include 'Receipt/headReceiptForm.html.twig' %}
-    <div class="tickets" data-prototype="{{ form_widget(form.tickets.vars.prototype)|e('html_attr') }}">
-        {% for item in form.tickets %}
-            <div class="row">
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        {{ form_row(item.ticket, {'value':item.vars.value.ticket, 'disabled':'disabled'}) }}
-                        <input type="hidden" name="receipt[tickets][{{ loop.index0 }}][ticket]" value="{{ item.vars.value.ticket }}">
+    <div class="row">
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h4>Sales Receipt {{ nextId }}</h4></div>
+                <div class="panel-body">
+                    {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-sm-4">
+                            {{ form_row(form.salesDate) }}
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        {{ form_row(item.amount) }}
+                    <div class="row">
+                        <div class="col-sm-2 text-right">
+                            <u>Ticket</u>
+                        </div>
+                        <div class="col-sm-2 text-right">
+                            <u>Amount</u>
+                        </div>
+                        <div class="col-sm-4">
+                            <u>Artist</u>
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        {{ form_row(item.artist, {'value':item.vars.value.artist.lastName~', '~item.vars.value.artist.firstName }) }}
+                    <div id="ticketAddDialog"></div>
+                    <div id="tickets">
+                        {% for ticket in receipt.tickets %}
+                            {% include ticketTemplate %}
+                        {%  endfor %}
                     </div>
-                </div>
-                    <div class="col-sm-1"><br>
-                        <a href="#" class="btn-sm btn-warning" style="text-decoration: none;">Delete</a>
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-sm-3">
+                            <a id="addTicket" href="#" class="btn-sm btn-info" style="text-decoration: none;">Add ticket</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            {{ form_row(form.save) }}
+                        </div>
+                        <div class="col-sm-3">
+                            {{ form_row(form.view) }}
+                        </div>
+                    </div>
+                    {{ form_rest(form) }}{{ form_end(form) }}
                 </div>
             </div>
-        {% endfor %}
+        </div>
     </div>
-    {% include 'Receipt/tailReceiptForm.html.twig' %}
+
 {% endblock body %}
 {%  block javascripts %}
     {{ parent() }}
-    <script src="/js/bootstrap-datepicker.js"></script>
-    <script src="/js/tickets.js"></script>
+    <script src="{{ asset('/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('/js/project.js') }}"></script>
 {%  endblock javascripts %}

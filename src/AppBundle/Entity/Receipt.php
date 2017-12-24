@@ -25,6 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Receipt
 {
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -40,7 +41,6 @@ class Receipt
     {
         return $this->id;
     }
-
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
@@ -86,7 +86,6 @@ class Receipt
     {
         return $this->show;
     }
-    
     /**
      * @ORM\Column(name="sales_date", type="date", nullable = false)
      */
@@ -102,22 +101,5 @@ class Receipt
     public function getSalesDate()
     {
         return $this->salesDate;
-    }
-
-    /**
-     *  @ORM\Column(name="receipt_no", type="integer", nullable = false)
-     */
-    private $receiptNo;
-
-    public function setReceiptNo($receiptNo)
-    {
-        $this->receiptNo = $receiptNo;
-
-        return $this;
-    }
-
-    public function getReceiptNo()
-    {
-        return $this->receiptNo;
     }
 }

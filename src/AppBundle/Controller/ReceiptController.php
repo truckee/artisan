@@ -66,44 +66,17 @@ class ReceiptController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $nextId = $em->getRepository('AppBundle:Receipt')->getNewReceiptNo();
-        $form = $this->createForm(ReceiptTicketType::class, $receipt,
-            [
-            'next' => $nextId,
-            'save_label' => 'Add receipt',
-        ]);
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $tickets = $form->get('tickets')->getData();
-                foreach ($tickets as $ticket) {
-                    $ticketNumber = $ticket->getTicket();
-                    $owner = $artist->getTicketArtist($ticketNumber);
-                    $ticket->setArtist($owner);
-                    $receipt->addTicket($ticket);
-                }
-                $receipt->setShow($show);
+        //save receipt to guarantee uniqueness
+        $receipt->setSalesDate(new \DateTime());
+        $receipt->setShow($show);
+        $receipt->setReceiptNo($nextId);
+        $em->persist($receipt);
+        $em->flush();
 
-                $em->persist($receipt);
-                $em->flush();
-                $flash->success('Receipt added!');
-                if ($form->get('view')->isClicked()) {
-                    $id = $receipt->getReceiptNo();
-                    
-                    return $this->redirectToRoute('view_single_receipt', ['id' => $id]);
-                }
-                return $this->redirectToRoute("homepage");
-            } else {
-                $flash->error('At least one ticket is required');
-            }
-        }
-
-        return $this->render(
-                'Receipt/receiptForm.html.twig',
-                [
-                    'form' => $form->createView(),
-                    'nextId' => $nextId,
-                ]
-        );
+        return $this->redirectToRoute('receipt_edit', [
+            'id' => $nextId,
+            'add' => true,
+            ]);
     }
 
     /**
@@ -134,9 +107,9 @@ class ReceiptController extends Controller
     }
 
     /**
-     * @Route("/edit/{id}", name="receipt_edit")
+     * @Route("/edit/{id}/{add}", name="receipt_edit")
      */
-    public function editReceiptAction(Request $request, Defaults $defaults, TicketArtist $artist, $id = null)
+    public function editReceiptAction(Request $request, Defaults $defaults, TicketArtist $artist, $id = null, $add = null)
     {
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
@@ -149,24 +122,16 @@ class ReceiptController extends Controller
             return $this->redirectToRoute('receipt_select', ['target' => 'edit']);
         }
         $em = $this->getDoctrine()->getManager();
-        $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['receiptNo' => $id]);
+        $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['id' => $id]);
         $form = $this->createForm(ReceiptTicketType::class, $receipt, [
             'save_label' => 'Save',
             'next' => $id,
-            'validation_groups' => 'edit',
+//            'validation_groups' => 'edit',
             ]);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $tickets = $form->get('tickets')->getData();
-                foreach ($tickets as $ticket) {
-                    $ticketNumber = $ticket->getTicket();
-                    $owner = $artist->getTicketArtist($ticketNumber);
-                    $ticket->setArtist($owner);
-                    $receipt->addTicket($ticket);
-                }
                 $receipt->setShow($show);
-
                 $em->persist($receipt);
                 $em->flush();
                 $flash->success('Receipt updated!');
@@ -182,6 +147,7 @@ class ReceiptController extends Controller
                 'receipt' => $receipt,
                 'form' => $form->createView(),
                 'nextId' => $receipt->getReceiptNo(),
+                    'ticketTemplate' => (true === $add) ? null : 'Ticket/ticketEditRow.html.twig',
         ]);
     }
 }

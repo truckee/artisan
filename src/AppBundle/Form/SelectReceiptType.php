@@ -55,7 +55,7 @@ class SelectReceiptType extends AbstractType
                         return $er->createQueryBuilder('r')
                             ->where('r.show = :show')
                             ->setParameter(':show', $show)
-                            ->orderBy('r.receiptNo', 'ASC');
+                            ->orderBy('r.id', 'ASC');
                     }
             ]
             )

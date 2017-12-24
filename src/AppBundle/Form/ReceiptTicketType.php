@@ -19,7 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class ReceiptTicketType extends AbstractType
 {
@@ -33,24 +32,14 @@ class ReceiptTicketType extends AbstractType
             ->add('salesDate', DateType::class,
                 [
                 'widget' => 'single_text',
-                'data' => new \DateTime(),
                 'html5' => false,
                 'attr' => ['class' => 'js-datepicker'],
                 'format' => 'MM/dd/yyyy',
             ])
-            ->add('receiptNo', HiddenType::class,
+            ->add('id', HiddenType::class,
                 [
                 'data' => $options['next'],
                 'label' => false,
-            ])
-            ->add('tickets', CollectionType::class,
-                [
-                'label' => false,
-                'entry_type' => TicketType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
             ])
             ->add('save', SubmitType::class, array(
                 'label' => $options['save_label'],
