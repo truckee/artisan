@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-//src\AppBundle\Form\ReceiptTicketType.php
+//src\AppBundle\Form\ReceiptType.php
 
 namespace AppBundle\Form;
 
@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ReceiptTicketType extends AbstractType
+class ReceiptType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options)

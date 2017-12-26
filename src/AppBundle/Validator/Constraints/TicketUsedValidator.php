@@ -34,7 +34,6 @@ class TicketUsedValidator extends ConstraintValidator
         $entity = $this->ticket->getTicketUsed($ticket);
         if (null === $entity) {
             $this->context->buildViolation($constraint->message)
-//                ->atPath('block')
                 ->addViolation();
         }
     }

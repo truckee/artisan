@@ -34,7 +34,6 @@ class TicketExistsValidator extends ConstraintValidator
         $entity = $this->artist->getTicketArtist($ticket);
         if (null === $entity) {
             $this->context->buildViolation($constraint->message)
-//                ->atPath('block')
                 ->addViolation();
         }
     }

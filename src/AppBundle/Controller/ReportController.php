@@ -15,7 +15,6 @@ namespace AppBundle\Controller;
 use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * ReportController
@@ -35,7 +34,7 @@ class ReportController extends Controller
     /**
      * @Route("/artistsInShow", name="report_artists_in_show")
      */
-    public function viewShowArtistsAction(Request $request, Defaults $defaults)
+    public function viewShowArtistsAction(Defaults $defaults)
     {
         $show = $defaults->showDefault();
         $em = $this->getDoctrine()->getManager();
@@ -49,7 +48,7 @@ class ReportController extends Controller
     /**
      * @Route("/showSummary/{id}", name="show_summary")
      */
-    public function showSummaryAction(Request $request, $id = null)
+    public function showSummaryAction($id = null)
     {
         if (null !== $id) {
             $em = $this->getDoctrine()->getManager();
@@ -71,7 +70,7 @@ class ReportController extends Controller
     /**
      * @Route("/blocksByArtist", name="blocks_by_artist")
      */
-    public function showBlocksByArtistAction(Request $request, Defaults $defaults)
+    public function showBlocksByArtistAction(Defaults $defaults)
     {
         $show = $defaults->showDefault();
         $em = $this->getDoctrine()->getManager();
@@ -143,7 +142,7 @@ class ReportController extends Controller
     /**
      * @Route("/ArtistsByBlock", name="blocks_by_block")
      */
-    public function showArtistByBlocksAction(Request $request, Defaults $defaults)
+    public function showArtistByBlocksAction(Defaults $defaults)
     {
         $show = $defaults->showDefault();
         $em = $this->getDoctrine()->getManager();
@@ -161,7 +160,7 @@ class ReportController extends Controller
     /**
      * @Route("/viewSingleReceipt/{id}", name="view_single_receipt")
      */
-    public function viewSingleReceiptAction(Request $request, Defaults $defaults, $id = null)
+    public function viewSingleReceiptAction(Defaults $defaults, $id = null)
     {
         $show = $defaults->showDefault();
         if (null === $id) {

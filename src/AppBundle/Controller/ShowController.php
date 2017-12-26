@@ -15,7 +15,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Show;
 use AppBundle\Form\ShowType;
 use AppBundle\Form\SelectShowType;
-use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

@@ -127,7 +127,7 @@ class TicketController extends Controller
      *
      * @Route("/findTicket/{ticket}", name="find_ticket")
      */
-    public function findTicketAction(Request $request, TicketArtist $artist, $ticket)
+    public function findTicketAction(TicketArtist $artist, $ticket)
     {
         $entity = $artist->getTicketArtist($ticket);
         if (null === $entity) {

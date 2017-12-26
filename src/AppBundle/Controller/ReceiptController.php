@@ -13,7 +13,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Receipt;
-use AppBundle\Form\ReceiptTicketType;
+use AppBundle\Form\ReceiptType;
 use AppBundle\Form\SelectReceiptType;
 use AppBundle\Services\Defaults;
 use AppBundle\Services\TicketArtist;
@@ -123,7 +123,7 @@ class ReceiptController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['id' => $id]);
-        $form = $this->createForm(ReceiptTicketType::class, $receipt,
+        $form = $this->createForm(ReceiptType::class, $receipt,
             [
             'save_label' => 'Save',
         ]);

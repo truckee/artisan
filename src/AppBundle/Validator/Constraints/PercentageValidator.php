@@ -25,7 +25,6 @@ class PercentageValidator extends ConstraintValidator
     {
         if ($percent < 0 || $percent > 1) {
             $this->context->buildViolation($constraint->message)
-//                ->atPath('tax')
                 ->addViolation();
         }
     }

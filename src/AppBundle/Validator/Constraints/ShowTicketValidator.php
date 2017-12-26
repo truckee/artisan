@@ -36,12 +36,9 @@ class ShowTicketValidator extends ConstraintValidator
     {
         $show = $this->defaults->showDefault();
         $blocks = $this->em->getRepository('AppBundle:Block')->findBy(['show' => $show]);
-//        $found = false;
         foreach ($blocks as $value) {
             $block = $value->getBlock();
             if ($block[0] <= $ticket && $ticket <= $block[1]) {
-//                $found = true;
-
                 return;
             }
         }
