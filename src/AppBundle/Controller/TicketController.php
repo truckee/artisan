@@ -47,20 +47,21 @@ class TicketController extends Controller
             $ticket->setReceipt($receipt);
             $em->persist($ticket);
             $em->flush();
-            $view = $this->renderView('Ticket/ticketViewRow.html.twig', [
-                'ticket' => $ticket,
+            $view = $this->renderView('Ticket/ticketEditRow.html.twig',
+                [
+                    'ticket' => $ticket,
             ]);
             $response = new Response((json_encode($view, JSON_HEX_QUOT | JSON_HEX_TAG)));
 
             return $response;
         }
 
-        return $this->render('Ticket/ticketDialogForm.html.twig' ,[
-            'form' => $form->createView(),
-            'ticket' => $ticket,
-            'id' => $id,
+        return $this->render('Ticket/ticketAddDialogForm.html.twig',
+                [
+                    'form' => $form->createView(),
+                    'ticket' => $ticket,
+                    'id' => $id,
         ]);
-
     }
 
     /**
@@ -68,8 +69,6 @@ class TicketController extends Controller
      */
     public function editTicketAction(Request $request, Defaults $defaults, $id)
     {
-        $show = $defaults->showDefault();
-        $flash = $this->get('braincrafted_bootstrap.flash');
         $em = $this->getDoctrine()->getManager();
         $ticket = $em->getRepository('AppBundle:Ticket')->find($id);
         $form = $this->createForm(TicketType::class, $ticket, [
@@ -77,28 +76,24 @@ class TicketController extends Controller
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->getClickedButton() && 'delete' === $form->getClickedButton()->getName()) {
-                $flash->danger('delete');
-            } else {
-                $flash->success('valid');
-            }
             $em->persist($ticket);
             $em->flush();
+            $response = new Response($ticket->getAmount());
 
-            return $this->redirectToRoute('homepage');
+            return $response;
         }
 
-        return $this->render('Ticket/editTicket.html.twig',
+        return $this->render('Ticket/ticketEditDialogForm.html.twig',
                 [
-                'form' => $form->createView(),
-                'ticket' => $ticket,
+                    'form' => $form->createView(),
+                    'ticket' => $ticket,
         ]);
     }
 
     /**
      * @Route("/delete/{id}", name="ticket_delete")
      */
-    public function deleteTicketAction(Request $request, Defaults $defaults, $id)
+    public function deleteTicketAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $flash = $this->get('braincrafted_bootstrap.flash');
@@ -122,8 +117,27 @@ class TicketController extends Controller
 
         return $this->render('Ticket/deleteTicket.html.twig',
                 [
-                'form' => $form->createView(),
-                'ticket' => $ticket,
+                    'form' => $form->createView(),
+                    'ticket' => $ticket,
         ]);
+    }
+
+    /**
+     * Used by receipt form to get artist name
+     *
+     * @Route("/findTicket/{ticket}", name="find_ticket")
+     */
+    public function findTicketAction(Request $request, TicketArtist $artist, $ticket)
+    {
+        $entity = $artist->getTicketArtist($ticket);
+        if (null === $entity) {
+            $response = new Response('Ticket does not exist');
+
+            return $response;
+        }
+        $name = $entity->getFirstName() . ' ' . $entity->getLastName();
+        $response = new Response($name);
+
+        return $response;
     }
 }

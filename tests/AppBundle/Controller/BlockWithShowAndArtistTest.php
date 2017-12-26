@@ -150,7 +150,7 @@ class BlockWithShowAndArtistTest extends WebTestCase
     public function testReceiptFormReturnsArtistByTicket()
     {
         $crawler = $this->login();
-        $crawler = $this->client->request('GET', '/receipt/findTicket/1');
+        $crawler = $this->client->request('GET', '/ticket/findTicket/1');
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Benny Borko")')->count());
     }

@@ -46,10 +46,10 @@ class SelectReceiptType extends AbstractType
                     'class' => 'AppBundle:Receipt',
                     'label' => false,
                     'choice_label' => function ($receipt, $key, $index) {
-                        return $receipt->getReceiptNo();
+                        return $receipt->getId();
                     },
                     'choice_value' => function (Receipt $receipt = null) {
-                        return $receipt ? $receipt->getReceiptNo() : '';
+                        return $receipt ? $receipt->getId() : '';
                     }, 'mapped' => false,
                     'query_builder' => function (EntityRepository $er) use ($show) {
                         return $er->createQueryBuilder('r')

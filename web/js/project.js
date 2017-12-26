@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 $(document).ready(function () {
-    $ticketAdd = $("#ticketAddDialog");
+    $ticketAdd = $("#ticketDialog");
     $flashError = $("div.alert");
     if (false === $flashError.text().includes("ERROR")) {
         $flashError.remove();
@@ -25,14 +25,14 @@ $(document).ready(function () {
     });
 
     $('#addTicket').on('click', function () {
-        nowAt = $(location).attr('pathname');
-        n = (nowAt.match(/\//g) || []).length;
-        urlArray = nowAt.split("/");
-        receiptNo = parseInt(urlArray[n], 10);
+        receiptNo = $('#addTicket').data('receipt');
+        currLoc = $(location).attr('pathname');
+        //remove add paramter if exists
+        nowAt = ('/1' === currLoc.substring(currLoc.length-2, currLoc.length)) ? currLoc.substring(0, currLoc.length-2) : currLoc
         receiptAt = nowAt.indexOf('/receipt');
         ticketAddUrl = nowAt.slice(0, receiptAt) + '/ticket/add/' + receiptNo;
         $.get(ticketAddUrl, function (data) {
-            $("#ticketAddDialog").dialog({
+            $("#ticketDialog").dialog({
                 title: 'Add ticket',
                 buttons: [
                     {
@@ -44,18 +44,16 @@ $(document).ready(function () {
                             $.post(ticketAddUrl, formData, function (response) {
                                 //if validation error:
                                 if (response.indexOf('<form') === 0) {
-                                    $("#ticketAddDialog").html(response);
+                                    $("#ticketDialog").html(response);
                                     return;
                                 }
                                 //return ticket
                                 ticket = $.parseJSON(response);
-                                //alert($.trim(str.replace(/[\t\n]+/g,' ')));
                                 $('#tickets').append($.trim(ticket.replace(/[\t\n]+/g,' ')));
-                                $("#ticketAddDialog").html('Ticket added!');
+                                $("#ticketDialog").html('Ticket added!');
                                 $("#submit").hide();
                             });
-
-                        },
+                        }
                     },
                     {
                         text: 'Close',
@@ -67,10 +65,53 @@ $(document).ready(function () {
                     }
                 ],
             });
-            $("#ticketAddDialog").html(data);
-            $("#ticketAddDialog").dialog('open');
+            $("#ticketDialog").html(data);
+            $("#ticketDialog").dialog('open');
         });
+    });
 
+    $('[id^=editTicket]').on('click', function() {
+        ticketId = $(this).data('ticket');
+        amount = $(this).parent().parent().find($('#amount' + ticketId));
+        nowAt = $(location).attr('pathname');
+        receiptAt = nowAt.indexOf('/receipt');
+        ticketEditUrl = nowAt.slice(0, receiptAt) + '/ticket/edit/' + ticketId;
+        $.get(ticketEditUrl, function(data) {
+            $("#ticketDialog").dialog({
+                title: 'Edit ticket',
+                buttons: [
+                    {
+                        text: "Submit",
+                        id: "submit",
+                        class: "btn-xs btn-primary",
+                        click: function () {
+                            var formData = $("form").serialize();
+                            $.post(ticketEditUrl, formData, function (response) {
+                                //if validation error:
+                                if (response.indexOf('<form') === 0) {
+                                    $("#ticketDialog").html();
+                                    return;
+                                }
+                                //return ticket
+                                amount.text(response);
+                                $("#ticketDialog").html('Ticket updated!');
+                                $("#submit").hide();
+                            });
+                        }
+                    },
+                    {
+                        text: 'Close',
+                        id: "close",
+                        class: "btn-xs btn-primary",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ],
+            });
+            $("#ticketDialog").html(data);
+            $("#ticketDialog").dialog('open');
+        });
     });
 
     //use ticket number to identify artist, or not found
@@ -78,10 +119,9 @@ $(document).ready(function () {
         $ticket = $('#ticket_ticket').val();
         nowAt = $(location).attr('pathname');
         receiptAt = nowAt.indexOf('/receipt');
-        findTicketUrl = nowAt.slice(0, receiptAt) + '/receipt/findTicket/' + $ticket;
+        findTicketUrl = nowAt.slice(0, receiptAt) + '/ticket/findTicket/' + $ticket;
         $.get(findTicketUrl, function (data) {
             $('#ticket_artist').val(data);
         });
     });
-
 });

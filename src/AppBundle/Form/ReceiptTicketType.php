@@ -12,20 +12,15 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Form\TicketType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ReceiptTicketType extends AbstractType
 {
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -36,16 +31,11 @@ class ReceiptTicketType extends AbstractType
                 'attr' => ['class' => 'js-datepicker'],
                 'format' => 'MM/dd/yyyy',
             ])
-            ->add('id', HiddenType::class,
-                [
-                'data' => $options['next'],
-                'label' => false,
-            ])
             ->add('save', SubmitType::class, array(
-                'label' => $options['save_label'],
+                'label' => 'Save',
             ))
             ->add('view', SubmitType::class, array(
-                'label' => 'Add & view',
+                'label' => 'Save & view',
             ))
         ;
     }
@@ -55,18 +45,13 @@ class ReceiptTicketType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\Receipt',
             'required' => false,
-            'next' => null,
             'save_label' => null,
-            'validation_groups' => null,
-        ));
+        ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBlockPrefix()
     {
         return 'receipt';

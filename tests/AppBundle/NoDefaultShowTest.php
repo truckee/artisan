@@ -88,7 +88,7 @@ class NoDefaultShowTest extends WebTestCase
     public function testNoReceiptAddWithoutDefaultShow()
     {
         $crawler = $this->login();
-        $crawler = $this->client->request('GET', '/receipt/new');
+        $crawler = $this->client->request('GET', '/receipt/add');
 
         $this->assertGreaterThan(
             0, $crawler->filter('html:contains("Set a show to active before adding a receipt")')->count()

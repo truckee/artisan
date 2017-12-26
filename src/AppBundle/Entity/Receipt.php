@@ -21,7 +21,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="receipt")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\ReceiptRepository")
  */
 class Receipt
 {

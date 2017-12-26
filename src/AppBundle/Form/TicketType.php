@@ -13,10 +13,11 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-//use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TicketType extends AbstractType
@@ -24,32 +25,64 @@ class TicketType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add(
-                'ticket',
-                TextType::class,
-                [
-                'label' => 'Ticket',
-                'label_attr' => ['style' => 'color: red;'],
-            ]
-            )
-            ->add(
-                'amount',
-                TextType::class,
-                [
-                'label' => 'Amount',
-                'label_attr' => ['style' => 'color: red;'],
-            ]
-            )
-            ->add(
-                'artist',
-                TextType::class,
-                [
-                    'mapped' => false,
-                    'disabled' => true,
-                ]
-            )
-        ;
+        $builder->addEventListener(FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+            $ticket = $event->getData();
+            $form = $event->getForm();
+            if (!$ticket || null === $ticket->getId()) {
+                $form->add(
+                    'ticket', TextType::class,
+                    [
+                        'label' => 'Ticket',
+                        'label_attr' => ['style' => 'color: red;'],
+                    ]
+                );
+                $form->add(
+                    'amount', TextType::class,
+                    [
+                        'label' => 'Amount',
+                        'label_attr' => ['style' => 'color: red;'],
+                    ]
+                );
+                $form->add(
+                    'artist', TextType::class,
+                    [
+                        'mapped' => false,
+                        'disabled' => true,
+                    ]
+                );
+            } else {
+                $form->add('ticketDisplay', TextType::class,
+                    [
+                        'label' => 'Ticket',
+                        'data' => $ticket->getTicket(),
+                        'disabled' => true,
+                        'mapped' => false,
+                ]);
+                $form->add(
+                    'ticket', HiddenType::class,
+                    [
+                        'label' => 'Ticket',
+                        'label_attr' => ['style' => 'color: red;'],
+                    ]
+                );
+                $form->add(
+                    'amount', TextType::class,
+                    [
+                        'label' => 'Amount',
+                        'label_attr' => ['style' => 'color: red;'],
+                    ]
+                );
+                $form->add(
+                    'artist', TextType::class,
+                    [
+                        'data' => $ticket->getArtist()->getLastName() . ', ' . $ticket->getArtist()->getFirstName(),
+                        'mapped' => false,
+                        'disabled' => true,
+                    ]
+                );
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)

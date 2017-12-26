@@ -5,7 +5,7 @@
         </div>
         <div class="col-sm-6">
             <div class="panel panel-primary">
-                <div class="panel-heading"><h4>Sales Receipt {{ nextId }}</h4></div>
+                <div class="panel-heading"><h4>Sales Receipt {{ receipt.id }}</h4></div>
                 <div class="panel-body">
                     {{ form_start(form) }}
                     <div class="row">
@@ -14,6 +14,7 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-sm-1"></div>
                         <div class="col-sm-2 text-right">
                             <u>Ticket</u>
                         </div>
@@ -24,15 +25,15 @@
                             <u>Artist</u>
                         </div>
                     </div>
-                    <div id="ticketAddDialog"></div>
+                    <div id="ticketDialog"></div>
                     <div id="tickets">
                         {% for ticket in receipt.tickets %}
-                            {% include ticketTemplate %}
+                            {% include 'Ticket/ticketEditRow.html.twig' %}
                         {%  endfor %}
                     </div>
                     <div class="row" style="margin-bottom: 5px;">
                         <div class="col-sm-3">
-                            <a id="addTicket" href="#" class="btn-sm btn-info" style="text-decoration: none;">Add ticket</a>
+                            <a id="addTicket" href="#" class="btn-sm btn-info" style="text-decoration: none;" data-receipt="{{ receipt.id }}">Add ticket</a>
                         </div>
                     </div>
                     <div class="row">
