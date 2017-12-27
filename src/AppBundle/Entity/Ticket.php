@@ -112,7 +112,7 @@ class Ticket
     /**
      * @ORM\Column(type="decimal", precision=8, scale=2)
      * @Assert\NotBlank(message = "May not be empty", groups={"add", "edit"})
-     * @Assert\GreaterThan(value = 0, message = "Must be > 0", groups={"add", "edit"})
+     * @Assert\NotEqualTo(value = 0, message = "May not = 0", groups={"add", "edit"})
      * @Assert\Type(type="numeric", message = "Must be a number", groups={"add", "edit"})
      */
     private $amount;
