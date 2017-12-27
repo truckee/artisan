@@ -7,21 +7,32 @@
  * file that was distributed with this source code.
  */
 $(document).ready(function () {
-    $ticketAdd = $("#ticketDialog");
+
     $flashError = $("div.alert");
     if (false === $flashError.text().includes("ERROR")) {
         $flashError.remove();
     }
 
-    $ticketAdd.dialog({
-        autoOpen: false,
-        resizable: true,
-        modal: true,
-        width: '40%'
+//  a hack to remove bogus HTML on validation errors
+    $('.control-label').each(function () {
+        if ($.isNumeric(($(this).html()))) {
+            $(this).parent().parent().remove();
+        }
+    });
+
+    $('.js-datepicker').datepicker({
+        format: 'mm/dd/yyyy'
     });
 
     $('#menuToggle').click(function () {
         window.print();
+    });
+
+    $("#ticketDialog").dialog({
+        autoOpen: false,
+        resizable: true,
+        modal: true,
+        width: '40%'
     });
 
     $('#addTicket').on('click', function () {

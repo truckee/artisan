@@ -51,7 +51,7 @@
                     <b>Confirmed?</b> {{ form_row(form.confirmed) }}
                 </div>
                 <div class="col-sm-2">
-                   <b>Tax form?</b> {{ form_row(form.tax_form) }}
+                    <b>Tax form?</b> {{ form_row(form.tax_form) }}
                 </div>
             </div>
             <div class="row">
@@ -61,7 +61,4 @@
             </div>
         </div></div>
     {% endblock body %}
-    {%  block javascripts %}
-        {{ parent() }}
-        <script src="{{ asset('js/project.js') }}"></script>
-    {%  endblock javascripts %}
+
