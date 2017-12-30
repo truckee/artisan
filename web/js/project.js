@@ -100,7 +100,7 @@ $(document).ready(function () {
                             $.post(ticketEditUrl, formData, function (response) {
                                 //if validation error:
                                 if (response.indexOf('<form') === 0) {
-                                    $("#ticketDialog").html();
+                                    $("#ticketDialog").html(response);
                                     return;
                                 }
                                 //return ticket
