@@ -29,7 +29,7 @@ class PdfService
     {
         switch ($this->os) {
             case 'windows':
-                return "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"";
+                return "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\" --zoom \"1.25\"";
             case 'ubuntu':
                 return '/usr/local/bin/wkhtmltopdf';
 

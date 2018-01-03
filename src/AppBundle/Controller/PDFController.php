@@ -13,7 +13,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Services\PdfService;
-//use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -49,6 +49,12 @@ class PDFController extends Controller
                 ]
         );
         $filename = $show->getShow() . ' Summary';
+
+//        return new PdfResponse(
+//            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+//            $filename
+//        );
+
         $exec = $pdf->pdfExecutable();
         $snappy = new Pdf($exec);
         $content = $snappy->getOutputFromHtml($html);
