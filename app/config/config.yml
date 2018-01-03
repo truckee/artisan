@@ -99,3 +99,13 @@ knp_menu:
         template: BraincraftedBootstrapBundle:Menu:bootstrap.html.twig
     templating: false
     default_renderer: twig
+
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" # for Windows users, else /usr/local/bin/wkhtmltopdf
+        options:    []
+    image:
+        enabled:    true
+        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\"" # for Windows users, else /usr/local/bin/wkhtmltoimage
+        options:    []
