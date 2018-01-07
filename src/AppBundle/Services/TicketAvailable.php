@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-//src\AppBundle\Services\TicketUsed.php
+//src\AppBundle\Services\TicketAvailable.php
 
 namespace AppBundle\Services;
 
@@ -19,7 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
  * TicketUsed
  *
  */
-class TicketUsed
+class TicketAvailable
 {
     private $em;
     private $defaults;
@@ -30,7 +30,7 @@ class TicketUsed
         $this->defaults = $defaults;
     }
 
-    public function getTicketUsed($incoming)
+    public function isTicketAvailable($incoming)
     {
         $show = $this->defaults->showDefault();
         $ticket = (is_object($incoming)) ? $incoming->getTicket() : $incoming;
