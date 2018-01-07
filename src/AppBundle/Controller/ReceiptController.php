@@ -114,7 +114,7 @@ class ReceiptController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before adding a receipt!');
+            $flash->error('Set a show to active before editing a receipt!');
 
             return $this->redirectToRoute("homepage");
         }

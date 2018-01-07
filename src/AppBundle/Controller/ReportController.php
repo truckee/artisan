@@ -37,6 +37,12 @@ class ReportController extends Controller
     public function viewShowArtistsAction(Defaults $defaults)
     {
         $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (null === $show) {
+            $flash->error('Set a show to active before running this report!');
+
+            return $this->redirectToRoute('homepage');
+        }
         $em = $this->getDoctrine()->getManager();
         $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
 
@@ -73,6 +79,12 @@ class ReportController extends Controller
     public function showBlocksByArtistAction(Defaults $defaults)
     {
         $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (null === $show) {
+            $flash->error('Set a show to active before running this report!');
+
+            return $this->redirectToRoute('homepage');
+        }
         $em = $this->getDoctrine()->getManager();
         $blocks = $em->getRepository('AppBundle:Block')->getBlocksByArtists($show);
 
@@ -91,6 +103,12 @@ class ReportController extends Controller
     public function viewShowReceiptsAction(Defaults $defaults)
     {
         $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (null === $show) {
+            $flash->error('Set a show to active before running this report!');
+
+            return $this->redirectToRoute('homepage');
+        }
         $em = $this->getDoctrine()->getManager();
         $receipts = $em->getRepository('AppBundle:Receipt')->findBy(['show' => $show], ['id' => 'ASC']);
 
@@ -107,6 +125,12 @@ class ReportController extends Controller
     public function viewSingleArtistTicketsAction(Defaults $defaults, $id = null)
     {
         $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (null === $show) {
+            $flash->error('Set a show to active before running this report!');
+
+            return $this->redirectToRoute('homepage');
+        }
         if (null !== $id) {
             $em = $this->getDoctrine()->getManager();
             $artist = $em->getRepository('AppBundle:Artist')->find($id);
@@ -131,6 +155,12 @@ class ReportController extends Controller
     public function viewArtistsAction(Defaults $defaults)
     {
         $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (null === $show) {
+            $flash->error('Set a show to active before running this report!');
+
+            return $this->redirectToRoute('homepage');
+        }
         $em = $this->getDoctrine()->getManager();
         $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
 
@@ -145,6 +175,12 @@ class ReportController extends Controller
     public function showArtistByBlocksAction(Defaults $defaults)
     {
         $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (null === $show) {
+            $flash->error('Set a show to active before running this report!');
+
+            return $this->redirectToRoute('homepage');
+        }
         $em = $this->getDoctrine()->getManager();
         $blocks = $em->getRepository('AppBundle:Block')->getBlocksByBlock($show);
 
@@ -163,6 +199,12 @@ class ReportController extends Controller
     public function viewSingleReceiptAction(Defaults $defaults, $id = null)
     {
         $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (null === $show) {
+            $flash->error('Set a show to active before running this report!');
+
+            return $this->redirectToRoute('homepage');
+        }
         if (null === $id) {
             return $this->redirectToRoute('receipt_select', ['target' => 'single']);
         }
