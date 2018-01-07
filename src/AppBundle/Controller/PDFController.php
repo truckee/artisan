@@ -78,7 +78,7 @@ class PDFController extends Controller
         $content = $snappy->getOutputFromHtml($html);
         $response = new Response($content, 200, [
             'Content-Type' => 'application/pdf',
-//            'Content-Disposition' => 'attachment; filename=' . urlencode($filename) . '.pdf',
+            'Content-Disposition' => 'attachment; filename=' . urlencode($filename) . '.pdf',
         ]);
 
         return $response;
