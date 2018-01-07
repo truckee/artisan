@@ -133,10 +133,11 @@ class ReceiptController extends Controller
                 $receipt->setShow($show);
                 $em->persist($receipt);
                 $em->flush();
-                $flash->success('Receipt updated!');
                 if ($form->get('view')->isClicked()) {
                     return $this->redirectToRoute('view_single_receipt', ['id' => $id]);
                 }
+                $flash->success('Receipt updated!');
+                
                 return $this->redirectToRoute("homepage");
             } else {
                 $flash->error('At least one ticket is required');
