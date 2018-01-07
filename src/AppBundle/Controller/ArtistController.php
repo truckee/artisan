@@ -78,6 +78,12 @@ class ArtistController extends Controller
     public function addExistingArtistsAction(Request $request, Defaults $defaults)
     {
         $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (null === $show) {
+            $flash->error('Set a show to active before adding an artist!');
+
+            return $this->redirectToRoute("homepage");
+        }
         $artist = new Artist();
         $flash = $this->get('braincrafted_bootstrap.flash');
         $em = $this->getDoctrine()->getManager();

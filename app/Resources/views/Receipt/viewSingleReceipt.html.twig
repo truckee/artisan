@@ -2,64 +2,62 @@
 {% block body %}
     {% include 'default/printButton.html.twig' %}
     <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8 text-center text-bold text-info"><h3>Receipt {{ receipt.id }}</h3></div>
+        <div class="col-xs-12 text-center text-bold text-info"><h3>Receipt {{ receipt.id }}</h3></div>
     </div>
     <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8 text-center">{{ receipt.salesDate|date('m/d/Y') }}</div>
+        <div class="col-xs-12 text-center">{{ receipt.salesDate|date('m/d/Y') }}</div>
     </div>
     <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-1 text-right">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-1 text-right">
             <u>Ticket</u>
         </div>
-        <div class="col-sm-4">
+        <div class="col-xs-3">
             <u>Artist</u>
         </div>
-        <div class="col-sm-1 text-right">
+        <div class="col-xs-2 text-right">
             <u>Amount</u>
         </div>
-        <div class="col-sm-1 text-right">
+        <div class="col-xs-1 text-right">
             <u>Tax</u>
         </div>
-        <div class="col-sm-1 text-right">
+        <div class="col-xs-2 text-right">
             <u>Total</u>
         </div>
     </div>
     {% set grandTotal = 0 %}{% set grandTaxTotal = 0 %}
     {% for ticket in receipt.tickets %}
         <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-1 text-right">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-1 text-right">
                 {{ ticket.ticket }}
             </div>
-            <div class="col-sm-4">
+            <div class="col-xs-3">
                 {{ ticket.artist.lastName~', '~ticket.artist.firstName }}
             </div>
-            <div class="col-sm-1 text-right">
+            <div class="col-xs-2 text-right">
                 {{ ticket.amount|number_format(2) }}
             </div>
-            <div class="col-sm-1 text-right">
+            <div class="col-xs-1 text-right">
                 {#- tax -#}
             </div>
-            <div class="col-sm-1 text-right">
+            <div class="col-xs-2 text-right">
                 {%-  set grandTotal = grandTotal + ticket.amount -%}
             </div>
         </div>
     {% endfor  %}
     <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-2 text-right">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-3 text-right">
             Grand total
         </div>
-        <div class="col-sm-4 text-right">
+        <div class="col-xs-3 text-right">
             {{ '$'~grandTotal|number_format(2) }}
         </div>
-        <div class="col-sm-1 text-right">{%  set tax = grandTotal*show.tax %}
+        <div class="col-xs-1 text-right">{%  set tax = grandTotal*show.tax %}
             {{ '$'~tax|number_format(2, '.', ',') }}
         </div>
-        <div class="col-sm-1 text-right">
+        <div class="col-xs-2 text-right">
             {{ '$'~(grandTotal+tax)|number_format(2, '.', ',') }}
         </div>
     </div>

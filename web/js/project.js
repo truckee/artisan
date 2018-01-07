@@ -9,7 +9,7 @@
 $(document).ready(function () {
 
     $flashError = $("div.alert");
-    if (false === $flashError.text().includes("ERROR")) {
+    if ($.trim($flashError.text()) === '') {
         $flashError.remove();
     }
 
