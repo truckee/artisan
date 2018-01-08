@@ -29,4 +29,4 @@ Upload tarball to the project directory
 
     `$ tar -xf ../vendor.tar.gz -C .`
 
-
+Clear cache: `$ php bin/console cache:clear -e=prod`
