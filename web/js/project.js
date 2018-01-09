@@ -39,7 +39,7 @@ $(document).ready(function () {
         receiptNo = $('#addTicket').data('receipt');
         currLoc = $(location).attr('pathname');
         //remove add paramter if exists
-        nowAt = ('/1' === currLoc.substring(currLoc.length-2, currLoc.length)) ? currLoc.substring(0, currLoc.length-2) : currLoc
+        nowAt = ('/1' === currLoc.substring(currLoc.length-2, currLoc.length)) ? currLoc.substring(0, currLoc.length-2) : currLoc;
         receiptAt = nowAt.indexOf('/receipt');
         ticketAddUrl = nowAt.slice(0, receiptAt) + '/ticket/add/' + receiptNo;
         $.get(ticketAddUrl, function (data) {
@@ -74,7 +74,7 @@ $(document).ready(function () {
                             $(this).dialog("close");
                         }
                     }
-                ],
+                ]
             });
             $("#ticketDialog").html(data);
             $("#ticketDialog").dialog('open');
@@ -118,7 +118,7 @@ $(document).ready(function () {
                             $(this).dialog("close");
                         }
                     }
-                ],
+                ]
             });
             $("#ticketDialog").html(data);
             $("#ticketDialog").dialog('open');

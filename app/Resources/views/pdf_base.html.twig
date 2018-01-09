@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% block stylesheets %}
+            <link href="{{ absolute_url(asset('css/bootstrap.css')) }}" rel="stylesheet" media="all">
+        {% endblock %}
+    </head>
+    <body>
+        <div class="container">
+                <div class="row">
+                    <div class="col-sm-2 text-center"><img src="{{ absolute_url(asset('/images/logo.jpg')) }}" alt="UUFNN logo" media="print"></div>
+                    <div class="col-sm-8 text-center"><h2>{{  label_success(render(controller('AppBundle:Default:defaultShow'))) }}</h2></div>
+                </div>
+            {% block body %}
+            {% endblock %}
+        </div>
+        {% block javascripts %}
+            <script
+                src="https://code.jquery.com/jquery-1.11.3.js"
+                integrity="sha256-IGWuzKD7mwVnNY01LtXxq3L84Tm/RJtNCYBfXZw3Je0="
+            crossorigin="anonymous"></script>
+            <script src="{{ absolute_url(asset('js/bootstrap.js')) }}"></script>
+        {% endblock %}
+    </body>
+</html>

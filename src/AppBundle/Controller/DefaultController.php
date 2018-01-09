@@ -32,4 +32,12 @@ class DefaultController extends Controller
 
         return $response;
     }
+
+    /**
+     * @Route("/demoXcept")
+     */
+    public function demoXceptAction()
+    {
+        throw new \Exception('Not a good idea, bunky!');
+    }
 }

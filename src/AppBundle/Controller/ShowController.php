@@ -76,6 +76,8 @@ class ShowController extends Controller
                     return $this->redirectToRoute('show_edit', ['id' => $id]);
                 case 'summary':
                     return $this->redirectToRoute('show_summary', ['id' => $id]);
+                case 'summary_pdf':
+                    return $this->redirectToRoute('show_summary_pdf', ['id' => $id]);
                 default:
                     break;
             }

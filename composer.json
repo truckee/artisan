@@ -42,6 +42,7 @@
         "javiereguiluz/easyadmin-bundle": "^1.17",
         "jquery/jquery": "1.11.*",
         "knplabs/knp-menu-bundle": "^2.0",
+        "knplabs/knp-snappy-bundle": "^1.5",
         "liip/functional-test-bundle": "^1.8",
         "oyejorge/less.php": "v1.7.0.14",
         "sensio/distribution-bundle": "^5.0.19",

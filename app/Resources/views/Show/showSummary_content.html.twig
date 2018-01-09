@@ -1,0 +1,73 @@
+<div class="row">
+    <div class="col-xs-1"></div>
+    <div class="col-xs-3">
+        <u>Artist</u>
+    </div>
+    <div class="text-right col-xs-2">
+        <u>Sales</u>
+    </div>
+    <div class="text-right col-xs-2">
+        <u>Tax</u>
+    </div>
+    <div class="text-right col-xs-2">
+        <u>Total</u>
+    </div>
+</div>
+{% set grandTotal = 0 %}{% set grandTaxTotal = 0 %}
+{% for artist in artists %}
+    {%  set tax =  artist.total*show.tax%}
+    <div class="row">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-3">
+            {{ artist.lastName~', '~artist.firstName }}
+        </div>
+        <div class="text-right col-xs-2">
+            {{ artist.total|number_format(2) }}
+        </div>
+        <div class="text-right col-xs-2">
+            {{ tax|number_format(2) }}
+        </div>
+        <div class="text-right col-xs-2" style="padding-bottom: 3px;">
+            {{ '$'~(artist.total + tax)|number_format(2) }}
+        </div>{% set grandTotal = grandTotal + artist.total %}{% set grandTaxTotal = grandTaxTotal + tax %}
+    </div>
+{%  endfor  %}
+<div class="row">
+    <div class="col-xs-1"></div>
+    <div class="col-xs-3">
+        Grand total
+    </div>
+    <div class="text-right col-xs-2">
+        {{ '$'~grandTotal|number_format(2) }}
+    </div>
+    <div class="text-right col-xs-2">
+        {{ '$'~grandTaxTotal|number_format(2) }}
+    </div>
+    <div class="text-right col-xs-2">
+        {{ '$'~grandTotal|number_format(2) }}
+    </div>
+</div>
+<div class="row" style="margin-top: 10px;">
+    <div class="col-xs-1"></div>
+    <div class="col-xs-2">
+        Distribution
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-1"></div>
+    <div class="col-xs-2">
+        Artists
+    </div>
+    <div class="text-right col-xs-3">
+        {{ '$'~(grandTotal*(1-show.percent))|number_format(2, '.', ',') }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-1"></div>
+    <div class="col-xs-2">
+        UUFNN
+    </div>
+    <div class="text-right col-xs-3">
+        {{ '$'~(grandTotal*show.percent)|number_format(2, '.', ',') }}
+    </div>
+</div>
