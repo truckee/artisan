@@ -114,7 +114,7 @@ class ReceiptController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before adding a receipt!');
+            $flash->error('Set a show to active before editing a receipt!');
 
             return $this->redirectToRoute("homepage");
         }
@@ -133,10 +133,11 @@ class ReceiptController extends Controller
                 $receipt->setShow($show);
                 $em->persist($receipt);
                 $em->flush();
-                $flash->success('Receipt updated!');
                 if ($form->get('view')->isClicked()) {
                     return $this->redirectToRoute('view_single_receipt', ['id' => $id]);
                 }
+                $flash->success('Receipt updated!');
+                
                 return $this->redirectToRoute("homepage");
             } else {
                 $flash->error('At least one ticket is required');

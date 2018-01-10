@@ -29,8 +29,6 @@ class Defaults
 
     public function showDefault()
     {
-        $defaultShow = $this->em->getRepository('AppBundle:Show')->findOneBy(['default' => true]);
-
-        return $default = $defaultShow;
+        return $this->em->getRepository('AppBundle:Show')->findOneBy(['default' => true]);
     }
 }

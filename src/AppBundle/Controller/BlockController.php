@@ -82,7 +82,7 @@ class BlockController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before adding a ticket block!');
+            $flash->error('Set a show to active before editing a ticket block!');
 
             return $this->redirectToRoute('homepage');
         }

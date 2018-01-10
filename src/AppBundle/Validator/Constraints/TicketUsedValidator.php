@@ -12,7 +12,7 @@
 
 namespace AppBundle\Validator\Constraints;
 
-use AppBundle\Services\TicketUsed;
+use AppBundle\Services\TicketAvailable;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -24,14 +24,14 @@ class TicketUsedValidator extends ConstraintValidator
 {
     private $ticket;
 
-    public function __construct(TicketUsed $ticket)
+    public function __construct(TicketAvailable $ticket)
     {
         $this->ticket = $ticket;
     }
 
     public function validate($ticket, Constraint $constraint)
     {
-        $entity = $this->ticket->getTicketUsed($ticket);
+        $entity = $this->ticket->isTicketAvailable($ticket);
         if (null === $entity) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
