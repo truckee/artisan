@@ -163,7 +163,7 @@ class BlockController extends Controller
         }
         $em->flush();
 
-        $flash->success($count . ' tickets reassigned to artist ' . $newOwner->getFirstName() . ' ' . $newOwner->getLastName());
+        $flash->success('Ticket block, ' .  $count . ' tickets reassigned to artist ' . $newOwner->getFirstName() . ' ' . $newOwner->getLastName());
 
         return $this->redirectToRoute('homepage');
     }
