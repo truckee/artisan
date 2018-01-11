@@ -135,12 +135,16 @@ class ArtistController extends Controller
     }
 
     /**
-     * @Route("/select/{target}", name="artist_select")
+     * @Route("/select/{target}/{notId}/{blockId}", name="artist_select")
      */
-    public function selectArtistAction(Request $request, $target)
+    public function selectArtistAction(Request $request, $target, $notId = null, $blockId = null)
     {
         $artist = new Artist();
-        $form = $this->createForm(SelectArtistType::class, $artist, ['target' => $target]);
+        $form = $this->createForm(SelectArtistType::class, $artist, [
+            'target' => $target,
+            'notId' => $notId,
+            'blockId' => $blockId,
+            ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $id = $request->request->get('select_artist')['artist'];
@@ -152,7 +156,15 @@ class ArtistController extends Controller
                 case 'tickets':
                     return $this->redirectToRoute('single_artist_tickets', ['id' => $id]);
                 case 'block edit':
-                    return $this->redirectToRoute('block_select', ['id' => $id]);
+                    return $this->redirectToRoute('block_select', ['id' => $id, 'action' => 'block_edit']);
+                case 'block reassign':
+                    return $this->redirectToRoute('block_select', ['id' => $id, 'action' => 'block_reassign']);
+                case 'replacement':
+                    $blockId = $request->request->get('select_artist')['blockId'];
+                    return $this->redirectToRoute('block_reassign', [
+                        'replacementId' => $id,
+                        'id' => $blockId,
+                        ]);
                 default:
                     break;
             }

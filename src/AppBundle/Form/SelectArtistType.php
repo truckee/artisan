@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -25,10 +26,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class SelectArtistType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $target = $options['target'];
+        $notId = $options['notId'];
+        $blockId = $options['blockId'];
         $builder
             ->add(
                 'artist',
@@ -39,13 +41,28 @@ class SelectArtistType extends AbstractType
                     'choice_label' => function ($artist, $key, $index) {
                         return $artist->getLastName() . ', ' . $artist->getFirstName();
                     },
-                    'query_builder' => function (EntityRepository $er) {
+                    'query_builder' => function (EntityRepository $er) use ($target, $notId) {
+                        if ('replacement' === $target) {
+                            return $er->createQueryBuilder('a')
+                                ->where('a <> :notId')
+                                ->setParameter('notId', $notId)
+                                ->orderBy('a.firstName', 'ASC')
+                                ->orderBy('a.lastName', 'ASC');
+                        }
                         return $er->createQueryBuilder('a')
                             ->orderBy('a.firstName', 'ASC')
                             ->orderBy('a.lastName', 'ASC');
                     },
                     'mapped' => false,
-            ]
+                ]
+            )
+            ->add(
+                'blockId',
+                HiddenType::class,
+                [
+                'data' => $blockId,
+                'mapped' => false,
+                ]
             )
             ->add(
                 'save',
@@ -53,8 +70,8 @@ class SelectArtistType extends AbstractType
                 array(
                     'label' => 'Select',
                     'label_format' => ['class' => 'text-bold']
-        )
-            );
+                )
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -63,7 +80,8 @@ class SelectArtistType extends AbstractType
             'data_class' => 'AppBundle\Entity\Artist',
             'required' => false,
             'target' => null,
-            'block' => null,
+            'notId' => null,
+            'blockId' => null,
         ));
     }
 }

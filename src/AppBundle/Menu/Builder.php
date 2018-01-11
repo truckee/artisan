@@ -47,11 +47,11 @@ class Builder implements ContainerAwareInterface
             'route' => 'existing_artists'
         ]);
 
-        $menu->addChild('Block');
-        $menu['Block']->addChild('Add block', [
+        $menu->addChild('Tickets');
+        $menu['Tickets']->addChild('Add block', [
             'route' => 'block_add'
         ]);
-        $menu['Block']->addChild('Edit block', [
+        $menu['Tickets']->addChild('Edit block', [
             'route' => 'block_edit'
         ]);
 
@@ -69,7 +69,11 @@ class Builder implements ContainerAwareInterface
         ]);
 
         if ($checker->isGranted('ROLE_ADMIN')) {
-            $menu->addChild('Admin', [
+            $menu->addChild('Admin');
+            $menu['Admin']->addChild('Ticket block reassign', [
+                'route' => 'block_reassign'
+            ]);
+            $menu['Admin']->addChild('Users', [
                 'route' => 'easyadmin'
             ]);
         }

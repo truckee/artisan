@@ -116,9 +116,62 @@ class BlockController extends Controller
     }
 
     /**
-     * @Route("/select/{id}", name="block_select")
+     * @Route("/reassign/{id}/{replacementId}", name="block_reassign")
      */
-    public function selectBlockAction(Request $request, $id)
+    public function reassignBlockAction(Request $request, Defaults $defaults, $id = null, $replacementId = null)
+    {
+        $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (null === $show) {
+            $flash->error('Set a show to active before reassigning a ticket block!');
+
+            return $this->redirectToRoute('homepage');
+        }
+        //get id of block to reassign
+        if (null === $id) {
+            return $this->redirectToRoute('artist_select', ['target' => 'block reassign']);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $block = $em->getRepository('AppBundle:Block')->find($id);
+        $artist = $block->getArtist();
+        $notId = $artist->getId();
+        if (null === $replacementId) {
+            return $this->redirectToRoute('artist_select', [
+                'target' => 'replacement',
+                'blockId' => $id,
+                'notId' => $notId,
+                ]);
+        }
+        //replace artist
+        $newOwner = $em->getRepository('AppBundle:Artist')->find($replacementId);
+        $block->setArtist($newOwner);
+        $em->persist($block);
+
+        $count = 0;
+        $receipts = $em->getRepository('AppBundle:Receipt')->findBy(['show' => $show]);
+        foreach ($receipts as $receipt) {
+            $tickets = $receipt->getTickets();
+            foreach ($tickets as $ticket) {
+                $number = $ticket->getTicket();
+                if ($number >= $block->getLower() && $number <= $block->getUpper()) {
+                    $ticket->setArtist($newOwner);
+                    $em->persist($ticket);
+                    $count ++;
+                }
+            }
+        }
+        $em->flush();
+
+        $flash->success($count . ' tickets reassigned to artist ' . $newOwner->getFirstName() . ' ' . $newOwner->getLastName());
+
+        return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * @Route("/select/{id}/{action}", name="block_select")
+     */
+    public function selectBlockAction(Request $request, $id, $action)
     {
         $em = $this->getDoctrine()->getManager();
         $artist = $em->getRepository('AppBundle:Artist')->find($id);
@@ -133,7 +186,7 @@ class BlockController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $id = $request->request->get('select_block')['block'];
 
-            return $this->redirectToRoute('block_edit', ['id' => $id]);
+            return $this->redirectToRoute($action, ['id' => $id]);
         }
 
         return $this->render(
