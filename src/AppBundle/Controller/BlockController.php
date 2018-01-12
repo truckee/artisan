@@ -63,12 +63,12 @@ class BlockController extends Controller
         }
 
         return $this->render(
-            'Block/blockForm.html.twig',
+                'Block/blockForm.html.twig',
                 [
                     'form' => $form->createView(),
                     'artist' => $artist,
                     'action' => 'Add'
-        ]
+                ]
         );
     }
 
@@ -105,13 +105,13 @@ class BlockController extends Controller
         }
 
         return $this->render(
-            'Block/editBlock.html.twig',
+                'Block/editBlock.html.twig',
                 [
                     'form' => $form->createView(),
                     'block' => $block,
 //                    'artist' => $artist,
                     'action' => 'Edit',
-        ]
+                ]
         );
     }
 
@@ -137,33 +137,25 @@ class BlockController extends Controller
         $artist = $block->getArtist();
         $notId = $artist->getId();
         if (null === $replacementId) {
-            return $this->redirectToRoute('artist_select', [
-                'target' => 'replacement',
-                'blockId' => $id,
-                'notId' => $notId,
-                ]);
+            return $this->redirectToRoute('artist_select',
+                    [
+                        'target' => 'replacement',
+                        'blockId' => $id,
+                        'notId' => $notId,
+            ]);
         }
         //replace artist
         $newOwner = $em->getRepository('AppBundle:Artist')->find($replacementId);
         $block->setArtist($newOwner);
         $em->persist($block);
-
-        $count = 0;
-        $receipts = $em->getRepository('AppBundle:Receipt')->findBy(['show' => $show]);
-        foreach ($receipts as $receipt) {
-            $tickets = $receipt->getTickets();
-            foreach ($tickets as $ticket) {
-                $number = $ticket->getTicket();
-                if ($number >= $block->getLower() && $number <= $block->getUpper()) {
-                    $ticket->setArtist($newOwner);
-                    $em->persist($ticket);
-                    $count ++;
-                }
-            }
-        }
+        $options = [
+            'block' => $block,
+            'newOwner' => $newOwner,
+            'show' => $show,
+        ];
+        $count = $this->blockCheck($options);
         $em->flush();
-
-        $flash->success('Ticket block, ' .  $count . ' tickets reassigned to artist ' . $newOwner->getFirstName() . ' ' . $newOwner->getLastName());
+        $flash->success('Ticket block, ' . $count . ' tickets reassigned to artist ' . $newOwner->getFirstName() . ' ' . $newOwner->getLastName());
 
         return $this->redirectToRoute('homepage');
     }
@@ -176,11 +168,9 @@ class BlockController extends Controller
         $em = $this->getDoctrine()->getManager();
         $artist = $em->getRepository('AppBundle:Artist')->find($id);
         $form = $this->createForm(
-            SelectBlockType::class,
-            null,
-            [
-                'artist' => $artist,
-        ]
+            SelectBlockType::class, null, [
+            'artist' => $artist,
+            ]
         );
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -190,37 +180,67 @@ class BlockController extends Controller
         }
 
         return $this->render(
-            'default/selectEntity.html.twig',
+                'default/selectEntity.html.twig',
                 [
                     'form' => $form->createView(),
                     'heading' => 'Select block for ' . $artist->getFirstName() . ' ' . $artist->getLastName(),
-        ]
+                ]
         );
     }
 
     /**
      * @Route("/delete/{id}", name="block_delete")
      */
-    public function deleteBlockAction(Request $request, $id)
+    public function deleteBlockAction(Request $request, Defaults $defaults, $id)
     {
+        $show = $defaults->showDefault();
         $em = $this->getDoctrine()->getManager();
         $block = $em->getRepository('AppBundle:Block')->find($id);
         $form = $this->createForm(BlockType::class, $block);
         $form->handleRequest($request);
         if ($request->isMethod('POST')) {
-            $artist = $block->getArtist();
-            $artist->removeBlock($block);
-            $em->persist($artist);
-            $em->flush();
             $flash = $this->get('braincrafted_bootstrap.flash');
-            $flash->success('Block deleted!');
+            $options['action'] = 'delete';
+            $options['block'] = $block;
+            $canBeDeleted = $em->getRepository('AppBundle:Block')->canBlockBeDeleted($show, $block);
+            if (true === $canBeDeleted) {
+                $artist = $block->getArtist();
+                $artist->removeBlock($block);
+                $em->persist($artist);
+                $em->flush();
+                $flash = $this->get('braincrafted_bootstrap.flash');
+                $flash->success('Block deleted!');
+            } else {
+                $flash->danger('Block contains at least one used ticket');
+            }
 
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('Block/deleteBlock.html.twig', [
-            'block' => $block,
-            'form' => $form->createView(),
-            ]);
+        return $this->render('Block/deleteBlock.html.twig',
+                [
+                    'block' => $block,
+                    'form' => $form->createView(),
+        ]);
+    }
+
+    private function blockCheck($options)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $receipts = $em->getRepository('AppBundle:Receipt')->findBy(['show' => $options['show']]);
+        $count = 0;
+        foreach ($receipts as $receipt) {
+            $tickets = $receipt->getTickets();
+            foreach ($tickets as $ticket) {
+                $number = $ticket->getTicket();
+                if ($number >= $options['block']->getLower() && $number <= $options['block']->getUpper()) {
+                    $ticket->setArtist($options['newOwner']);
+                    $em->persist($ticket);
+                    $count ++;
+                }
+            }
+        }
+
+        return $count;
     }
 }
