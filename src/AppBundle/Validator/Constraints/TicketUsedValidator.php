@@ -22,16 +22,16 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class TicketUsedValidator extends ConstraintValidator
 {
-    private $ticket;
+    private $check;
 
-    public function __construct(TicketAvailable $ticket)
+    public function __construct(TicketAvailable $check)
     {
-        $this->ticket = $ticket;
+        $this->check = $check;
     }
 
     public function validate($ticket, Constraint $constraint)
     {
-        $entity = $this->ticket->isTicketAvailable($ticket);
+        $entity = $this->check->isTicketAvailable($ticket);
         if (null === $entity) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
