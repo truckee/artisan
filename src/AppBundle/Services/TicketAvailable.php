@@ -16,7 +16,7 @@ use AppBundle\Services\Defaults;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * TicketUsed
+ * TicketAvailable
  *
  */
 class TicketAvailable
@@ -33,12 +33,17 @@ class TicketAvailable
     public function isTicketAvailable($incoming)
     {
         $show = $this->defaults->showDefault();
-        $ticket = (is_object($incoming)) ? $incoming->getTicket() : $incoming;
+        $ticket = $this->em->getRepository('AppBundle:Ticket')->findOneBy(['ticket' => $incoming]);
         //ticket already used?
         $receipts = $this->em->getRepository('AppBundle:Receipt')->findBy(['show' => $show]);
         foreach ($receipts as $receipt) {
+//            if ($receipt->getTickets()->contains($ticket)) {
+//                return null;
+//            }
+//        }
+//          a brute force method that works
             foreach ($receipt->getTickets() as $entity) {
-                if ($entity->getTicket() == $ticket) {
+                if ($entity->getTicket() == $ticket->getTicket()) {
                     return null;
                 }
             }
