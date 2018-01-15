@@ -25,9 +25,9 @@
             <u>Total</u>
         </div>
     </div>
-    {% set grandTotal = 0 %}{% set grandTaxTotal = 0 %}
+    {% set grandTotal = 0 %}{% set grandTaxTotal = 0 %}{% set notaxTotal = 0 %}
     {% for receipt in receipts %}
-        {% set total = 0 %}{% set receiptTaxTotal = 0 %}
+        {% set total = 0 %}{% set receiptTaxTotal = 0 %}{% set notax = 0 %}
         {% for ticket in receipt.tickets %}
             <div class="row">
                 <div class="col-sm-3"></div>
@@ -52,6 +52,20 @@
                 </div>
             </div>
         {% endfor  %}
+        {% if receipt.nontaxable is not null %}{% set notax = receipt.nontaxable.amount  %}
+            <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-1">
+                    {{ receipt.id }}
+                </div>
+                <div class="col-sm-2">
+                    Nontaxable item(s)
+                </div>
+                <div class="col-sm-3 text-right" style="padding-bottom: 10px;">
+                    {{ '$'~notax|number_format(2) }}
+                </div>
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-sm-3"></div>
             <div class="col-sm-2">
@@ -67,10 +81,10 @@
                 {{ receiptTaxTotal|number_format(2) }}
             </div>
             <div class="col-sm-1 text-right" style="padding-bottom: 10px;">
-                {{ '$'~(total + receiptTaxTotal)|number_format(2) }}
+                {{ '$'~(total + receiptTaxTotal+notax)|number_format(2) }}
             </div>
         </div>
-        {% set grandTotal = grandTotal + total %}{% set grandTaxTotal = grandTaxTotal + receiptTaxTotal %}
+        {% set grandTotal = grandTotal + total %}{% set grandTaxTotal = grandTaxTotal + receiptTaxTotal %}{% set notaxTotal = notaxTotal + notax %}
     {%  endfor  %}
     <div class="row">
         <div class="col-sm-3"></div>
@@ -80,13 +94,13 @@
             Grand total
         </div>
         <div class="col-sm-1 text-right">
-            {{ grandTotal|number_format(2) }}
+            {{ (grandTotal+notaxTotal)|number_format(2) }}
         </div>
         <div class="col-sm-1 text-right">
             {{ '$'~grandTaxTotal|number_format(2, '.', ',') }}
         </div>
         <div class="col-sm-1 text-right">
-            {{ '$'~grandTotal|number_format(2, '.', ',') }}
+            {{ '$'~(grandTotal+grandTaxTotal+notaxTotal)|number_format(2, '.', ',') }}
         </div>
     </div>
 {% endblock body %}

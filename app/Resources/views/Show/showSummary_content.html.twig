@@ -32,19 +32,28 @@
         </div>{% set grandTotal = grandTotal + artist.total %}{% set grandTaxTotal = grandTaxTotal + tax %}
     </div>
 {%  endfor  %}
+<div class="row" style="padding: 10px 0;">
+    <div class="col-xs-1"></div>
+        <div class="col-xs-3">
+            Nontaxable items
+        </div>
+        <div class="text-right col-xs-2">
+            {{ taxfree|number_format(2) }}
+        </div>
+</div>
 <div class="row">
     <div class="col-xs-1"></div>
     <div class="col-xs-3">
         Grand total
     </div>
     <div class="text-right col-xs-2">
-        {{ '$'~grandTotal|number_format(2) }}
+        {{ '$'~(grandTotal+taxfree)|number_format(2) }}
     </div>
     <div class="text-right col-xs-2">
         {{ '$'~grandTaxTotal|number_format(2) }}
     </div>
     <div class="text-right col-xs-2">
-        {{ '$'~grandTotal|number_format(2) }}
+        {{ '$'~(grandTotal+taxfree+grandTaxTotal)|number_format(2) }}
     </div>
 </div>
 <div class="row" style="margin-top: 10px;">
@@ -68,6 +77,6 @@
         UUFNN
     </div>
     <div class="text-right col-xs-3">
-        {{ '$'~(grandTotal*show.percent)|number_format(2, '.', ',') }}
+        {{ '$'~(grandTotal*show.percent+taxfree)|number_format(2, '.', ',') }}
     </div>
 </div>

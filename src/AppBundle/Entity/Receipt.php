@@ -14,6 +14,7 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Show;
 use AppBundle\Entity\Ticket;
+use AppBundle\Validator\Constraints as AppAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -21,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="receipt")
+ * @AppAssert\NonzeroReceipt
  */
 class Receipt
 {
@@ -29,6 +31,7 @@ class Receipt
     {
         $this->tickets = new ArrayCollection();
     }
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -40,13 +43,13 @@ class Receipt
     {
         return $this->id;
     }
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Ticket", mappedBy="receipt", cascade={"persist"}, orphanRemoval=true, fetch="EAGER")
      * @ORM\OrderBy({"ticket" = "ASC"})
      * @Assert\Valid()
-     * @Assert\Count(min=1,minMessage="At least one ticket is required")
      */
     protected $tickets;
 
@@ -55,6 +58,11 @@ class Receipt
      * @ORM\JoinColumn(name="show_id", referencedColumnName="id")
      */
     protected $show;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Nontaxable")
+     */
+    protected $nontaxable;
 
     public function addTicket(Ticket $ticket)
     {
@@ -85,6 +93,7 @@ class Receipt
     {
         return $this->show;
     }
+
     /**
      * @ORM\Column(name="sales_date", type="date", nullable = false)
      */
@@ -100,5 +109,17 @@ class Receipt
     public function getSalesDate()
     {
         return $this->salesDate;
+    }
+
+    public function setNontaxable($nontaxable)
+    {
+        $this->nontaxable = $nontaxable;
+
+        return $this;
+}
+
+    public function getNontaxable()
+    {
+        return $this->nontaxable;
     }
 }

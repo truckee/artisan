@@ -53,4 +53,16 @@ class ShowRepository extends EntityRepository
 
         return $qb;
     }
+
+    public function getShowNontaxable($show)
+    {
+        return $this->getEntityManager()->createQueryBuilder('r')
+            ->select('SUM(n.amount)')
+            ->from('AppBundle:Receipt', 'r')
+            ->join('AppBundle:Nontaxable', 'n', 'WITH', 'r.nontaxable = n')
+            ->where('r.show = :show')
+            ->setParameter(':show', $show->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

@@ -35,12 +35,28 @@ $(document).ready(function () {
         width: '40%'
     });
 
+    $("#nontaxDialog").dialog({
+        autoOpen: false,
+        resizable: true,
+        modal: true,
+        width: '40%',
+        close: function() {
+            nonTax = $('#nontax_amount');
+            if (0 < parseInt(nonTax.text())) {
+                $("#nontaxItemAdd").hide();
+            }
+        }
+    }
+    );
+
+    if ($('#nonTaxEditRow').length > 0) {
+        $('#nontaxItemAdd').hide();
+    } else {
+        $('#nontaxItemAdd').show();
+    }
+
     $('#addTicket').on('click', function () {
-        receiptNo = $('#addTicket').data('receipt');
-        currLoc = $(location).attr('pathname');
-        //remove add paramter if exists
-        nowAt = ('/1' === currLoc.substring(currLoc.length-2, currLoc.length)) ? currLoc.substring(0, currLoc.length-2) : currLoc;
-        receiptAt = nowAt.indexOf('/receipt');
+        receiptAt = receiptUrl($(this));
         ticketAddUrl = nowAt.slice(0, receiptAt) + '/ticket/add/' + receiptNo;
         $.get(ticketAddUrl, function (data) {
             $("#ticketDialog").dialog({
@@ -80,6 +96,90 @@ $(document).ready(function () {
             $("#ticketDialog").dialog('open');
         });
     });
+
+    $('#nontaxItemAdd').on('click', function () {
+        receiptAt = receiptUrl($(this));
+        nontaxAddUrl = nowAt.slice(0, receiptAt) + '/nontax/addAmount/' + receiptNo;
+        nonTax = $('#nontaxable_nontaxable');
+        $.get(nontaxAddUrl, function (data) {
+            $("#nontaxDialog").dialog({
+                title: 'Add nontaxable item(s)',
+                buttons: [
+                    {
+                        text: "Submit",
+                        id: "submit",
+                        class: "btn-xs btn-primary",
+                        click: function () {
+                            var formData = $("form").serialize();
+                            $.post(nontaxAddUrl, formData, function (response) {
+                                //if validation error:
+                                if (response.indexOf('<form') === 0) {
+                                    $("#nontaxDialog").html(response);
+                                    return;
+                                }
+                                taxfree = $.parseJSON(response);
+                                $('#tickets').append($.trim(taxfree.replace(/[\t\n]+/g,' ')));
+                                $("#nontaxDialog").html('Nontaxable added!');
+                                $("#submit").hide();
+                            });
+                        }
+                    },
+                    {
+                        text: 'Close',
+                        id: "close",
+                        class: "btn-xs btn-primary",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
+            $("#nontaxDialog").html(data);
+            $("#nontaxDialog").dialog('open');
+        });
+   });
+
+    $('#nontaxItemEdit').on('click', function () {
+        nontaxId = $(this).data('nontax');
+        receiptAt = receiptUrl($(this));
+        amount = $(this).parent().parent().find($('#amount'));
+        nontaxAddUrl = nowAt.slice(0, receiptAt) + '/nontax/editAmount/' + nontaxId;
+        $.get(nontaxAddUrl, function (data) {
+            $("#nontaxDialog").dialog({
+                title: 'Edit nontaxable item(s)',
+                buttons: [
+                    {
+                        text: "Submit",
+                        id: "submit",
+                        class: "btn-xs btn-primary",
+                        click: function () {
+                            var formData = $("form").serialize();
+                            $.post(nontaxAddUrl, formData, function (response) {
+                                //if validation error:
+                                if (response.indexOf('<form') === 0) {
+                                    $("#nontaxDialog").html(response);
+                                    return;
+                                }
+                                $('#nontax_amount').text(response);
+                                $("#nontaxDialog").html('Nontaxable updated!');
+                                $("#submit").hide();
+                            });
+                        }
+                    },
+                    {
+                        text: 'Close',
+                        id: "close",
+                        class: "btn-xs btn-primary",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
+            $("#nontaxDialog").html(data);
+            $("#nontaxDialog").dialog('open');
+        });
+   });
 
     $('[id^=editTicket]').on('click', function() {
         ticketId = $(this).data('ticket');
@@ -135,4 +235,14 @@ $(document).ready(function () {
             $('#ticket_artist').val(data);
         });
     });
+
+    function receiptUrl(clickedId) {
+        receiptNo = $(clickedId).data('receipt');
+        currLoc = $(location).attr('pathname');
+        //remove add paramter if exists
+        nowAt = ('/1' === currLoc.substring(currLoc.length-2, currLoc.length)) ? currLoc.substring(0, currLoc.length-2) : currLoc;
+
+        return nowAt.indexOf('/receipt');
+    }
+
 });

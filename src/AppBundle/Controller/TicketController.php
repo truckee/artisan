@@ -67,7 +67,7 @@ class TicketController extends Controller
     /**
      * @Route("/edit/{id}", name="ticket_edit")
      */
-    public function editTicketAction(Request $request, Defaults $defaults, $id)
+    public function editTicketAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $ticket = $em->getRepository('AppBundle:Ticket')->find($id);

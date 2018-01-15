@@ -63,11 +63,13 @@ class ReportController extends Controller
             return $this->redirectToRoute('show_select', ['target' => 'summary']);
         }
         $summary = $em->getRepository('AppBundle:Show')->getShowSummary($show);
+        $taxfree = $em->getRepository('AppBundle:Show')->getShowNontaxable($show);
 
         return $this->render(
             'Show/showSummary.html.twig',
                 [
                     'artists' => $summary,
+                    'taxfree' => $taxfree,
                     'show' => $show,
         ]
         );

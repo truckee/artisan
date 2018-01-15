@@ -51,10 +51,8 @@ class ReceiptController extends Controller
 
     /**
      * @Route("/add", name="receipt_add")
-     * @param Request $request
-     * @param Defaults $defaults
      */
-    public function addReceipt(Request $request, Defaults $defaults, TicketArtist $artist)
+    public function addReceipt(Defaults $defaults)
     {
         $receipt = new Receipt();
         $show = $defaults->showDefault();
@@ -73,8 +71,8 @@ class ReceiptController extends Controller
 
         return $this->redirectToRoute('receipt_edit',
                 [
-                'id' => $receipt->getId(),
-                'add' => true,
+                    'id' => $receipt->getId(),
+                    'add' => true,
         ]);
     }
 
@@ -93,6 +91,8 @@ class ReceiptController extends Controller
                     return $this->redirectToRoute('receipt_edit', ['id' => $id]);
                 case 'single':
                     return $this->redirectToRoute('view_single_receipt', ['id' => $id]);
+                case 'add_nontaxable':
+                    return $this->redirectToRoute('nontax_add', ['id' => $id]);
                 default:
                     break;
             }
@@ -106,10 +106,9 @@ class ReceiptController extends Controller
     }
 
     /**
-     * @Route("/edit/{id}/{add}", name="receipt_edit")
+     * @Route("/edit/{id}", name="receipt_edit")
      */
-    public function editReceiptAction(Request $request, Defaults $defaults, TicketArtist $artist, $id = null,
-                                      $add = null)
+    public function editReceiptAction(Request $request, Defaults $defaults, $id = null)
     {
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
@@ -123,24 +122,22 @@ class ReceiptController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['id' => $id]);
-        $form = $this->createForm(ReceiptType::class, $receipt,
-            [
-            'save_label' => 'Save',
+        $form = $this->createForm(ReceiptType::class, $receipt, [
+                'save_label' => 'Save',
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $receipt->setShow($show);
                 $em->persist($receipt);
                 $em->flush();
                 if ($form->get('view')->isClicked()) {
                     return $this->redirectToRoute('view_single_receipt', ['id' => $id]);
                 }
                 $flash->success('Receipt updated!');
-                
+
                 return $this->redirectToRoute("homepage");
             } else {
-                $flash->error('At least one ticket is required');
+                $flash->error('At least one ticket or a nontaxable amount is required');
             }
         }
 

@@ -1,0 +1,8 @@
+<form action="{{ path('nontax_add', {'id':id}) }}" method="post">
+    <div class="row">
+        <div class="col-sm-12">
+            {{ form_row(form.amount) }}
+        </div>
+    </div>
+{{ form_rest(form) }}
+</form>

@@ -46,19 +46,32 @@
             </div>
         </div>
     {% endfor  %}
+    {% set notax = 0 %}
+    {%  if receipt.nontaxable.amount is defined %}
+    {% set notax = receipt.nontaxable.amount %}
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-4">
+                Nontaxable item(s)
+            </div>
+            <div class="col-xs-2 text-right">
+                {{ notax|number_format(2) }}
+            </div>
+        </div>
+    {% endif %}
     <div class="row">
         <div class="col-xs-1"></div>
         <div class="col-xs-3 text-right">
             Grand total
         </div>
         <div class="col-xs-3 text-right">
-            {{ '$'~grandTotal|number_format(2) }}
+            {{ '$'~(grandTotal+notax)|number_format(2) }}
         </div>
         <div class="col-xs-1 text-right">{%  set tax = grandTotal*show.tax %}
             {{ '$'~tax|number_format(2, '.', ',') }}
         </div>
         <div class="col-xs-2 text-right">
-            {{ '$'~(grandTotal+tax)|number_format(2, '.', ',') }}
+            {{ '$'~(grandTotal+tax+notax)|number_format(2, '.', ',') }}
         </div>
     </div>
 {% endblock body %}
