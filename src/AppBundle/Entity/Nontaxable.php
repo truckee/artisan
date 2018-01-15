@@ -36,11 +36,17 @@ class Nontaxable
 
     /**
      * @ORM\Column(type="decimal", precision=8, scale=2, nullable = true)
-     * @Assert\NotBlank(message = "May not be empty")
-     * @Assert\Type(type="numeric", message = "Must be a number")
-     * @Assert\GreaterThan(value=0, message = "Must be > 0")
+     * @Assert\NotBlank(message = "May not be empty", groups={"add", "edit"})
+     * @Assert\Type(type="numeric", message = "Must be a number", groups={"add", "edit"})
+     * @Assert\GreaterThan(value=0, message = "Must be > 0", groups={"add"})
+     * @Assert\GreaterThanOrEqual(value=0, message = "Must be >= 0", groups={"edit"})
      */
     protected $amount;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Receipt", mappedBy="nontaxable")
+     */
+    protected $receipt;
 
     public function setAmount($amount)
     {
@@ -52,6 +58,18 @@ class Nontaxable
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    public function setReceipt($receipt)
+    {
+        $this->receipt = $receipt;
+
+        return $this;
+    }
+
+    public function getReceipt()
+    {
+        return $this->receipt;
     }
     
 }

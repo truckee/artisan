@@ -40,10 +40,14 @@ $(document).ready(function () {
         resizable: true,
         modal: true,
         width: '40%',
-        close: function() {
+        close: function () {
             nonTax = $('#nontax_amount');
             if (0 < parseInt(nonTax.text())) {
                 $("#nontaxItemAdd").hide();
+            }
+            if (0 === parseInt(nonTax.text())) {
+                $("#nonTaxEditRow").hide();
+                $("#nontaxItemAdd").show();
             }
         }
     }
@@ -76,7 +80,7 @@ $(document).ready(function () {
                                 }
                                 //return ticket
                                 ticket = $.parseJSON(response);
-                                $('#tickets').append($.trim(ticket.replace(/[\t\n]+/g,' ')));
+                                $('#tickets').append($.trim(ticket.replace(/[\t\n]+/g, ' ')));
                                 $("#ticketDialog").html('Ticket added!');
                                 $("#submit").hide();
                             });
@@ -118,7 +122,7 @@ $(document).ready(function () {
                                     return;
                                 }
                                 taxfree = $.parseJSON(response);
-                                $('#tickets').append($.trim(taxfree.replace(/[\t\n]+/g,' ')));
+                                $('#tickets').append($.trim(taxfree.replace(/[\t\n]+/g, ' ')));
                                 $("#nontaxDialog").html('Nontaxable added!');
                                 $("#submit").hide();
                             });
@@ -137,14 +141,14 @@ $(document).ready(function () {
             $("#nontaxDialog").html(data);
             $("#nontaxDialog").dialog('open');
         });
-   });
+    });
 
-    $('#nontaxItemEdit').on('click', function () {
+    $(document).on('click', '#nontaxItemEdit',  function () {
         nontaxId = $(this).data('nontax');
         receiptAt = receiptUrl($(this));
         amount = $(this).parent().parent().find($('#amount'));
-        nontaxAddUrl = nowAt.slice(0, receiptAt) + '/nontax/editAmount/' + nontaxId;
-        $.get(nontaxAddUrl, function (data) {
+        nontaxEditUrl = nowAt.slice(0, receiptAt) + '/nontax/editAmount/' + nontaxId;
+        $.get(nontaxEditUrl, function (data) {
             $("#nontaxDialog").dialog({
                 title: 'Edit nontaxable item(s)',
                 buttons: [
@@ -154,7 +158,7 @@ $(document).ready(function () {
                         class: "btn-xs btn-primary",
                         click: function () {
                             var formData = $("form").serialize();
-                            $.post(nontaxAddUrl, formData, function (response) {
+                            $.post(nontaxEditUrl, formData, function (response) {
                                 //if validation error:
                                 if (response.indexOf('<form') === 0) {
                                     $("#nontaxDialog").html(response);
@@ -179,15 +183,15 @@ $(document).ready(function () {
             $("#nontaxDialog").html(data);
             $("#nontaxDialog").dialog('open');
         });
-   });
+    });
 
-    $('[id^=editTicket]').on('click', function() {
+    $(document).on('click', '[id^=editTicket]',  function () {
         ticketId = $(this).data('ticket');
         amount = $(this).parent().parent().find($('#amount' + ticketId));
         nowAt = $(location).attr('pathname');
         receiptAt = nowAt.indexOf('/receipt');
         ticketEditUrl = nowAt.slice(0, receiptAt) + '/ticket/edit/' + ticketId;
-        $.get(ticketEditUrl, function(data) {
+        $.get(ticketEditUrl, function (data) {
             $("#ticketDialog").dialog({
                 title: 'Edit ticket',
                 buttons: [
@@ -240,7 +244,7 @@ $(document).ready(function () {
         receiptNo = $(clickedId).data('receipt');
         currLoc = $(location).attr('pathname');
         //remove add paramter if exists
-        nowAt = ('/1' === currLoc.substring(currLoc.length-2, currLoc.length)) ? currLoc.substring(0, currLoc.length-2) : currLoc;
+        nowAt = ('/1' === currLoc.substring(currLoc.length - 2, currLoc.length)) ? currLoc.substring(0, currLoc.length - 2) : currLoc;
 
         return nowAt.indexOf('/receipt');
     }

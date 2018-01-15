@@ -60,7 +60,7 @@ class Receipt
     protected $show;
 
     /**
-     * @ORM\OneToOne(targetEntity="Nontaxable")
+     * @ORM\OneToOne(targetEntity="Nontaxable", inversedBy="receipt")
      */
     protected $nontaxable;
 

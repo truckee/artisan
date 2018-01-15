@@ -39,7 +39,7 @@ class NontaxableType extends AbstractType
         $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\Nontaxable',
             'required' => false,
-            'save_label' => null,
+            'validation_groups' => [],
         ]);
     }
 }

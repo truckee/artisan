@@ -45,7 +45,10 @@ class NontaxableController extends Controller
         }
         $nontax = new Nontaxable();
         $em = $this->getDoctrine()->getManager();
-        $form = $this->createForm(NontaxableType::class, $nontax);
+        $form = $this->createForm(NontaxableType::class, $nontax,
+            [
+                'validation_groups' => ['add'],
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $receipt = $em->getRepository('AppBundle:Receipt')->find($id);
@@ -76,12 +79,22 @@ class NontaxableController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $nontax = $em->getRepository('AppBundle:Nontaxable')->find($id);
-        $form = $this->createForm(NontaxableType::class, $nontax);
+        $form = $this->createForm(NontaxableType::class, $nontax,
+            [
+                'validation_groups' => ['edit'],
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($nontax);
-            $em->flush();
+            if (0 !== (int) $nontax->getAmount()) {
+                $em->persist($nontax);
             $response = new Response($nontax->getAmount());
+            } else {
+                $receipt = $nontax->getReceipt();
+                $receipt->setNontaxable(null);
+                $em->remove($nontax);
+            $response = new Response(0);
+            }
+            $em->flush();
 
             return $response;
         }
@@ -92,5 +105,4 @@ class NontaxableController extends Controller
                     'id' => $id,
         ]);
     }
-    
 }

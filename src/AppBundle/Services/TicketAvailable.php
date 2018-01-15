@@ -33,17 +33,12 @@ class TicketAvailable
     public function isTicketAvailable($incoming)
     {
         $show = $this->defaults->showDefault();
-        $ticket = $this->em->getRepository('AppBundle:Ticket')->findOneBy(['ticket' => $incoming]);
+        $ticket = (is_object($incoming)) ? $incoming->getTicket() : $incoming;
         //ticket already used?
         $receipts = $this->em->getRepository('AppBundle:Receipt')->findBy(['show' => $show]);
         foreach ($receipts as $receipt) {
-//            if ($receipt->getTickets()->contains($ticket)) {
-//                return null;
-//            }
-//        }
-//          a brute force method that works
             foreach ($receipt->getTickets() as $entity) {
-                if ($entity->getTicket() == $ticket->getTicket()) {
+                if ($entity->getTicket() == $ticket) {
                     return null;
                 }
             }
