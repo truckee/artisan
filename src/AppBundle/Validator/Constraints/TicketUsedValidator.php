@@ -12,9 +12,11 @@
 
 namespace AppBundle\Validator\Constraints;
 
-use AppBundle\Services\TicketAvailable;
+//use AppBundle\Services\TicketAvailable;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Doctrine\ORM\EntityManagerInterface;
+use AppBundle\Services\Defaults;
 
 /**
  * TicketUsedValidator
@@ -22,19 +24,28 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class TicketUsedValidator extends ConstraintValidator
 {
-    private $check;
+    private $em;
+    private $defaults;
 
-    public function __construct(TicketAvailable $check)
+    public function __construct(EntityManagerInterface $em, Defaults $defaults)
     {
-        $this->check = $check;
+        $this->em = $em;
+        $this->defaults = $defaults;
     }
 
     public function validate($ticket, Constraint $constraint)
     {
-        $entity = $this->check->isTicketAvailable($ticket);
-        if (null === $entity) {
-            $this->context->buildViolation($constraint->message)
-                ->addViolation();
+        $show = $this->defaults->showDefault();
+        $entity = $this->em->getRepository('AppBundle:Ticket')->findOneBy(['ticket' => $ticket]);
+        if (null !== $entity) {
+            //ticket already used?
+            $receipts = $this->em->getRepository('AppBundle:Receipt')->findBy(['show' => $show]);
+            foreach ($receipts as $receipt) {
+                if (true === $receipt->getTickets()->contains($entity)) {
+                    $this->context->buildViolation($constraint->message)
+                        ->addViolation();
+                }
+            }
         }
     }
 }
