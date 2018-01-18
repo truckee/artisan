@@ -23,7 +23,8 @@ class NonzeroReceiptValidator extends ConstraintValidator
 {
     public function validate($receipt, Constraint $constraint)
     {
-        if (null === $receipt->getNontaxable()) {
+
+        if (null === $receipt->getNontaxable() && 0 === count($receipt->getTickets())) {
                 $this->context->buildViolation($constraint->message)
                     ->atPath('block')
                     ->addViolation();

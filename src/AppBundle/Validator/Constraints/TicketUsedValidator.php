@@ -36,14 +36,12 @@ class TicketUsedValidator extends ConstraintValidator
     public function validate($ticket, Constraint $constraint)
     {
         $show = $this->defaults->showDefault();
-        $entity = $this->em->getRepository('AppBundle:Ticket')->findOneBy(['ticket' => $ticket]);
-        if (null !== $entity) {
-            //ticket already used?
-            $receipts = $this->em->getRepository('AppBundle:Receipt')->findBy(['show' => $show]);
-            foreach ($receipts as $receipt) {
-                if (true === $receipt->getTickets()->contains($entity)) {
-                    $this->context->buildViolation($constraint->message)
-                        ->addViolation();
+        $entities = $this->em->getRepository('AppBundle:Ticket')->findBy(['ticket' => $ticket]);
+        if (null !== $entities) {
+            foreach ($entities as $possible) {
+                if ($show === $possible->getReceipt()->getShow()) {
+                    $this->context->buildViolation($constraint->message)->addViolation();
+                    return;
                 }
             }
         }

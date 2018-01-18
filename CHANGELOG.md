@@ -1,5 +1,8 @@
 ### Change log
 
+### 2018-01-18 ###
+- Redefine receipt validation
+
 ### 2018-01-15: ###
 - Enable single non-taxable amount
 - Restrict all artist drop-downs to those in show
