@@ -78,16 +78,16 @@
                 Total
             </div>
             <div class="col-sm-1 text-right">
-                {{ total|number_format(2) }}
+                {{ '$'~(total+notax)|number_format(2) }}
             </div>
             <div class="col-sm-1 text-right">
-                {{ receiptTaxTotal|number_format(2) }}
+                {{ '$'~receiptTaxTotal|number_format(2) }}
             </div>
             <div class="col-sm-1 text-right" style="padding-bottom: 10px;">
                 {{ '$'~(total + receiptTaxTotal+notax)|number_format(2) }}
             </div>
         </div>
-        {% set grandTotal = grandTotal + total %}{% set grandTaxTotal = grandTaxTotal + receiptTaxTotal %}{% set notaxTotal = notaxTotal + notax %}
+        {% set grandTotal = grandTotal + total + notax %}{% set grandTaxTotal = grandTaxTotal + receiptTaxTotal %}
     {%  endfor  %}
     <div class="row">
         <div class="col-sm-3"></div>
@@ -97,7 +97,7 @@
             Grand total
         </div>
         <div class="col-sm-1 text-right">
-            {{ (grandTotal+notaxTotal)|number_format(2) }}
+            {{ '$'~(grandTotal+notaxTotal)|number_format(2) }}
         </div>
         <div class="col-sm-1 text-right">
             {{ '$'~grandTaxTotal|number_format(2, '.', ',') }}
