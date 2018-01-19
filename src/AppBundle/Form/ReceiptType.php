@@ -32,10 +32,10 @@ class ReceiptType extends AbstractType
                 'format' => 'MM/dd/yyyy',
             ])
             ->add('save', SubmitType::class, array(
-                'label' => 'Save',
+                'label' => 'Close',
             ))
             ->add('view', SubmitType::class, array(
-                'label' => 'Save & view',
+                'label' => 'Close & view',
             ))
         ;
     }
