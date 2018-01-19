@@ -112,7 +112,7 @@ class ReportController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $em = $this->getDoctrine()->getManager();
-        $receipts = $em->getRepository('AppBundle:Receipt')->findBy(['show' => $show], ['id' => 'ASC']);
+        $receipts = $em->getRepository('AppBundle:Receipt')->nonzeroReceipts($show);
 
         return $this->render('Receipt/viewShowReceipts.html.twig',
                 [
