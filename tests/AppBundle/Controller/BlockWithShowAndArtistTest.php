@@ -76,7 +76,7 @@ class BlockWithShowAndArtistTest extends WebTestCase
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Block added")')->count());
 
-        $crawler = $this->client->request('GET', '/block/byBlock');
+        $crawler = $this->client->request('GET', '/reports/ArtistsByBlock');
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("1050")')->count());
     }

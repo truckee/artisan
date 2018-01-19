@@ -101,7 +101,7 @@ class NoDefaultShowTest extends WebTestCase
         $crawler = $this->client->request('GET', '/receipt/edit');
 
         $this->assertGreaterThan(
-            0, $crawler->filter('html:contains("Set a show to active before adding a receipt")')->count()
+            0, $crawler->filter('html:contains("Set a show to active before editing a receipt")')->count()
         );
     }
 

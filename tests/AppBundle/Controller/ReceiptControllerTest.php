@@ -64,9 +64,9 @@ class ReceiptControllerTest extends WebTestCase
     {
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/receipt/add');
-        $form = $crawler->selectButton('Save')->form();
+        $form = $crawler->selectButton('Close')->form();
         $crawler = $this->client->submit($form);
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("At least one ticket is required")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("At least one ticket or a nontaxable amount is required")')->count());
     }
 }
