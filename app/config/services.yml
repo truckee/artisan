@@ -37,3 +37,10 @@ services:
     AppBundle\Services\PdfService:
         arguments:
             $os: '%os%'
+
+    Braincrafted\Bundle\BootstrapBundle\Session\FlashMessage:
+        public: false
+
+    braincrafted_bootstrap.flash:
+        alias: Braincrafted\Bundle\BootstrapBundle\Session\FlashMessage
+        public: true
