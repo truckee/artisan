@@ -6,7 +6,25 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+var urlArray = [];
+var ticketDialog;
+var nontaxDialog;
+var addAmend;
+var ticketAddParams = {};
+var ticketEditParams = {};
+var nontaxAddParams = {};
+var nontaxEditParams = {};
+
 $(document).ready(function () {
+    //initialize parameters
+    ticketDialog = $("#ticketDialog");
+    nontaxDialog = $("#nontaxDialog");
+    addAmend = $('#tickets');
+    nontaxAddParams = {title: 'Add nontaxable item(s)', success: 'Nontaxable added!'};
+    nontaxEditParams = {title: 'Edit nontaxable item(s)', success: 'Nontaxable updated!', update: $('#nontax_amount')};
+    ticketAddParams = {title: 'Add ticket', success: 'Ticket added!'};
+    ticketEditParams = {title: 'Edit ticket', update: $('#amount'), success: 'Ticket updated!'};
 
     $flashError = $("div.alert");
     if ($.trim($flashError.text()) === '') {
@@ -28,208 +46,55 @@ $(document).ready(function () {
         window.print();
     });
 
-    $("#ticketDialog").dialog({
-        autoOpen: false,
-        resizable: true,
-        modal: true,
-        width: '40%'
+    $(document).on('click', '#addTicket', function () {
+        urlArray = dialogUrl(this.id);
+        receiptEdit(ticketAddParams, ticketDialog, 'add');
     });
 
-    $("#nontaxDialog").dialog({
+    $(document).on('click', '[id^=editTicket]', function () {
+        url = dialogUrl(this.id);
+        receiptEdit(ticketEditParams, ticketDialog, 'edit');
+    });
+
+    $(document).on('click', '#addNontaxItem', function () {
+        url = dialogUrl(this.id);
+        receiptEdit(nontaxAddParams, nontaxDialog, 'add');
+    });
+
+    $(document).on('click', '#editNontaxItem', function () {
+        url = dialogUrl(this.id);
+        receiptEdit(nontaxEditParams, nontaxDialog, 'edit');
+    });
+
+    nontaxDialog.keydown(function(event){
+    if(event.keyCode === 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+
+
+//prevent adding more than one nontax item
+    nontaxDialog.dialog({
         autoOpen: false,
-        resizable: true,
-        modal: true,
-        width: '40%',
         close: function () {
-            nonTax = $('#nontax_amount');
-            if (0 < parseInt(nonTax.text())) {
-                $("#nontaxItemAdd").hide();
+            if (0 < parseInt($('#' + nontaxEditParams.update.prop('id')).text())) {
+                $("#addNontaxItem").hide();
             }
-            if (0 === parseInt(nonTax.text())) {
+            if (0 === parseInt($('#' + nontaxEditParams.update.prop('id')).text())) {
                 $("#nonTaxEditRow").hide();
-                $("#nontaxItemAdd").show();
+                $("#addNontaxItem").show();
             }
         }
     }
     );
-
     if ($('#nonTaxEditRow').length > 0) {
-        $('#nontaxItemAdd').hide();
+        $('#addNontaxItem').hide();
     } else {
-        $('#nontaxItemAdd').show();
+        $('#addNontaxItem').show();
     }
 
-    $('#addTicket').on('click', function () {
-        receiptAt = receiptUrl($(this));
-        ticketAddUrl = nowAt.slice(0, receiptAt) + '/ticket/add/' + receiptNo;
-        $.get(ticketAddUrl, function (data) {
-            $("#ticketDialog").dialog({
-                title: 'Add ticket',
-                buttons: [
-                    {
-                        text: "Submit",
-                        id: "submit",
-                        class: "btn-xs btn-primary",
-                        click: function () {
-                            var formData = $("form").serialize();
-                            $.post(ticketAddUrl, formData, function (response) {
-                                //if validation error:
-                                if (response.indexOf('<form') === 0) {
-                                    $("#ticketDialog").html(response);
-                                    return;
-                                }
-                                //return ticket
-                                ticket = $.parseJSON(response);
-                                $('#tickets').append($.trim(ticket.replace(/[\t\n]+/g, ' ')));
-                                $("#ticketDialog").html('Ticket added!');
-                                $("#submit").hide();
-                            });
-                        }
-                    },
-                    {
-                        text: 'Close',
-                        id: "close",
-                        class: "btn-xs btn-primary",
-                        click: function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                ]
-            });
-            $("#ticketDialog").html(data);
-            $("#ticketDialog").dialog('open');
-        });
-    });
-
-    $('#nontaxItemAdd').on('click', function () {
-        receiptAt = receiptUrl($(this));
-        nontaxAddUrl = nowAt.slice(0, receiptAt) + '/nontax/addAmount/' + receiptNo;
-        nonTax = $('#nontaxable_nontaxable');
-        $.get(nontaxAddUrl, function (data) {
-            $("#nontaxDialog").dialog({
-                title: 'Add nontaxable item(s)',
-                buttons: [
-                    {
-                        text: "Submit",
-                        id: "submit",
-                        class: "btn-xs btn-primary",
-                        click: function () {
-                            var formData = $("form").serialize();
-                            $.post(nontaxAddUrl, formData, function (response) {
-                                //if validation error:
-                                if (response.indexOf('<form') === 0) {
-                                    $("#nontaxDialog").html(response);
-                                    return;
-                                }
-                                taxfree = $.parseJSON(response);
-                                $('#tickets').append($.trim(taxfree.replace(/[\t\n]+/g, ' ')));
-                                $("#nontaxDialog").html('Nontaxable added!');
-                                $("#submit").hide();
-                            });
-                        }
-                    },
-                    {
-                        text: 'Close',
-                        id: "close",
-                        class: "btn-xs btn-primary",
-                        click: function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                ]
-            });
-            $("#nontaxDialog").html(data);
-            $("#nontaxDialog").dialog('open');
-        });
-    });
-
-    $(document).on('click', '#nontaxItemEdit',  function () {
-        nontaxId = $(this).data('nontax');
-        receiptAt = receiptUrl($(this));
-        amount = $(this).parent().parent().find($('#amount'));
-        nontaxEditUrl = nowAt.slice(0, receiptAt) + '/nontax/editAmount/' + nontaxId;
-        $.get(nontaxEditUrl, function (data) {
-            $("#nontaxDialog").dialog({
-                title: 'Edit nontaxable item(s)',
-                buttons: [
-                    {
-                        text: "Submit",
-                        id: "submit",
-                        class: "btn-xs btn-primary",
-                        click: function () {
-                            var formData = $("form").serialize();
-                            $.post(nontaxEditUrl, formData, function (response) {
-                                //if validation error:
-                                if (response.indexOf('<form') === 0) {
-                                    $("#nontaxDialog").html(response);
-                                    return;
-                                }
-                                $('#nontax_amount').text(response);
-                                $("#nontaxDialog").html('Nontaxable updated!');
-                                $("#submit").hide();
-                            });
-                        }
-                    },
-                    {
-                        text: 'Close',
-                        id: "close",
-                        class: "btn-xs btn-primary",
-                        click: function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                ]
-            });
-            $("#nontaxDialog").html(data);
-            $("#nontaxDialog").dialog('open');
-        });
-    });
-
-    $(document).on('click', '[id^=editTicket]',  function () {
-        ticketId = $(this).data('ticket');
-        amount = $(this).parent().parent().find($('#amount' + ticketId));
-        nowAt = $(location).attr('pathname');
-        receiptAt = nowAt.indexOf('/receipt');
-        ticketEditUrl = nowAt.slice(0, receiptAt) + '/ticket/edit/' + ticketId;
-        $.get(ticketEditUrl, function (data) {
-            $("#ticketDialog").dialog({
-                title: 'Edit ticket',
-                buttons: [
-                    {
-                        text: "Submit",
-                        id: "submit",
-                        class: "btn-xs btn-primary",
-                        click: function () {
-                            var formData = $("form").serialize();
-                            $.post(ticketEditUrl, formData, function (response) {
-                                //if validation error:
-                                if (response.indexOf('<form') === 0) {
-                                    $("#ticketDialog").html(response);
-                                    return;
-                                }
-                                //return ticket
-                                amount.text(response);
-                                $("#ticketDialog").html('Ticket updated!');
-                                $("#submit").hide();
-                            });
-                        }
-                    },
-                    {
-                        text: 'Close',
-                        id: "close",
-                        class: "btn-xs btn-primary",
-                        click: function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                ]
-            });
-            $("#ticketDialog").html(data);
-            $("#ticketDialog").dialog('open');
-        });
-    });
-
-    //use ticket number to identify artist, or not found
+//use ticket number to identify artist, or not found
     $(document).on("blur", 'input[name$="[ticket]"]' + '', function () {
         $ticket = $('#ticket_ticket').val();
         nowAt = $(location).attr('pathname');
@@ -239,14 +104,85 @@ $(document).ready(function () {
             $('#ticket_artist').val(data);
         });
     });
+});
 
-    function receiptUrl(clickedId) {
-        receiptNo = $(clickedId).data('receipt');
-        currLoc = $(location).attr('pathname');
-        //remove add paramter if exists
-        nowAt = ('/1' === currLoc.substring(currLoc.length - 2, currLoc.length)) ? currLoc.substring(0, currLoc.length - 2) : currLoc;
-
-        return nowAt.indexOf('/receipt');
+function dialogUrl(id) {
+    entityId = $('#' + id).data('entityid');
+    currLoc = $(location).attr('href');
+    receiptAt = currLoc.indexOf('/receipt');
+    prefix = currLoc.substr(0, receiptAt);
+    //use substring to avoid entity id suffix
+    switch (id.substr(0, 7)) {
+        case 'addTick':
+            urlArray['url'] = prefix + '/ticket/add/' + entityId;
+            break;
+        case 'editTic':
+            urlArray['url'] = prefix + '/ticket/edit/' + entityId;
+            urlArray['entityId'] = entityId;
+            break;
+        case 'addNont':
+            urlArray['url'] = prefix + '/nontax/addAmount/' + entityId;
+            urlArray['entityId'] = entityId;
+            break;
+        case 'editNon':
+            urlArray['url'] = prefix + '/nontax/editAmount/' + entityId;
+            urlArray['entityId'] = entityId;
+            break;
+        default:
+            break;
     }
 
-});
+    return urlArray;
+}
+
+function receiptEdit(params, addDialog, action) {
+    if ('Edit ticket' === params.title) {
+        params.update = $('#amount' + urlArray['entityId']);
+    }
+    $.get(urlArray['url'], function (data) {
+        addDialog.dialog({
+            resizable: true,
+            modal: true,
+            width: '40%',
+            title: params.title,
+            buttons: [
+                {
+                    text: 'Submit',
+                    id: "submit",
+                    class: "btn-xs btn-primary",
+                    click: function () {
+                        var formData = $("form").serialize();
+                        $.post(urlArray['url'], formData, function (response) {
+                            //if validation error:
+                            if (response.indexOf('<form') === 0) {
+                                addDialog.html(response);
+                                return;
+                            }
+                            //return ticket
+                            if ('add' === action) {
+                                ticket = $.parseJSON(response);
+                                addAmend.append($.trim(ticket.replace(/[\t\n]+/g, ' ')));
+                            }
+                            if ('edit' === action) {
+                                params.update.text(response);
+                            }
+                            addDialog.html(params.success);
+                            $("#submit").hide();
+                        });
+                    }
+                },
+                {
+                    text: 'Close',
+                    id: "close",
+                    class: "btn-xs btn-primary",
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ]
+        });
+        addDialog.html(data);
+        addDialog.dialog('open');
+    });
+}
+
