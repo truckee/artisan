@@ -22,9 +22,9 @@ $(document).ready(function () {
     nontaxDialog = $("#nontaxDialog");
     addAmend = $('#tickets');
     nontaxAddParams = {title: 'Add nontaxable item(s)', success: 'Nontaxable added!'};
-    nontaxEditParams = {title: 'Edit nontaxable item(s)', success: 'Nontaxable updated!', update: $('#nontax_amount')};
+    nontaxEditParams = {title: 'Edit nontaxable item(s)', success: 'Nontaxable updated!', update:'#nontax_amount'};
     ticketAddParams = {title: 'Add ticket', success: 'Ticket added!'};
-    ticketEditParams = {title: 'Edit ticket', update: $('#amount'), success: 'Ticket updated!'};
+    ticketEditParams = {title: 'Edit ticket', success: 'Ticket updated!'};
 
     $flashError = $("div.alert");
     if ($.trim($flashError.text()) === '') {
@@ -78,10 +78,10 @@ $(document).ready(function () {
     nontaxDialog.dialog({
         autoOpen: false,
         close: function () {
-            if (0 < parseInt($('#' + nontaxEditParams.update.prop('id')).text())) {
+            if (0 < parseInt($(nontaxEditParams.update).text())) {
                 $("#addNontaxItem").hide();
             }
-            if (0 === parseInt($('#' + nontaxEditParams.update.prop('id')).text())) {
+            if (0 === parseInt($(nontaxEditParams.update).text())) {
                 $("#nonTaxEditRow").hide();
                 $("#addNontaxItem").show();
             }
@@ -164,7 +164,7 @@ function receiptEdit(params, addDialog, action) {
                                 addAmend.append($.trim(ticket.replace(/[\t\n]+/g, ' ')));
                             }
                             if ('edit' === action) {
-                                params.update.text(response);
+                                $(params.update).text(response);
                             }
                             addDialog.html(params.success);
                             $("#submit").hide();
