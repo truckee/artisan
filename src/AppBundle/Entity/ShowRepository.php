@@ -46,6 +46,7 @@ class ShowRepository extends EntityRepository
             ->join('AppBundle:Artist', 'a', 'WITH', 't.artist = a')
             ->where('r.show = :show')
             ->andWhere('a.id = :artist')
+            ->orderBy('t.ticket', 'ASC')
             ->setParameter(':show', $show->getId())
             ->setParameter(':artist', $artist->getId())
             ->getQuery()
