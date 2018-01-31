@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+{% for key, data in showArtists %}
+    <artist>
+        <firstName>{{ data.artist.firstName }}</firstName>
+        <lastName>{{  data.artist.lastName }}</lastName>
+        <address>{{  data.artist.address }}</address>
+        <city>{{  data.artist.city }}</city>
+        <state>{{  data.artist.state }}</state>
+        <zip>{{  data.artist.zip }}</zip>
+        <tickets>
+            {% for ticket in data.tickets %}
+                <ticket>{{ ticket.ticket }}</ticket>
+                <receipt>{{ ticket.receiptNo }}</receipt>
+                <amount>{{ ticket.amount }}</amount>
+                {%  endfor %}
+        </tickets>
+    </artist>
+{% endfor %}
+</root>
