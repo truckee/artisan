@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class ArtistRepository extends EntityRepository
 {
+
     public function allArtistsInShow($show)
     {
         return $this->getEntityManager()->createQueryBuilder()
@@ -74,5 +75,19 @@ class ArtistRepository extends EntityRepository
 
             return $maybe;
         }
+    }
+
+    public function artistShowTickets($show)
+    {
+        $showArtists = [];
+        $artists = $this->allArtistsInShow($show);
+        foreach ($artists as $artist) {
+            $id = $artist->getId();
+            $showArtists[$id]['artist'] = $artist;
+            $tickets = $this->getEntityManager()->getRepository('AppBundle:Show')->getSingleArtist($show, $artist);
+            $showArtists[$id]['tickets'] = $tickets;
+        }
+
+        return $showArtists;
     }
 }

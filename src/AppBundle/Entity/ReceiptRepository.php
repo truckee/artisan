@@ -40,6 +40,5 @@ class ReceiptRepository extends EntityRepository
         }
 
         return $receipts;
-//        dump($receipts);die;
     }
 }

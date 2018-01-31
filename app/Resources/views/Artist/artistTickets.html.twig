@@ -1,0 +1,78 @@
+<div class="row">
+    <div class="col-xs-2"></div>
+    <div class="col-xs-1 text-right">
+        <u>Ticket</u>
+    </div>
+    <div class="col-xs-1 text-right">
+        <u>Receipt</u>
+    </div>
+    <div class="col-xs-2 text-right">
+        <u>Amount</u>
+    </div>
+    <div class="col-xs-2 text-right">
+        <u>Tax</u>
+    </div>
+    <div class="col-xs-2 text-right">
+        <u>Total</u>
+    </div>
+</div>    {% set total = 0 %}{% set taxTotal = 0 %}
+{% for ticket in tickets %}
+    <div class="row">
+        <div class="col-xs-2"></div>
+        <div class="col-xs-1 text-right">
+            {{ ticket.ticket|number_format(0, '', '') }}
+        </div>
+        <div class="col-xs-1 text-right">
+            {{ ticket.receiptNo|number_format(0, '', '') }}
+        </div>
+        <div class="col-xs-2 text-right">
+            {{ ticket.amount|number_format(2) }}
+        </div>
+        <div class="col-xs-2 text-right">
+            {{ (ticket.amount*show.tax)|number_format(2) }}
+        </div>
+        <div class="col-xs-2 text-right">
+            {#- sums -#}{%- set taxTotal = taxTotal + ticket.amount * show.tax -%}
+            {%-  set total = total + ticket.amount -%}
+        </div>
+    </div>
+{% endfor  %}
+<div class="row">
+    <div class="col-xs-3"></div>
+    <div class="col-xs-1 text-right">
+        Total
+    </div>
+    <div class="col-xs-2 text-right">
+        {{ total|number_format(2) }}
+    </div>
+    <div class="col-xs-2 text-right">
+        {{ taxTotal|number_format(2) }}
+    </div>
+    <div class="col-xs-2 text-right" style="padding-bottom: 10px;">
+        {{ '$'~(total + taxTotal)|number_format(2) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-4"></div>
+    <div class="col-xs-1">
+        Distribution
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-4"></div>
+    <div class="col-xs-1">
+        Artist
+    </div>
+    <div class="col-xs-1 text-right">
+        {{ '$'~(total*(1-show.percent))|number_format(2, '.', ',') }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-4"></div>
+    <div class="col-xs-1">
+        UUFNN
+    </div>
+    <div class="col-xs-1 text-right">
+        {{ '$'~(total*show.percent)|number_format(2, '.', ',') }}
+    </div>
+</div>

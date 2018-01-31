@@ -12,9 +12,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Services\Defaults;
 use AppBundle\Services\PdfService;
-use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+//use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
+use PDFMerger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 //use Symfony\Component\HttpFoundation\Request;
@@ -46,19 +48,15 @@ class PDFController extends Controller
                 'artists' => $summary,
                 'show' => $show,
                 'reportTitle' => 'Summary for ' . $show->getShow(),
-                ]
+            ]
         );
         $filename = $show->getShow() . ' Summary';
-
-//        return new PdfResponse(
-//            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-//            $filename
-//        );
 
         $exec = $pdf->pdfExecutable();
         $snappy = new Pdf($exec);
         $content = $snappy->getOutputFromHtml($html);
-        $response = new Response($content, 200, [
+        $response = new Response($content, 200,
+            [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename=' . urlencode($filename) . '.pdf',
         ]);
@@ -67,18 +65,59 @@ class PDFController extends Controller
     }
 
     /**
-     * @Route("/test")
+     * @Route("/allTickets", name="all_tickets")
      */
-    public function testAction(PdfService $pdf)
+    public function allTicketsAction(PdfService $pdf, Defaults $defaults)
     {
-        $html = $this->renderView('Pdf/test.html.twig');
-        $filename = 'test';
+        $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (null === $show) {
+            $flash->error('Set a show to active before creating artists list!');
+
+            return $this->redirectToRoute("homepage");
+        }
+        $em = $this->getDoctrine()->getManager();
+        $showArtists = $em->getRepository('AppBundle:Artist')->artistShowTickets($show);
+        if (null === $showArtists) {
+            $flash->error('No artists in show!');
+
+            return $this->redirectToRoute("homepage");
+        }
+
         $exec = $pdf->pdfExecutable();
         $snappy = new Pdf($exec);
-        $content = $snappy->getOutputFromHtml($html);
-        $response = new Response($content, 200, [
+        $dir = $this->getParameter('kernel.project_dir') . '/web/files/';
+        $collection = new PDFMerger();
+        $showName = str_replace(' ', '', $show->getShow());
+        $trash = [];
+        // remove time limit - this can take a while
+        set_time_limit(0);
+        foreach ($showArtists as $artist) {
+            $filename = $dir . $showName . $artist['artist']->getFirstName() . $artist['artist']->getLastName() . '.pdf';
+            $header = $this->renderView('Pdf/pdfArtistPageHeader.html.twig',
+                [
+                    'artist' => $artist['artist'],
+            ]);
+            $page = $this->renderView(('Pdf/pdfArtistTickets.html.twig'),
+                [
+                    'tickets' => $artist['tickets'],
+                    'show' => $show,
+            ]);
+            $snappy->setOption('header-html', $header);
+            file_put_contents($filename, $snappy->getOutputFromHtml($page));
+            $collection->addPDF($filename);
+            $trash[] = $filename;
+        }
+
+        $binary = $collection->merge('string', $showName . "ArtistTickets.pdf");
+        //remove constituent files
+        foreach ($trash as $discard) {
+            unlink($discard);
+        }
+
+        $response = new Response($binary, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename=' . urlencode($filename) . '.pdf',
+            'Content-Disposition' => 'attachment; filename=' . $showName . "ArtistTickets.pdf",
         ]);
 
         return $response;

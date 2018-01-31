@@ -45,6 +45,7 @@
         "knplabs/knp-snappy-bundle": "^1.5",
         "liip/functional-test-bundle": "^1.8",
         "oyejorge/less.php": "v1.7.0.14",
+        "rguedes/pdfmerger": "^1.0",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^3.0.2",
         "symfony/assetic-bundle": "^2.8",

@@ -28,7 +28,7 @@ class ShowRepository extends EntityRepository
             ->join('AppBundle:Ticket', 't', 'WITH', 't.receipt = r')
             ->join('AppBundle:Artist', 'a', 'WITH', 't.artist = a')
             ->where('r.show = :show')
-            ->setParameter(':show', $show->getId())
+            ->setParameter(':show', $show)
             ->groupBy('a.firstName')
             ->groupBy('a.lastName')
             ->getQuery()
@@ -45,10 +45,10 @@ class ShowRepository extends EntityRepository
             ->join('AppBundle:Ticket', 't', 'WITH', 't.receipt = r')
             ->join('AppBundle:Artist', 'a', 'WITH', 't.artist = a')
             ->where('r.show = :show')
-            ->andWhere('a.id = :artist')
+            ->andWhere('a = :artist')
             ->orderBy('t.ticket', 'ASC')
-            ->setParameter(':show', $show->getId())
-            ->setParameter(':artist', $artist->getId())
+            ->setParameter(':show', $show)
+            ->setParameter(':artist', $artist)
             ->getQuery()
             ->getResult();
 
@@ -62,7 +62,7 @@ class ShowRepository extends EntityRepository
             ->from('AppBundle:Receipt', 'r')
             ->join('AppBundle:Nontaxable', 'n', 'WITH', 'r.nontaxable = n')
             ->where('r.show = :show')
-            ->setParameter(':show', $show->getId())
+            ->setParameter(':show', $show)
             ->getQuery()
             ->getSingleScalarResult();
     }

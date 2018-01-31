@@ -20,6 +20,7 @@ use AppBundle\Services\Defaults;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * ArtistController
@@ -41,12 +42,11 @@ class ArtistController extends Controller
         $flash = $this->get('braincrafted_bootstrap.flash');
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(
-            ArtistType::class,
-            $artist,
+            ArtistType::class, $artist,
             [
                 'entity_manager' => $em,
                 'validation_groups' => ['add'],
-        ]
+            ]
         );
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -94,11 +94,9 @@ class ArtistController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $form = $this->createForm(
-            AddExistingArtistsType::class,
-            $show,
-            [
+            AddExistingArtistsType::class, $show, [
                 'query_bulider' => $someNotInShow,
-        ]
+            ]
         );
         if (is_null($show)) {
             $flash->error('Create a default show before adding an artist!');
@@ -127,9 +125,8 @@ class ArtistController extends Controller
         }
 
         return $this->render(
-                'Artist/existingArtist.html.twig',
-                [
-                'form' => $form->createView(),
+                'Artist/existingArtist.html.twig', [
+                    'form' => $form->createView(),
                 ]
         );
     }
@@ -140,11 +137,12 @@ class ArtistController extends Controller
     public function selectArtistAction(Request $request, $target, $notId = null, $blockId = null)
     {
         $artist = new Artist();
-        $form = $this->createForm(SelectArtistType::class, $artist, [
+        $form = $this->createForm(SelectArtistType::class, $artist,
+            [
             'target' => $target,
             'notId' => $notId,
             'blockId' => $blockId,
-            ]);
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $id = $request->request->get('select_artist')['artist'];
@@ -161,22 +159,23 @@ class ArtistController extends Controller
                     return $this->redirectToRoute('block_select', ['id' => $id, 'action' => 'block_reassign']);
                 case 'replacement':
                     $blockId = $request->request->get('select_artist')['blockId'];
-                    return $this->redirectToRoute('block_reassign', [
-                        'replacementId' => $id,
-                        'id' => $blockId,
-                        ]);
+                    return $this->redirectToRoute('block_reassign',
+                            [
+                            'replacementId' => $id,
+                            'id' => $blockId,
+                    ]);
                 default:
                     break;
             }
         }
 
         return $this->render(
-            'default/selectEntity.html.twig',
+                'default/selectEntity.html.twig',
                 [
                     'form' => $form->createView(),
                     'artist' => $artist,
                     'heading' => 'Select artist for ' . $target,
-        ]
+                ]
         );
     }
 
@@ -193,12 +192,11 @@ class ArtistController extends Controller
         }
         $show = $defaults->showDefault();
         $form = $this->createForm(
-            ArtistType::class,
-            $artist,
+            ArtistType::class, $artist,
             [
                 'entity_manager' => $em,
                 'validation_groups' => ['edit'],
-        ]
+            ]
         );
         $flash = $this->get('braincrafted_bootstrap.flash');
         $form->handleRequest($request);
@@ -220,12 +218,45 @@ class ArtistController extends Controller
         }
 
         return $this->render(
-            'Artist/artistForm.html.twig',
+                'Artist/artistForm.html.twig',
                 [
                     'form' => $form->createView(),
                     'artist' => $artist,
                     'action' => 'Edit artist',
-        ]
+                ]
         );
+    }
+
+    /**
+     * @Route("/xml", name="artists_xml")
+     */
+    public function allArtistsXMLAction(Defaults $defaults)
+    {
+        $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (null === $show) {
+            $flash->error('Set a show to active before creating artists list!');
+
+            return $this->redirectToRoute("homepage");
+        }
+        $em = $this->getDoctrine()->getManager();
+        $showArtists = $em->getRepository('AppBundle:Artist')->artistShowTickets($show);
+        if (null === $showArtists) {
+            $flash->error('No artists in show!');
+
+            return $this->redirectToRoute("homepage");
+        }
+        $content = $this->renderView('Artist/allArtists.xml.twig', [
+            'showArtists' => $showArtists,
+        ]);
+        $filename = $show->getShow();
+        $response = new Response($content, 200,
+            [
+            'Content-Type' => 'application/xml; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename=' . urlencode($filename)
+            ]
+        );
+
+        return $response;
     }
 }
