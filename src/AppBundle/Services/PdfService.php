@@ -32,7 +32,7 @@ class PdfService
                 return "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\" -T 25 -R 25 -B 25 -L 25";
 //                return "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\" --zoom \"1.1\"";
             case 'ubuntu':
-                return '/usr/local/bin/wkhtmltopdf';
+                return '/home/dh_p3ask8/wkhtmltox/bin/wkhtmltopdf';
 
             default:
                 break;
