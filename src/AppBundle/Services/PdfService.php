@@ -27,15 +27,6 @@ class PdfService
 
     public function pdfExecutable()
     {
-        switch ($this->os) {
-            case 'windows':
-                return "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\" -T 25 -R 25 -B 25 -L 25";
-//                return "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\" --zoom \"1.1\"";
-            case 'ubuntu':
-                return '/home/dh_p3ask8/wkhtmltox/bin/wkhtmltopdf';
-
-            default:
-                break;
-        }
+        return $this->os;
     }
 }
