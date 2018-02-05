@@ -97,6 +97,7 @@ class PDFController extends Controller
             $header = $this->renderView('Pdf/pdfArtistPageHeader.html.twig',
                 [
                     'artist' => $artist['artist'],
+                    'show' => $show,
             ]);
             $page = $this->renderView(('Pdf/pdfArtistTickets.html.twig'),
                 [

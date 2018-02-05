@@ -1,5 +1,5 @@
 {% extends "base.html.twig" %}
 {% block body %}
-    <div class="text-center text-info"><h3>Tickets for {{ artist.firstName~' '~artist.lastName }} </h3></div>
+    <div class="text-center text-info"><h3>{{ artist.firstName~' '~artist.lastName }}: Tickets</h3></div>
     {% include 'Artist/artistTickets.html.twig' %}
 {% endblock %}
