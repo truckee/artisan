@@ -77,7 +77,7 @@ class ReportsControllerTest extends WebTestCase
         $form['select_artist[artist]']->select(1);
         $crawler = $this->client->submit($form);
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Tickets for Benny Borko")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Benny Borko: Tickets")')->count());
     }
 
     public function testViewArtists()
