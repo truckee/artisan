@@ -42,23 +42,29 @@ class PDFController extends Controller
             return $this->redirectToRoute('show_select', ['target' => 'summary_pdf']);
         }
         $summary = $em->getRepository('AppBundle:Show')->getShowSummary($show);
+        $taxfree = $em->getRepository('AppBundle:Show')->getShowNontaxable($show);
+
         $html = $this->renderView(
-            'Pdf/showSummary.html.twig',
+            'Pdf/Show/summaryContent.html.twig',
             [
                 'artists' => $summary,
+                'taxfree' => $taxfree,
                 'show' => $show,
-                'reportTitle' => 'Summary for ' . $show->getShow(),
             ]
         );
-        $filename = $show->getShow() . ' Summary';
+        $header = $this->renderView('Pdf/Show/summaryHeader.html.twig', [
+                'reportTitle' => 'Summary for ' . $show->getShow(),
+        ]);
+        $filename = $showName = str_replace(' ', '', $show->getShow()) . 'Summary' . '.pdf';
 
         $exec = $pdf->pdfExecutable();
         $snappy = new Pdf($exec);
+        $snappy->setOption('header-html', $header);
         $content = $snappy->getOutputFromHtml($html);
         $response = new Response($content, 200,
             [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename=' . urlencode($filename) . '.pdf',
+            'Content-Disposition' => 'attachment; filename=' . $filename,
         ]);
 
         return $response;
@@ -94,12 +100,12 @@ class PDFController extends Controller
         set_time_limit(0);
         foreach ($showArtists as $artist) {
             $filename = $dir . $showName . $artist['artist']->getFirstName() . $artist['artist']->getLastName() . '.pdf';
-            $header = $this->renderView('Pdf/pdfArtistPageHeader.html.twig',
+            $header = $this->renderView('Pdf/Artist/pdfArtistsTicketsHeader.html.twig',
                 [
                     'artist' => $artist['artist'],
                     'show' => $show,
             ]);
-            $page = $this->renderView(('Pdf/pdfArtistTickets.html.twig'),
+            $page = $this->renderView(('Pdf/Artist/pdfArtistsTickets.html.twig'),
                 [
                     'tickets' => $artist['tickets'],
                     'show' => $show,
