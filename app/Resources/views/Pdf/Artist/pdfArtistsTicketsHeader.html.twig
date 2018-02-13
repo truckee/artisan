@@ -1,5 +1,8 @@
 {% extends "Pdf/pdfheader.html.twig" %}
-{%  block body %}
+{%  block title %}
     <div class="col-sm-8"><h3>{{ show.show }} Tickets</h3></div>
     <div class="col-sm-8"><h4>{{ artist.firstName~' '~artist.lastName }}</h4></div>
-{%  endblock body %}
+{%  endblock title %}
+{%  block pageHeader %}
+    {% include 'Artist/artistTicketsHeader.html.twig' %}
+{%  endblock pageHeader %}

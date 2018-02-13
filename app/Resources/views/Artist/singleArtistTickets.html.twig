@@ -1,5 +1,10 @@
 {% extends "base.html.twig" %}
-{% block body %}
+{% block title %}
     <div class="text-center text-info"><h3>{{ artist.firstName~' '~artist.lastName }}: Tickets</h3></div>
-    {% include 'Artist/artistTickets.html.twig' %}
+{% endblock title %}
+{% block pageHeader %}
+    {% include 'Artist/artistTicketsHeader.html.twig' %}
+{% endblock pageHeader %}
+{% block body %}
+    {% include 'Artist/artistTicketsContent.html.twig' %}
 {% endblock %}

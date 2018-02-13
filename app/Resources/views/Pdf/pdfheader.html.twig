@@ -10,9 +10,11 @@
         <div class="container">
             <div class="row">
             <div class="col-xs-2"><img src="{{ absolute_url(asset('/images/logo.jpg')) }}" alt="UUFNN logo"></div>
-            {% block body %}
+            {% block title %}
             {% endblock %}
             </div>
+            {% block pageHeader %}
+            {% endblock pageHeader %}
         </div>
     </body>
 </html>
