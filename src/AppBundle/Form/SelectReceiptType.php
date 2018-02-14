@@ -40,8 +40,7 @@ class SelectReceiptType extends AbstractType
         $target = $options['target'];
         $builder
             ->add(
-                'receipt',
-                EntityType::class,
+                'receipt', EntityType::class,
                 [
                     'class' => 'AppBundle:Receipt',
                     'label' => false,
@@ -57,16 +56,14 @@ class SelectReceiptType extends AbstractType
                             ->setParameter(':show', $show)
                             ->orderBy('r.id', 'ASC');
                     }
-            ]
+                ]
             )
             ->add(
-                'save',
-                SubmitType::class,
-                array(
+                'save', SubmitType::class, array(
                     'label' => 'Edit',
                     'label_format' => ['class' => 'text-bold']
-        )
-            );
+                )
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)

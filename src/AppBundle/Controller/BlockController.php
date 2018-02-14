@@ -47,7 +47,10 @@ class BlockController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $artist = $em->getRepository('AppBundle:Artist')->find($id);
-        $form = $this->createForm(BlockType::class, $block);
+        $form = $this->createForm(BlockType::class, $block,
+            [
+                'cancel_action' => $this->generateUrl('homepage'),
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $block->setArtist($artist);
@@ -91,7 +94,10 @@ class BlockController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $block = $em->getRepository('AppBundle:Block')->find($id);
-        $form = $this->createForm(BlockType::class, $block);
+        $form = $this->createForm(BlockType::class, $block,
+            [
+                'cancel_action' => $this->generateUrl('homepage'),
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($block);
@@ -168,8 +174,10 @@ class BlockController extends Controller
         $em = $this->getDoctrine()->getManager();
         $artist = $em->getRepository('AppBundle:Artist')->find($id);
         $form = $this->createForm(
-            SelectBlockType::class, null, [
+            SelectBlockType::class, null,
+            [
             'artist' => $artist,
+            'cancel_action' => $this->generateUrl('homepage'),
             ]
         );
         $form->handleRequest($request);

@@ -44,3 +44,7 @@ services:
     braincrafted_bootstrap.flash:
         alias: Braincrafted\Bundle\BootstrapBundle\Session\FlashMessage
         public: true
+
+    AppBundle\Form\Extension\CancelTypeExtension:
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }

@@ -1,0 +1,9 @@
+{% extends 'BraincraftedBootstrapBundle:Form:bootstrap.html.twig' %}
+
+{%- block submit_widget -%}
+    {%- set type = type|default('submit') -%}
+    {{ block('button_widget') }}
+    {% if form.parent.vars.cancel_action is defined %}
+        <a class="btn btn-primary" href="{{ form.parent.vars.cancel_action }}" role="button" style="margin-left: 10px;">Cancel</a>
+    {% endif %}
+{%- endblock submit_widget -%}

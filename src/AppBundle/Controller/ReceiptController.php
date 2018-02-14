@@ -82,7 +82,10 @@ class ReceiptController extends Controller
     public function selectReceipt(Request $request, Defaults $defaults, $target)
     {
         $show = $defaults->showDefault();
-        $form = $this->createForm(SelectReceiptType::class, null, ['target' => $target]);
+        $form = $this->createForm(SelectReceiptType::class, null, [
+            'target' => $target,
+            'cancel_action' => $this->generateUrl('homepage'),
+            ]);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $id = $request->request->get('select_receipt')['receipt'];

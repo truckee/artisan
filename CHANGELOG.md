@@ -1,5 +1,8 @@
 ### Change log
 
+#### 2018-02-14 ####
+- Add Cancel button where appropriate
+
 #### 2018-02-13 ####
 - Add all artists' tickets PDF
 

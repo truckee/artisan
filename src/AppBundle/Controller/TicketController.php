@@ -37,6 +37,7 @@ class TicketController extends Controller
         $ticket = new Ticket();
         $form = $this->createForm(TicketType::class, $ticket, [
             'validation_groups' => ['add'],
+            'cancel_action' => $this->generateUrl('homepage'),
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -73,6 +74,7 @@ class TicketController extends Controller
         $ticket = $em->getRepository('AppBundle:Ticket')->find($id);
         $form = $this->createForm(TicketType::class, $ticket, [
             'validation_groups' => ['edit'],
+            'cancel_action' => $this->generateUrl('homepage'),
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

@@ -24,24 +24,29 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 class BlockType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add(
-                'lower',
-                TextType::class,
+                'lower', TextType::class,
                 [
-                    'label' => 'Lower end',
+                    'label' => 'Starting number',
                     'label_attr' => ['style' => 'color: red;']
                 ]
             )
             ->add(
-                'upper',
-                TextType::class,
+                'upper', TextType::class,
                 [
-                    'label' => 'Upper end',
+                    'label' => 'Ending number',
                     'label_attr' => ['style' => 'color: red;']
                 ]
+            )
+            ->add(
+                'save', SubmitType::class,
+                array(
+                    'label' => 'Save',
+                )
             )
         ;
     }

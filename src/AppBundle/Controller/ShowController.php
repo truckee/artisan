@@ -35,7 +35,9 @@ class ShowController extends Controller
     public function addShowAction(Request $request)
     {
         $show = new Show();
-        $form = $this->createForm(ShowType::class, $show);
+        $form = $this->createForm(ShowType::class, $show, [
+            'cancel_action' => $this->generateUrl('homepage'),
+        ]);
         $em = $this->getDoctrine()->getManager();
         $default = $em->getRepository('AppBundle:Show')->findOneBy(['default' => true]);
         $form->handleRequest($request);
@@ -67,7 +69,9 @@ class ShowController extends Controller
      */
     public function selectShow(Request $request, $target)
     {
-        $form = $this->createForm(SelectShowType::class);
+        $form = $this->createForm(SelectShowType::class, null, [
+            'cancel_action' => $this->generateUrl('homepage'),
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $id = $request->request->get('select_show')['show'];
@@ -103,7 +107,9 @@ class ShowController extends Controller
         } else {
             return $this->redirectToRoute('show_select', ['target' => 'edit']);
         }
-        $form = $this->createForm(ShowType::class, $show);
+        $form = $this->createForm(ShowType::class, $show, [
+            'cancel_action' => $this->generateUrl('homepage'),
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             //set any previous default off

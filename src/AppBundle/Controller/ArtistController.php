@@ -46,6 +46,7 @@ class ArtistController extends Controller
             [
                 'entity_manager' => $em,
                 'validation_groups' => ['add'],
+                'cancel_action' => $this->generateUrl('homepage'),
             ]
         );
         $form->handleRequest($request);
@@ -94,8 +95,10 @@ class ArtistController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $form = $this->createForm(
-            AddExistingArtistsType::class, $show, [
-                'query_bulider' => $someNotInShow,
+            AddExistingArtistsType::class, $show,
+            [
+            'query_bulider' => $someNotInShow,
+            'cancel_action' => $this->generateUrl('homepage'),
             ]
         );
         if (is_null($show)) {
@@ -125,8 +128,9 @@ class ArtistController extends Controller
         }
 
         return $this->render(
-                'Artist/existingArtist.html.twig', [
-                    'form' => $form->createView(),
+                'Artist/existingArtist.html.twig',
+                [
+                'form' => $form->createView(),
                 ]
         );
     }
@@ -139,9 +143,10 @@ class ArtistController extends Controller
         $artist = new Artist();
         $form = $this->createForm(SelectArtistType::class, $artist,
             [
-            'target' => $target,
-            'notId' => $notId,
-            'blockId' => $blockId,
+                'target' => $target,
+                'notId' => $notId,
+                'blockId' => $blockId,
+                'cancel_action' => $this->generateUrl('homepage'),
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -161,8 +166,8 @@ class ArtistController extends Controller
                     $blockId = $request->request->get('select_artist')['blockId'];
                     return $this->redirectToRoute('block_reassign',
                             [
-                            'replacementId' => $id,
-                            'id' => $blockId,
+                                'replacementId' => $id,
+                                'id' => $blockId,
                     ]);
                 default:
                     break;
@@ -196,6 +201,7 @@ class ArtistController extends Controller
             [
                 'entity_manager' => $em,
                 'validation_groups' => ['edit'],
+                'cancel_action' => $this->generateUrl('homepage'),
             ]
         );
         $flash = $this->get('braincrafted_bootstrap.flash');
@@ -246,7 +252,8 @@ class ArtistController extends Controller
 
             return $this->redirectToRoute("homepage");
         }
-        $content = $this->renderView('Artist/allArtists.xml.twig', [
+        $content = $this->renderView('Artist/allArtists.xml.twig',
+            [
             'showArtists' => $showArtists,
         ]);
         $filename = $show->getShow();
