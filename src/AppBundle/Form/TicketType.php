@@ -12,6 +12,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Ticket;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -25,8 +26,21 @@ class TicketType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder
+        ->add(
+            'amount', TextType::class,
+            [
+                'label' => 'Amount',
+                'label_attr' => ['style' => 'color: red;'],
+            ]
+        )
+        ->add('rcptTotal', HiddenType::class, [
+            'data' => $options['rcptTotal'],
+            ])
+        ;
+
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) {
+            function (FormEvent $event) use ($options) {
             $ticket = $event->getData();
             $form = $event->getForm();
             if (!$ticket || null === $ticket->getId()) {
@@ -34,13 +48,6 @@ class TicketType extends AbstractType
                     'ticket', TextType::class,
                     [
                         'label' => 'Ticket',
-                        'label_attr' => ['style' => 'color: red;'],
-                    ]
-                );
-                $form->add(
-                    'amount', TextType::class,
-                    [
-                        'label' => 'Amount',
                         'label_attr' => ['style' => 'color: red;'],
                     ]
                 );
@@ -67,13 +74,6 @@ class TicketType extends AbstractType
                     ]
                 );
                 $form->add(
-                    'amount', TextType::class,
-                    [
-                        'label' => 'Amount',
-                        'label_attr' => ['style' => 'color: red;'],
-                    ]
-                );
-                $form->add(
                     'artist', TextType::class,
                     [
                         'data' => $ticket->getArtist()->getLastName() . ', ' . $ticket->getArtist()->getFirstName(),
@@ -88,9 +88,10 @@ class TicketType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Ticket',
+            'data_class' => Ticket::class,
             'validation_groups' => [],
             'required' => false,
+            'rcptTotal' => null,
         ));
     }
 

@@ -90,4 +90,19 @@ class ArtistRepository extends EntityRepository
 
         return $showArtists;
     }
+
+    public function deleteableArtists()
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('a, SUM(t.amount) Amount')
+            ->from('AppBundle:Artist', 'a')
+            ->leftJoin('AppBundle:Ticket', 't', 'WITH', 't.artist = a')
+            ->groupBy('a.lastName')
+            ->addGroupBy('a.firstName')
+            ->having('Amount IS NULL')
+            ->getQuery()
+            ->getResult();
+
+        return $qb;
+    }
 }

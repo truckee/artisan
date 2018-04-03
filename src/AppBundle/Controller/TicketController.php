@@ -14,7 +14,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Ticket;
 use AppBundle\Form\TicketType;
-use AppBundle\Services\Defaults;
+use AppBundle\Services\ReceiptTotal;
 use AppBundle\Services\TicketArtist;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,17 +32,20 @@ class TicketController extends Controller
     /**
      * @Route("/add/{id}", name="ticket_add")
      */
-    public function addTicketAction(Request $request, TicketArtist $owner, $id)
+    public function addTicketAction(Request $request, TicketArtist $owner, ReceiptTotal $rcptTotal, $id)
     {
+        $em = $this->getDoctrine()->getManager();
+        $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['id' => $id]);
+        $total = $rcptTotal->getReceiptTotal($receipt);
         $ticket = new Ticket();
-        $form = $this->createForm(TicketType::class, $ticket, [
-            'validation_groups' => ['add'],
-            'cancel_action' => $this->generateUrl('homepage'),
+        $form = $this->createForm(TicketType::class, $ticket,
+            [
+                'validation_groups' => ['add'],
+                'cancel_action' => $this->generateUrl('homepage'),
+                'rcptTotal' => $total,
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['id' => $id]);
             $artist = $owner->getTicketArtist($ticket->getTicket());
             $ticket->setArtist($artist);
             $ticket->setReceipt($receipt);
@@ -72,9 +75,10 @@ class TicketController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $ticket = $em->getRepository('AppBundle:Ticket')->find($id);
-        $form = $this->createForm(TicketType::class, $ticket, [
-            'validation_groups' => ['edit'],
-            'cancel_action' => $this->generateUrl('homepage'),
+        $form = $this->createForm(TicketType::class, $ticket,
+            [
+                'validation_groups' => ['edit'],
+                'cancel_action' => $this->generateUrl('homepage'),
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

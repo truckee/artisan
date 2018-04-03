@@ -12,7 +12,6 @@
 
 namespace AppBundle\Validator\Constraints;
 
-//use AppBundle\Services\TicketAvailable;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Doctrine\ORM\EntityManagerInterface;

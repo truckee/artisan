@@ -266,4 +266,16 @@ class ArtistController extends Controller
 
         return $response;
     }
+
+    /**
+     * @Route("/delete")
+     */
+    public function deleteableArtistAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $artists = $em->getRepository('AppBundle:Artist')->deleteableArtists();
+
+        return new Response('good');
+        
+    }
 }

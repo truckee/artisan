@@ -59,14 +59,4 @@ class ReceiptControllerTest extends WebTestCase
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Ticket does not exist")')->count());
     }
-
-    public function testNewReceipt()
-    {
-        $crawler = $this->login();
-        $crawler = $this->client->request('GET', '/receipt/add');
-        $form = $crawler->selectButton('Close')->form();
-        $crawler = $this->client->submit($form);
-
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("At least one ticket or a nontaxable amount is required")')->count());
-    }
 }

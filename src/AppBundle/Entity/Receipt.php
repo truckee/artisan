@@ -14,7 +14,6 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Show;
 use AppBundle\Entity\Ticket;
-use AppBundle\Validator\Constraints as AppAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -23,7 +22,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="receipt")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ReceiptRepository")
- * @AppAssert\NonzeroReceipt
  */
 class Receipt
 {
@@ -94,7 +92,7 @@ class Receipt
     {
         return $this->show;
     }
-
+    
     /**
      * @ORM\Column(name="sales_date", type="date", nullable = false)
      */
@@ -117,7 +115,7 @@ class Receipt
         $this->nontaxable = $nontaxable;
 
         return $this;
-}
+    }
 
     public function getNontaxable()
     {

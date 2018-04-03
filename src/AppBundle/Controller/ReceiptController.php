@@ -82,10 +82,11 @@ class ReceiptController extends Controller
     public function selectReceipt(Request $request, Defaults $defaults, $target)
     {
         $show = $defaults->showDefault();
-        $form = $this->createForm(SelectReceiptType::class, null, [
+        $form = $this->createForm(SelectReceiptType::class, null,
+            [
             'target' => $target,
             'cancel_action' => $this->generateUrl('homepage'),
-            ]);
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $id = $request->request->get('select_receipt')['receipt'];
@@ -126,22 +127,18 @@ class ReceiptController extends Controller
         $em = $this->getDoctrine()->getManager();
         $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['id' => $id]);
         $form = $this->createForm(ReceiptType::class, $receipt, [
-                'save_label' => 'Save',
+            'save_label' => 'Save',
         ]);
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $em->persist($receipt);
-                $em->flush();
-                if ($form->get('view')->isClicked()) {
-                    return $this->redirectToRoute('view_single_receipt', ['id' => $id]);
-                }
-                $flash->success('Receipt updated!');
-
-                return $this->redirectToRoute("homepage");
-            } else {
-                $flash->error('At least one ticket or a nontaxable amount is required');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($receipt);
+            $em->flush();
+            if ($form->get('view')->isClicked()) {
+                return $this->redirectToRoute('view_single_receipt', ['id' => $id]);
             }
+            $flash->success('Receipt updated!');
+
+            return $this->redirectToRoute("homepage");
         }
 
         return $this->render('Receipt/receiptEditForm.html.twig',

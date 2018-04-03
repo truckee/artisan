@@ -17,6 +17,7 @@ use AppBundle\Entity\Receipt;
 use AppBundle\Validator\Constraints as AppAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity
@@ -42,7 +43,7 @@ class Ticket
      * @ORM\JoinColumn(name="receipt_id", referencedColumnName="id")
      */
     protected $receipt;
-    
+
     /**
      * @ORM\Column(type="integer")
      * @Assert\Type(type="numeric", message = "Must be a number", groups={"add", "edit"})
@@ -108,7 +109,6 @@ class Ticket
     {
         return $this->ticket;
     }
-
     /**
      * @ORM\Column(type="decimal", precision=8, scale=2)
      * @Assert\NotBlank(message = "May not be empty", groups={"add", "edit"})
@@ -116,6 +116,37 @@ class Ticket
      * @Assert\Type(type="numeric", message = "Must be a number", groups={"add", "edit"})
      */
     private $amount;
+
+    /**
+     * @Assert\Callback(groups={"edit"})
+     */
+    public function validateEdit(ExecutionContextInterface $context)
+    {
+        $receipt = $this->getReceipt();
+        $total = 0;
+        $tickets = $receipt->getTickets();
+        foreach ($tickets as $value) {
+            $total += ($this->getId() !== $value->getId()) ? $value->getAmount() : $this->getAmount();
+        }
+        if (0 > $total) {
+            $context->buildViolation('Receipt total may not be < 0!')
+                ->atPath('amount')
+                ->addViolation();
+        }
+    }
+
+    /**
+     * @Assert\Callback(groups={"add"})
+     */
+    public function validateAdd(ExecutionContextInterface $context)
+    {
+        $total = $this->getRcptTotal();
+        if (0 > $total + $this->getAmount()) {
+            $context->buildViolation('Receipt total may not be < 0!')
+                ->atPath('amount')
+                ->addViolation();
+        }
+    }
 
     public function setAmount($amount)
     {
@@ -127,5 +158,17 @@ class Ticket
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    private $rcptTotal;
+
+    public function setRcptTotal($rcptTotal)
+    {
+        $this->rcptTotal = $rcptTotal;
+    }
+
+    public function getRcptTotal()
+    {
+        return $this->rcptTotal;
     }
 }
