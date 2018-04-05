@@ -23,9 +23,7 @@ class ArtistRepository extends EntityRepository
 
     public function allArtistsInShow($show)
     {
-        return $this->getEntityManager()->createQueryBuilder()
-                ->select('a')
-                ->from('AppBundle:Artist', 'a')
+        return $this->createQueryBuilder('a')
                 ->join('a.shows', 's')
                 ->where('s.show = ?1')
                 ->orderBy('a.firstName')
@@ -37,9 +35,7 @@ class ArtistRepository extends EntityRepository
 
     public function isArtistInShow($show, $artist)
     {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('a')
-            ->from('AppBundle:Artist', 'a')
+        $qb = $this->createQueryBuilder('a')
             ->join('a.shows', 's')
             ->where('s.show = ?1')
             ->andWhere('a = ?2')
@@ -53,19 +49,15 @@ class ArtistRepository extends EntityRepository
 
     public function someNotInShow($show)
     {
-        $qb = $this->getEntityManager()->createQueryBuilder('a');
+        $qb = $this->createQueryBuilder('a');
         $ids = $qb
-            ->select('a')
-            ->from('AppBundle:Artist', 'a')
             ->leftJoin('a.shows', 's')
             ->where('s.show = ?1')
             ->setParameter(1, $show->getShow())
             ->getQuery()
             ->getResult();
         if (empty($ids)) {
-            return $this->getEntityManager()->createQueryBuilder('a')
-                    ->select('a')
-                    ->from('AppBundle:Artist', 'a');
+            return $this->createQueryBuilder('a');
         } else {
             $maybe = $this->getEntityManager()->createQueryBuilder('a')
                 ->select('a')
@@ -91,18 +83,44 @@ class ArtistRepository extends EntityRepository
         return $showArtists;
     }
 
+    public function getBlockOrTickets($show)
+    {
+        return $this->createQueryBuilder('a')
+                ->join('a.shows', 's')
+                ->where('s.show = ?1')
+                ->orderBy('a.firstName')
+                ->orderBy('a.lastName')
+                ->setParameter(1, $show->getShow());
+    }
+
+    public function getAllSelectable()
+    {
+        return $this->createQueryBuilder('a')
+                ->orderBy('a.firstName')
+                ->orderBy('a.lastName');
+    }
+
+    public function getReplacableArtists($notId)
+    {
+        return $this->createQueryBuilder('a')
+                ->where('a <> :notId')
+                ->setParameter('notId', $notId)
+                ->orderBy('a.firstName', 'ASC')
+                ->orderBy('a.lastName', 'ASC');
+    }
+
     public function deleteableArtists()
     {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('a, SUM(t.amount) Amount')
-            ->from('AppBundle:Artist', 'a')
-            ->leftJoin('AppBundle:Ticket', 't', 'WITH', 't.artist = a')
-            ->groupBy('a.lastName')
-            ->addGroupBy('a.firstName')
-            ->having('Amount IS NULL')
-            ->getQuery()
-            ->getResult();
+        return $this->createQueryBuilder('a')
+                ->join('AppBundle:Ticket', 't', 'WITH', 't.artist = a')
+                ->groupBy('a.lastName')
+                ->groupBy('a.firstName')
+                ->having('SUM(t.amount) = 0')
+        ;
+    }
 
-        return $qb;
+    public function processQuery($query)
+    {
+        return $query->getQuery()->getResult();
     }
 }

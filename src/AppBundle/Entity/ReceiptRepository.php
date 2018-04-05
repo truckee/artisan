@@ -23,6 +23,7 @@ class ReceiptRepository extends EntityRepository
 
     public function nonzeroReceipts($show)
     {
+        $receipts = [];
         $qb = $this->getEntityManager()->createQueryBuilder()
                 ->select('r, SUM((CASE WHEN t.amount IS NULL THEN 0 ELSE t.amount END) + (CASE WHEN n.amount IS NULL THEN 0 ELSE n.amount END)) Total')
                 ->from('AppBundle:Receipt', 'r')
@@ -40,5 +41,19 @@ class ReceiptRepository extends EntityRepository
         }
 
         return $receipts;
+    }
+
+    public function receiptArtistTotal($receipt, $artist)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('SUM(t.amount)')
+            ->from('AppBundle:Receipt', 'r')
+            ->join('AppBundle:Ticket', 't', 'WITH', 't.receipt = r')
+            ->join('AppBundle:Artist', 'a', 'WITH', 't.artist = a')
+            ->where('r = :receipt')
+            ->andWhere('a = :artist')
+            ->setParameters(['receipt' => $receipt, 'artist' => $artist])
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

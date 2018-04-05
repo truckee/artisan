@@ -27,17 +27,26 @@ class TicketType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add(
-            'amount', TextType::class,
-            [
-                'label' => 'Amount',
-                'label_attr' => ['style' => 'color: red;'],
-            ]
-        )
-        ->add('rcptTotal', HiddenType::class, [
-            'data' => $options['rcptTotal'],
-            ])
+            ->add(
+                'amount', TextType::class,
+                [
+                    'label' => 'Amount',
+                    'label_attr' => ['style' => 'color: red;'],
+                ]
+            )
         ;
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT,
+            function (FormEvent $event) use ($options) {
+            $ticket = $event->getData();
+            $form = $event->getForm();
+            if (null !== $ticket) {
+//                $form->add('rcptTotal', HiddenType::class, [
+//                'data' => $options['rcptTotal'],
+//                ]);
+            }
+        });
+
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($options) {
@@ -81,6 +90,9 @@ class TicketType extends AbstractType
                         'disabled' => true,
                     ]
                 );
+                $form->add('rcptTotal', HiddenType::class, [
+                'data' => $options['rcptTotal'],
+                ]);
             }
         });
     }

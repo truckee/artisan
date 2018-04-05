@@ -14,7 +14,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Ticket;
 use AppBundle\Form\TicketType;
-use AppBundle\Services\ReceiptTotal;
 use AppBundle\Services\TicketArtist;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,12 +31,20 @@ class TicketController extends Controller
     /**
      * @Route("/add/{id}", name="ticket_add")
      */
-    public function addTicketAction(Request $request, TicketArtist $owner, ReceiptTotal $rcptTotal, $id)
+    public function addTicketAction(Request $request, TicketArtist $owner, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['id' => $id]);
-        $total = $rcptTotal->getReceiptTotal($receipt);
         $ticket = new Ticket();
+        //set artist's total ticket amount for this receipt - required for validation
+        $ticketNumber = $request->request->get('ticket')['ticket'];
+        $total = null;
+        if (null !== $ticketNumber) {
+            $artist = $owner->getTicketArtist($ticketNumber);
+            $total = $em->getRepository('AppBundle:Receipt')->receiptArtistTotal($receipt, $artist);
+            
+            $ticket->setRcptTotal($total);
+        }
         $form = $this->createForm(TicketType::class, $ticket,
             [
                 'validation_groups' => ['add'],
@@ -46,7 +53,7 @@ class TicketController extends Controller
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $artist = $owner->getTicketArtist($ticket->getTicket());
+
             $ticket->setArtist($artist);
             $ticket->setReceipt($receipt);
             $em->persist($ticket);
@@ -75,6 +82,11 @@ class TicketController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $ticket = $em->getRepository('AppBundle:Ticket')->find($id);
+        //set artist's total ticket amount for this receipt - required for validation
+        $artist = $ticket->getArtist();
+        $receipt = $ticket->getReceipt();
+        $total = $em->getRepository('AppBundle:Receipt')->receiptArtistTotal($receipt, $artist);
+        $ticket->setRcptTotal($total);
         $form = $this->createForm(TicketType::class, $ticket,
             [
                 'validation_groups' => ['edit'],

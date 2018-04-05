@@ -126,10 +126,10 @@ class Ticket
         $total = 0;
         $tickets = $receipt->getTickets();
         foreach ($tickets as $value) {
-            $total += ($this->getId() !== $value->getId()) ? $value->getAmount() : $this->getAmount();
+            $total += ($this->getTicket() !== $value->getTicket()) ? $value->getAmount() : $this->getAmount() - $value->getAmount();
         }
         if (0 > $total) {
-            $context->buildViolation('Receipt total may not be < 0!')
+            $context->buildViolation('Artist\'s receipt total may not be < 0!')
                 ->atPath('amount')
                 ->addViolation();
         }
@@ -142,7 +142,7 @@ class Ticket
     {
         $total = $this->getRcptTotal();
         if (0 > $total + $this->getAmount()) {
-            $context->buildViolation('Receipt total may not be < 0!')
+            $context->buildViolation('Artist\'s receipt total may not be < 0!')
                 ->atPath('amount')
                 ->addViolation();
         }
@@ -164,7 +164,8 @@ class Ticket
 
     public function setRcptTotal($rcptTotal)
     {
-        $this->rcptTotal = $rcptTotal;
+
+       $this->rcptTotal = $rcptTotal;
     }
 
     public function getRcptTotal()

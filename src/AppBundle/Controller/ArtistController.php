@@ -13,6 +13,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Artist;
+use AppBundle\Entity\ArtistRepository;
 use AppBundle\Form\ArtistType;
 use AppBundle\Form\AddExistingArtistsType;
 use AppBundle\Form\SelectArtistType;
@@ -268,12 +269,25 @@ class ArtistController extends Controller
     }
 
     /**
-     * @Route("/delete")
+     * @Route("/delete/{id}")
      */
-    public function deleteableArtistAction()
+    public function deleteArtistAction(Request $request, $id = null)
     {
         $em = $this->getDoctrine()->getManager();
-        $artists = $em->getRepository('AppBundle:Artist')->deleteableArtists();
+        $artistsQuery = $em->getRepository('AppBundle:Artist')->deleteableArtists();
+        $artists = $em->getRepository('AppBundle:Artist')->processQuery($artistsQuery);
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        if (empty($artists)) {
+           $flash->info('All artists have some sales');
+
+           return $this->redirectToRoute('homepage');
+        } else {
+            return $this->redirectToRoute('artist_select', ['target' => 'delete']);
+        }
+        foreach ($artists as $value) {
+            $em->remove($value['0']);
+        }
+        $em->flush();
 
         return new Response('good');
         

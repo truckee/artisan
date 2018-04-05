@@ -12,6 +12,8 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Artist;
+use AppBundle\Entity\ArtistRepository;
 use AppBundle\Services\Defaults;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -44,30 +46,22 @@ class SelectArtistType extends AbstractType
             ->add(
                 'artist', EntityType::class,
                 [
-                    'class' => 'AppBundle:Artist',
+                    'class' => Artist::class,
                     'label' => false,
                     'choice_label' => function ($artist, $key, $index) {
                         return $artist->getLastName() . ', ' . $artist->getFirstName();
                     },
-                    'query_builder' => function (EntityRepository $er) use ($target, $notId, $show) {
+                    'query_builder' => function (ArtistRepository $repo) use ($target, $notId, $show) {
                         if ('replacement' === $target) {
-                            return $er->createQueryBuilder('a')
-                                ->where('a <> :notId')
-                                ->setParameter('notId', $notId)
-                                ->orderBy('a.firstName', 'ASC')
-                                ->orderBy('a.lastName', 'ASC');
+                            return $repo->getReplacableArtists($notId);
                         }
                         if ('block' === $target || 'tickets' === $target) {
-                            return $er->createQueryBuilder('a')
-                            ->join('a.shows', 's')
-                            ->where('s.show = ?1')
-                            ->orderBy('a.firstName')
-                            ->orderBy('a.lastName')
-                            ->setParameter(1, $show->getShow());
+                            return $repo->getBlockOrTickets($show);
                         }
-                        return $er->createQueryBuilder('a')
-                            ->orderBy('a.firstName', 'ASC')
-                            ->orderBy('a.lastName', 'ASC');
+                        if ('delete' === $target) {
+                            return $repo->deleteableArtists();
+                        }
+                        return $repo->getAllSelectable();
                     },
                     'mapped' => false,
                 ]
