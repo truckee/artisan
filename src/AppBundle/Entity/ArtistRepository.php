@@ -100,7 +100,7 @@ class ArtistRepository extends EntityRepository
                 ->orderBy('a.lastName');
     }
 
-    public function getReplacableArtists($notId)
+    public function getReplacementArtists($notId)
     {
         return $this->createQueryBuilder('a')
                 ->where('a <> :notId')
@@ -117,6 +117,16 @@ class ArtistRepository extends EntityRepository
                 ->groupBy('a.firstName')
                 ->having('SUM(t.amount) = 0')
         ;
+    }
+
+    public function canBeReplaced($show)
+    {
+        return $this->createQueryBuilder('a')
+            ->join('a.shows', 's')
+            ->join('a.blocks', 'b')
+            ->where('s.show = ?1')
+            ->having('count(b) > 0')
+            ->setParameter(1, $show->getShow());
     }
 
     public function processQuery($query)

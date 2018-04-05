@@ -53,9 +53,9 @@ class SelectArtistType extends AbstractType
                     },
                     'query_builder' => function (ArtistRepository $repo) use ($target, $notId, $show) {
                         if ('replacement' === $target) {
-                            return $repo->getReplacableArtists($notId);
+                            return $repo->getReplacementArtists($notId);
                         }
-                        if ('block' === $target || 'tickets' === $target) {
+                        if ('block' === $target || 'tickets' === $target || 'block reassign' === $target) {
                             return $repo->getBlockOrTickets($show);
                         }
                         if ('delete' === $target) {

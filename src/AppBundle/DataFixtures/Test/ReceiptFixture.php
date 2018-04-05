@@ -43,6 +43,7 @@ class ReceiptFixture extends AbstractFixture implements OrderedFixtureInterface
         $receipt->addTicket($ticket2);
         $receipt->setSalesDate(new \DateTime());
         $manager->persist($ticket);
+        $manager->persist($ticket2);
         $manager->persist($receipt);
 
         $manager->flush();

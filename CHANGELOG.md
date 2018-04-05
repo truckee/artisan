@@ -1,5 +1,10 @@
 ### Change log
 
+#### date here ####
+- Require sum of artist tickets in receipt to be >= 0
+- Add delete artist (with total sales = 0)
+- Require at least two artists with ticket blocks for block reassignment
+
 #### 2018-02-14 ####
 - Add Cancel button where appropriate
 

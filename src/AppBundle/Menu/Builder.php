@@ -76,6 +76,9 @@ class Builder implements ContainerAwareInterface
             $menu['Admin']->addChild('Users', [
                 'route' => 'easyadmin'
             ]);
+            $menu['Admin']->addChild('Delete artist', [
+                'route' => 'artist_delete'
+            ]);
         }
 
         return $menu;

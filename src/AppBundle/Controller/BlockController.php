@@ -133,12 +133,21 @@ class BlockController extends Controller
 
             return $this->redirectToRoute('homepage');
         }
+        //it takes two to tango
+        $em = $this->getDoctrine()->getManager();
+        $artistsQuery = $em->getRepository('AppBundle:Artist')->canBeReplaced($show);
+        $artists = $em->getRepository('AppBundle:Artist')->processQuery($artistsQuery);
+        if (2 > count($artists)) {
+            $flash->error('A minimum of two artists with ticket blocks in show is required for block reassignment');
+
+            return $this->redirectToRoute('homepage');
+        }
+
         //get id of block to reassign
         if (null === $id) {
             return $this->redirectToRoute('artist_select', ['target' => 'block reassign']);
         }
 
-        $em = $this->getDoctrine()->getManager();
         $block = $em->getRepository('AppBundle:Block')->find($id);
         $artist = $block->getArtist();
         $notId = $artist->getId();

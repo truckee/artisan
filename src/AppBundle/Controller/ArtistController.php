@@ -98,8 +98,8 @@ class ArtistController extends Controller
         $form = $this->createForm(
             AddExistingArtistsType::class, $show,
             [
-            'query_bulider' => $someNotInShow,
-            'cancel_action' => $this->generateUrl('homepage'),
+                'query_bulider' => $someNotInShow,
+                'cancel_action' => $this->generateUrl('homepage'),
             ]
         );
         if (is_null($show)) {
@@ -129,9 +129,8 @@ class ArtistController extends Controller
         }
 
         return $this->render(
-                'Artist/existingArtist.html.twig',
-                [
-                'form' => $form->createView(),
+                'Artist/existingArtist.html.twig', [
+                    'form' => $form->createView(),
                 ]
         );
     }
@@ -170,6 +169,8 @@ class ArtistController extends Controller
                                 'replacementId' => $id,
                                 'id' => $blockId,
                     ]);
+                case 'delete':
+                    return $this->redirectToRoute('artist_delete', ['id' => $id]);
                 default:
                     break;
             }
@@ -255,7 +256,7 @@ class ArtistController extends Controller
         }
         $content = $this->renderView('Artist/allArtists.xml.twig',
             [
-            'showArtists' => $showArtists,
+                'showArtists' => $showArtists,
         ]);
         $filename = $show->getShow();
         $response = new Response($content, 200,
@@ -269,7 +270,7 @@ class ArtistController extends Controller
     }
 
     /**
-     * @Route("/delete/{id}")
+     * @Route("/delete/{id}", name="artist_delete")
      */
     public function deleteArtistAction(Request $request, $id = null)
     {
@@ -278,18 +279,19 @@ class ArtistController extends Controller
         $artists = $em->getRepository('AppBundle:Artist')->processQuery($artistsQuery);
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (empty($artists)) {
-           $flash->info('All artists have some sales');
+            $flash->info('All artists have some sales');
 
-           return $this->redirectToRoute('homepage');
-        } else {
+            return $this->redirectToRoute('homepage');
+        }
+        if (null === $id) {
             return $this->redirectToRoute('artist_select', ['target' => 'delete']);
         }
-        foreach ($artists as $value) {
-            $em->remove($value['0']);
-        }
+        $artist = $em->getRepository('AppBundle:Artist')->find($id);
+        $name = $artist->getFirstName() . ' ' . $artist->getLastName();
+        $em->remove($artist);
         $em->flush();
+        $flash->success('Artist ' . $name . ' deleted');
 
-        return new Response('good');
-        
+        return $this->redirectToRoute('homepage');
     }
 }
