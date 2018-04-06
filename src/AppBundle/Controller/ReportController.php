@@ -88,6 +88,11 @@ class ReportController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $em = $this->getDoctrine()->getManager();
+        if (empty($artists)) {
+            $flash->info('No artists in show');
+
+            return $this->redirectToRoute('homepage');
+        }
         $blocks = $em->getRepository('AppBundle:Block')->getBlocksByArtists($show);
 
         return $this->render(
@@ -113,6 +118,11 @@ class ReportController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $receipts = $em->getRepository('AppBundle:Receipt')->nonzeroReceipts($show);
+        if (empty($receipts)) {
+            $flash->info('No receipts with > $0 for show');
+
+            return $this->redirectToRoute('homepage');
+        }
 
         return $this->render('Receipt/viewShowReceipts.html.twig',
                 [
@@ -130,6 +140,11 @@ class ReportController extends Controller
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
             $flash->error('Set a show to active before running this report!');
+
+            return $this->redirectToRoute('homepage');
+        }
+        if (empty($artists)) {
+            $flash->info('No artists in show');
 
             return $this->redirectToRoute('homepage');
         }
@@ -165,6 +180,11 @@ class ReportController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
+        if (empty($artists)) {
+            $flash->info('No artists in show');
+
+            return $this->redirectToRoute('homepage');
+        }
 
         return $this->render('Artist/inShow.html.twig', [
             'artists' => $artists,
@@ -184,6 +204,11 @@ class ReportController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $em = $this->getDoctrine()->getManager();
+        if (empty($artists)) {
+            $flash->info('No artists in show');
+
+            return $this->redirectToRoute('homepage');
+        }
         $blocks = $em->getRepository('AppBundle:Block')->getBlocksByBlock($show);
 
         return $this->render(

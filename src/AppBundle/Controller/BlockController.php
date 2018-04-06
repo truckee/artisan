@@ -42,10 +42,15 @@ class BlockController extends Controller
 
             return $this->redirectToRoute('homepage');
         }
+        $em = $this->getDoctrine()->getManager();
+        if (empty($artists)) {
+            $flash->info('No artists in show');
+
+            return $this->redirectToRoute('homepage');
+        }
         if (null === $id) {
             return $this->redirectToRoute('artist_select', ['target' => 'block']);
         }
-        $em = $this->getDoctrine()->getManager();
         $artist = $em->getRepository('AppBundle:Artist')->find($id);
         $form = $this->createForm(BlockType::class, $block,
             [
@@ -89,10 +94,15 @@ class BlockController extends Controller
 
             return $this->redirectToRoute('homepage');
         }
+        $em = $this->getDoctrine()->getManager();
+        if (empty($artists)) {
+            $flash->info('No artists in show');
+
+            return $this->redirectToRoute('homepage');
+        }
         if (null === $id) {
             return $this->redirectToRoute('artist_select', ['target' => 'block edit']);
         }
-        $em = $this->getDoctrine()->getManager();
         $block = $em->getRepository('AppBundle:Block')->find($id);
         $form = $this->createForm(BlockType::class, $block,
             [

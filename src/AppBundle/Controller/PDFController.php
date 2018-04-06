@@ -34,11 +34,17 @@ class PDFController extends Controller
      */
     public function showSummaryPDFAction(PdfService $pdf, $id = null)
     {
-        if (null !== $id) {
             $em = $this->getDoctrine()->getManager();
+        if (null !== $id) {
             $show = $em->getRepository('AppBundle:Show')->find($id);
         } else {
             return $this->redirectToRoute('show_select', ['target' => 'summary_pdf']);
+        }
+        $receipts = $em->getRepository('AppBundle:Receipt')->nonzeroReceipts($show);
+        if (empty($receipts)) {
+            $flash->info('No receipts with > $0 for show');
+
+            return $this->redirectToRoute('homepage');
         }
         $summary = $em->getRepository('AppBundle:Show')->getShowSummary($show);
         $taxfree = $em->getRepository('AppBundle:Show')->getShowNontaxable($show);
@@ -82,11 +88,11 @@ class PDFController extends Controller
             return $this->redirectToRoute("homepage");
         }
         $em = $this->getDoctrine()->getManager();
-        $showArtists = $em->getRepository('AppBundle:Artist')->artistShowTickets($show);
-        if (null === $showArtists) {
-            $flash->error('No artists in show!');
+        $receipts = $em->getRepository('AppBundle:Receipt')->nonzeroReceipts($show);
+        if (empty($receipts)) {
+            $flash->info('No receipts with > $0 for show');
 
-            return $this->redirectToRoute("homepage");
+            return $this->redirectToRoute('homepage');
         }
 
         $exec = $pdf->pdfExecutable();
