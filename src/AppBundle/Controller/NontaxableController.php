@@ -36,7 +36,7 @@ class NontaxableController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before adding a nontaxable amount!');
+            $flash->info('Set a show to active before adding a nontaxable amount!');
 
             return $this->redirectToRoute("homepage");
         }

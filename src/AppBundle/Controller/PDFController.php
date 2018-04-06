@@ -83,7 +83,7 @@ class PDFController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before creating artists list!');
+            $flash->info('Set a show to active before creating artists list!');
 
             return $this->redirectToRoute("homepage");
         }

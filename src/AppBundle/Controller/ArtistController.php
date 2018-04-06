@@ -82,7 +82,7 @@ class ArtistController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before adding an artist!');
+            $flash->info('Set a show to active before adding an artist!');
 
             return $this->redirectToRoute("homepage");
         }
@@ -103,7 +103,7 @@ class ArtistController extends Controller
             ]
         );
         if (is_null($show)) {
-            $flash->error('Create a default show before adding an artist!');
+            $flash->info('Create a default show before adding an artist!');
 
             return $this->redirectToRoute("show_add");
         }
@@ -243,14 +243,14 @@ class ArtistController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before creating artists list!');
+            $flash->info('Set a show to active before creating artists list!');
 
             return $this->redirectToRoute("homepage");
         }
         $em = $this->getDoctrine()->getManager();
         $showArtists = $em->getRepository('AppBundle:Artist')->artistShowTickets($show);
         if (null === $showArtists) {
-            $flash->error('No artists in show!');
+            $flash->info('No artists in show!');
 
             return $this->redirectToRoute("homepage");
         }

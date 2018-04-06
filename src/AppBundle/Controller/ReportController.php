@@ -39,7 +39,7 @@ class ReportController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before running this report!');
+            $flash->info('Set a show to active before running this report!');
 
             return $this->redirectToRoute('homepage');
         }
@@ -83,7 +83,7 @@ class ReportController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before running this report!');
+            $flash->info('Set a show to active before running this report!');
 
             return $this->redirectToRoute('homepage');
         }
@@ -112,7 +112,7 @@ class ReportController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before running this report!');
+            $flash->info('Set a show to active before running this report!');
 
             return $this->redirectToRoute('homepage');
         }
@@ -139,7 +139,7 @@ class ReportController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before running this report!');
+            $flash->info('Set a show to active before running this report!');
 
             return $this->redirectToRoute('homepage');
         }
@@ -174,7 +174,7 @@ class ReportController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before running this report!');
+            $flash->info('Set a show to active before running this report!');
 
             return $this->redirectToRoute('homepage');
         }
@@ -199,7 +199,7 @@ class ReportController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before running this report!');
+            $flash->info('Set a show to active before running this report!');
 
             return $this->redirectToRoute('homepage');
         }
@@ -228,7 +228,7 @@ class ReportController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before running this report!');
+            $flash->info('Set a show to active before running this report!');
 
             return $this->redirectToRoute('homepage');
         }

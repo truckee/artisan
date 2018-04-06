@@ -38,7 +38,7 @@ class BlockController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before adding a ticket block!');
+            $flash->info('Set a show to active before adding a ticket block!');
 
             return $this->redirectToRoute('homepage');
         }
@@ -90,7 +90,7 @@ class BlockController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before editing a ticket block!');
+            $flash->info('Set a show to active before editing a ticket block!');
 
             return $this->redirectToRoute('homepage');
         }
@@ -139,7 +139,7 @@ class BlockController extends Controller
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
-            $flash->error('Set a show to active before reassigning a ticket block!');
+            $flash->info('Set a show to active before reassigning a ticket block!');
 
             return $this->redirectToRoute('homepage');
         }
@@ -148,7 +148,7 @@ class BlockController extends Controller
         $artistsQuery = $em->getRepository('AppBundle:Artist')->canBeReplaced($show);
         $artists = $em->getRepository('AppBundle:Artist')->processQuery($artistsQuery);
         if (2 > count($artists)) {
-            $flash->error('A minimum of two artists with ticket blocks in show is required for block reassignment');
+            $flash->info('A minimum of two artists with ticket blocks in show is required for block reassignment');
 
             return $this->redirectToRoute('homepage');
         }
