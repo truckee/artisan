@@ -279,7 +279,7 @@ class ArtistController extends Controller
         $artists = $em->getRepository('AppBundle:Artist')->processQuery($artistsQuery);
         $flash = $this->get('braincrafted_bootstrap.flash');
         if (empty($artists)) {
-            $flash->info('All artists have some sales');
+            $flash->info('No artist with $0 in sales');
 
             return $this->redirectToRoute('homepage');
         }
