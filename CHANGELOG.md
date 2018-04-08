@@ -1,5 +1,9 @@
 ### Change log
 
+#### 2018-04-08 ####
+- Add ticket search
+- bug fixes
+
 #### 2018-04-05 ####
 - Require sum of artist tickets in receipt to be >= 0
 - Add delete artist (with total sales = 0)

@@ -54,6 +54,9 @@ class Builder implements ContainerAwareInterface
         $menu['Tickets']->addChild('Edit block', [
             'route' => 'block_edit'
         ]);
+        $menu['Tickets']->addChild('Search', [
+            'route' => 'ticket_search'
+        ]);
 
 
         $menu->addChild('Show');

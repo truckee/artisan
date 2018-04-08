@@ -14,6 +14,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Ticket;
 use AppBundle\Form\TicketType;
+use AppBundle\Form\TicketSearchType;
 use AppBundle\Services\TicketArtist;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -42,7 +43,7 @@ class TicketController extends Controller
         if (null !== $ticketNumber) {
             $artist = $owner->getTicketArtist($ticketNumber);
             $total = $em->getRepository('AppBundle:Receipt')->receiptArtistTotal($receipt, $artist);
-            
+
             $ticket->setRcptTotal($total);
         }
         $form = $this->createForm(TicketType::class, $ticket,
@@ -158,4 +159,41 @@ class TicketController extends Controller
 
         return $response;
     }
+
+    /**
+     * @Route("/search/{number}", name="ticket_search")
+     */
+    public function searchTicketAction(Request $request, $number = null)
+    {
+        $ticket = new Ticket();
+        $form = $this->createForm(TicketSearchType::class, $ticket,
+            [
+                'cancel_action' => $this->generateUrl('homepage'),
+        ]);
+        
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $number = $form->get('ticket')->getData();
+            $em = $this->getDoctrine()->getManager();
+            $tickets = $em->getRepository('AppBundle:Ticket')->searchTickets($number);
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            if (empty($tickets)) {
+                $flash->info('Ticket ' . $number . ' not found');
+
+                return $this->redirectToRoute('homepage');
+            }
+            return $this->render('Ticket/ticketsFound.html.twig', [
+                'tickets' => $tickets,
+                'number' => $number
+            ]);
+        }
+        
+
+        return $this->render(
+                'Ticket/ticketSearchForm.html.twig',
+                [
+                    'form' => $form->createView(),
+                    'ticket' => $number,
+                ]);
+     }
 }

@@ -22,7 +22,7 @@ $(document).ready(function () {
     nontaxDialog = $("#nontaxDialog");
     addAmend = $('#tickets');
     nontaxAddParams = {title: 'Add nontaxable item(s)', success: 'Nontaxable added!'};
-    nontaxEditParams = {title: 'Edit nontaxable item(s)', success: 'Nontaxable updated!', update:'#nontax_amount'};
+    nontaxEditParams = {title: 'Edit nontaxable item(s)', success: 'Nontaxable updated!', update: '#nontax_amount'};
     ticketAddParams = {title: 'Add ticket', success: 'Ticket added!'};
     ticketEditParams = {title: 'Edit ticket', success: 'Ticket updated!'};
 
@@ -66,12 +66,12 @@ $(document).ready(function () {
         receiptEdit(nontaxEditParams, nontaxDialog, 'edit');
     });
 
-    nontaxDialog.keydown(function(event){
-    if(event.keyCode === 13) {
-      event.preventDefault();
-      return false;
-    }
-  });
+    nontaxDialog.keydown(function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
 
 
 //prevent adding more than one nontax item
@@ -97,12 +97,16 @@ $(document).ready(function () {
 //use ticket number to identify artist, or not found
     $(document).on("blur", 'input[name$="[ticket]"]' + '', function () {
         $ticket = $('#ticket_ticket').val();
-        nowAt = $(location).attr('pathname');
-        receiptAt = nowAt.indexOf('/receipt');
-        findTicketUrl = nowAt.slice(0, receiptAt) + '/ticket/findTicket/' + $ticket;
-        $.get(findTicketUrl, function (data) {
-            $('#ticket_artist').val(data);
-        });
+        if ('' !== $ticket) {
+            nowAt = $(location).attr('pathname');
+            receiptAt = nowAt.indexOf('/receipt');
+            findTicketUrl = nowAt.slice(0, receiptAt) + '/ticket/findTicket/' + $ticket;
+            $.get(findTicketUrl, function (data) {
+                $('#ticket_artist').val(data);
+            });
+        } else {
+            $('#ticket_artist').val('No ticket entered');
+        }
     });
 });
 

@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\TicketRepository")
  * @ORM\Table(name="ticket")
  */
 class Ticket

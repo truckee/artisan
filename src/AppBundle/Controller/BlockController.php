@@ -43,15 +43,15 @@ class BlockController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $em = $this->getDoctrine()->getManager();
-        if (empty($artists)) {
-            $flash->info('No artists in show');
-
-            return $this->redirectToRoute('homepage');
-        }
         if (null === $id) {
             return $this->redirectToRoute('artist_select', ['target' => 'block']);
         }
         $artist = $em->getRepository('AppBundle:Artist')->find($id);
+        if (empty($artist)) {
+            $flash->info('No artists in show');
+
+            return $this->redirectToRoute('homepage');
+        }
         $form = $this->createForm(BlockType::class, $block,
             [
                 'cancel_action' => $this->generateUrl('homepage'),
@@ -95,13 +95,14 @@ class BlockController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $em = $this->getDoctrine()->getManager();
-        if (empty($artists)) {
+        if (null === $id) {
+            return $this->redirectToRoute('artist_select', ['target' => 'block edit']);
+        }
+        $artist = $em->getRepository('AppBundle:Artist')->find($id);
+        if (empty($artist)) {
             $flash->info('No artists in show');
 
             return $this->redirectToRoute('homepage');
-        }
-        if (null === $id) {
-            return $this->redirectToRoute('artist_select', ['target' => 'block edit']);
         }
         $block = $em->getRepository('AppBundle:Block')->find($id);
         $form = $this->createForm(BlockType::class, $block,
@@ -195,8 +196,8 @@ class BlockController extends Controller
         $form = $this->createForm(
             SelectBlockType::class, null,
             [
-            'artist' => $artist,
-            'cancel_action' => $this->generateUrl('homepage'),
+                'artist' => $artist,
+                'cancel_action' => $this->generateUrl('homepage'),
             ]
         );
         $form->handleRequest($request);
