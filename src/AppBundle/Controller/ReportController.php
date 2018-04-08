@@ -45,6 +45,11 @@ class ReportController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
+        if (empty($artists)) {
+            $flash->info('No artists in show');
+
+            return $this->redirectToRoute('homepage');
+        }
 
         return $this->render('Artist/inShow.html.twig', [
                 'artists' => $artists,
@@ -88,6 +93,7 @@ class ReportController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $em = $this->getDoctrine()->getManager();
+        $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
         if (empty($artists)) {
             $flash->info('No artists in show');
 
@@ -143,13 +149,14 @@ class ReportController extends Controller
 
             return $this->redirectToRoute('homepage');
         }
+        $em = $this->getDoctrine()->getManager();
+        $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
         if (empty($artists)) {
             $flash->info('No artists in show');
 
             return $this->redirectToRoute('homepage');
         }
         if (null !== $id) {
-            $em = $this->getDoctrine()->getManager();
             $artist = $em->getRepository('AppBundle:Artist')->find($id);
             $tickets = $em->getRepository('AppBundle:Show')->getSingleArtist($show, $artist);
         } else {
@@ -204,6 +211,7 @@ class ReportController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $em = $this->getDoctrine()->getManager();
+        $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
         if (empty($artists)) {
             $flash->info('No artists in show');
 
