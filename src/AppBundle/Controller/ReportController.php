@@ -123,9 +123,9 @@ class ReportController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $em = $this->getDoctrine()->getManager();
-        $receipts = $em->getRepository('AppBundle:Receipt')->nonzeroReceipts($show);
+        $receipts = $em->getRepository('AppBundle:Receipt')->receiptsInShow($show);
         if (empty($receipts)) {
-            $flash->info('No receipts with > $0 for show');
+            $flash->info('No receipts in active show');
 
             return $this->redirectToRoute('homepage');
         }
@@ -240,10 +240,16 @@ class ReportController extends Controller
 
             return $this->redirectToRoute('homepage');
         }
+        $em = $this->getDoctrine()->getManager();
+        $receipts = $em->getRepository('AppBundle:Receipt')->receiptsInShow($show);
+        if(empty($receipts)) {
+            $flash->info('No receipts in active show');
+
+            return $this->redirectToRoute('homepage');
+        }
         if (null === $id) {
             return $this->redirectToRoute('receipt_select', ['target' => 'single']);
         }
-        $em = $this->getDoctrine()->getManager();
         $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['id' => $id]);
 
         return $this->render('Receipt/viewSingleReceipt.html.twig',

@@ -56,4 +56,12 @@ class ReceiptRepository extends EntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function receiptsInShow($show)
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.show = :show')
+            ->setParameter('show', $show)
+            ->getQuery()->getResult();
+    }
 }

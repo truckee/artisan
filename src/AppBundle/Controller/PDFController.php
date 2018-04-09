@@ -34,7 +34,7 @@ class PDFController extends Controller
      */
     public function showSummaryPDFAction(PdfService $pdf, $id = null)
     {
-            $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         if (null !== $id) {
             $show = $em->getRepository('AppBundle:Show')->find($id);
         } else {
@@ -57,8 +57,9 @@ class PDFController extends Controller
                 'show' => $show,
             ]
         );
-        $header = $this->renderView('Pdf/Show/summaryHeader.html.twig', [
-                'reportTitle' => 'Summary for ' . $show->getShow(),
+        $header = $this->renderView('Pdf/Show/summaryHeader.html.twig',
+            [
+            'reportTitle' => 'Summary for ' . $show->getShow(),
         ]);
         $filename = $showName = str_replace(' ', '', $show->getShow()) . 'Summary' . '.pdf';
 
@@ -127,7 +128,8 @@ class PDFController extends Controller
             unlink($discard);
         }
 
-        $response = new Response($binary, 200, [
+        $response = new Response($binary, 200,
+            [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename=' . $showName . "ArtistTickets.pdf",
         ]);

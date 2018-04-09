@@ -13,7 +13,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Artist;
-use AppBundle\Entity\ArtistRepository;
 use AppBundle\Form\ArtistType;
 use AppBundle\Form\AddExistingArtistsType;
 use AppBundle\Form\SelectArtistType;

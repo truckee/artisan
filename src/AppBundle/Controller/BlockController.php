@@ -43,15 +43,16 @@ class BlockController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $em = $this->getDoctrine()->getManager();
-        if (null === $id) {
-            return $this->redirectToRoute('artist_select', ['target' => 'block']);
-        }
-        $artist = $em->getRepository('AppBundle:Artist')->find($id);
-        if (empty($artist)) {
+        $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
+        if (empty($artists)) {
             $flash->info('No artists in show');
 
             return $this->redirectToRoute('homepage');
         }
+        if (null === $id) {
+            return $this->redirectToRoute('artist_select', ['target' => 'block']);
+        }
+        $artist = $em->getRepository('AppBundle:Artist')->find($id);
         $form = $this->createForm(BlockType::class, $block,
             [
                 'cancel_action' => $this->generateUrl('homepage'),
@@ -95,15 +96,16 @@ class BlockController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $em = $this->getDoctrine()->getManager();
-        if (null === $id) {
-            return $this->redirectToRoute('artist_select', ['target' => 'block edit']);
-        }
-        $artist = $em->getRepository('AppBundle:Artist')->find($id);
-        if (empty($artist)) {
+        $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
+        if (empty($artists)) {
             $flash->info('No artists in show');
 
             return $this->redirectToRoute('homepage');
         }
+        if (null === $id) {
+            return $this->redirectToRoute('artist_select', ['target' => 'block edit']);
+        }
+        $artist = $em->getRepository('AppBundle:Artist')->find($id);
         $block = $em->getRepository('AppBundle:Block')->find($id);
         $form = $this->createForm(BlockType::class, $block,
             [
