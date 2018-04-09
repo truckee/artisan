@@ -121,10 +121,16 @@ class ReceiptController extends Controller
 
             return $this->redirectToRoute("homepage");
         }
+        $em = $this->getDoctrine()->getManager();
+        $receipts = $em->getRepository('AppBundle:Receipt')->receiptsInShow($show);
+        if (empty($receipts)) {
+            $flash->info('No receipts in active show');
+
+            return $this->redirectToRoute('homepage');
+        }
         if (null === $id) {
             return $this->redirectToRoute('receipt_select', ['target' => 'edit']);
         }
-        $em = $this->getDoctrine()->getManager();
         $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['id' => $id]);
         $form = $this->createForm(ReceiptType::class, $receipt, [
             'save_label' => 'Save',

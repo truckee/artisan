@@ -62,4 +62,12 @@ class ShowControllerTest extends WebTestCase
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Artisan Show 2017 updated")')->count());
     }
+
+    public function testReceiptEdit()
+    {
+        $crawler = $this->login();
+        $crawler = $this->client->request('GET', '/receipt/edit');
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("No receipts in active show")')->count());
+    }
 }
