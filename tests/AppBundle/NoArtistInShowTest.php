@@ -47,7 +47,7 @@ class NoArtistInShowTest extends WebTestCase
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/block/new');
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in show")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in active show")')->count());
     }
 
     public function testBlockEdit()
@@ -55,7 +55,7 @@ class NoArtistInShowTest extends WebTestCase
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/block/edit');
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in show")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in active show")')->count());
     }
 
     public function testArtistsInShow()
@@ -63,7 +63,7 @@ class NoArtistInShowTest extends WebTestCase
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/reports/artistsInShow');
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in show")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in active show")')->count());
     }
 
     public function testBlocksByArtist()
@@ -71,7 +71,7 @@ class NoArtistInShowTest extends WebTestCase
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/reports/blocksByArtist');
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in show")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in active show")')->count());
     }
 
     public function testSingleArtistTicketst()
@@ -79,7 +79,7 @@ class NoArtistInShowTest extends WebTestCase
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/reports/singleArtistTickets');
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in show")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in active show")')->count());
     }
 
     public function testViewArtists()
@@ -87,7 +87,7 @@ class NoArtistInShowTest extends WebTestCase
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/reports/viewArtists');
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in show")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in active show")')->count());
     }
 
     public function testShowArtistByBlocks()
@@ -95,7 +95,7 @@ class NoArtistInShowTest extends WebTestCase
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/reports/ArtistsByBlock');
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in show")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists in active show")')->count());
     }
 
     public function testViewReceipts()

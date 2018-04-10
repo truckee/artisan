@@ -54,14 +54,12 @@ class ReceiptController extends Controller
      */
     public function addReceipt(Defaults $defaults)
     {
+        if (!$defaults->isActiveShowSet()) {
+            return $this->redirectToRoute('homepage');
+        }
+
         $receipt = new Receipt();
         $show = $defaults->showDefault();
-        $flash = $this->get('braincrafted_bootstrap.flash');
-        if (null === $show) {
-            $flash->info('Set a show to active before adding a receipt!');
-
-            return $this->redirectToRoute("homepage");
-        }
         $em = $this->getDoctrine()->getManager();
         //save receipt to guarantee uniqueness
         $receipt->setSalesDate(new \DateTime());
@@ -114,27 +112,22 @@ class ReceiptController extends Controller
      */
     public function editReceiptAction(Request $request, Defaults $defaults, $id = null)
     {
-        $show = $defaults->showDefault();
-        $flash = $this->get('braincrafted_bootstrap.flash');
-        if (null === $show) {
-            $flash->info('Set a show to active before editing a receipt!');
-
-            return $this->redirectToRoute("homepage");
-        }
-        $em = $this->getDoctrine()->getManager();
-        $receipts = $em->getRepository('AppBundle:Receipt')->receiptsInShow($show);
-        if (empty($receipts)) {
-            $flash->info('No receipts in active show');
-
+        if (!$defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
+        if (!$defaults->hasReceiptsInActiveShow()) {
+            return $this->redirectToRoute('homepage');
+        }
+
         if (null === $id) {
             return $this->redirectToRoute('receipt_select', ['target' => 'edit']);
         }
+        $em = $this->getDoctrine()->getManager();
         $receipt = $em->getRepository('AppBundle:Receipt')->findOneBy(['id' => $id]);
         $form = $this->createForm(ReceiptType::class, $receipt, [
             'save_label' => 'Save',
         ]);
+        $flash = $this->get('braincrafted_bootstrap.flash');
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($receipt);

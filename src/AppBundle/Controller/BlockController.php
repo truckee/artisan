@@ -34,36 +34,31 @@ class BlockController extends Controller
      */
     public function addBlockAction(Request $request, Defaults $defaults, $id = null)
     {
-        $block = new Block();
-        $show = $defaults->showDefault();
-        $flash = $this->get('braincrafted_bootstrap.flash');
-        if (null === $show) {
-            $flash->info('Set a show to active before adding a ticket block!');
-
+        if (!$defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        $em = $this->getDoctrine()->getManager();
-        $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
-        if (empty($artists)) {
-            $flash->info('No artists in show');
-
+        if (!$defaults->hasArtistsInActiveShow()) {
             return $this->redirectToRoute('homepage');
         }
         if (null === $id) {
             return $this->redirectToRoute('artist_select', ['target' => 'block']);
         }
+
+        $block = new Block();
+        $show = $defaults->showDefault();
+        $em = $this->getDoctrine()->getManager();
         $artist = $em->getRepository('AppBundle:Artist')->find($id);
         $form = $this->createForm(BlockType::class, $block,
             [
                 'cancel_action' => $this->generateUrl('homepage'),
         ]);
+        $flash = $this->get('braincrafted_bootstrap.flash');
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $block->setArtist($artist);
             $block->setShow($show);
             $em->persist($block);
             $em->flush();
-            $flash = $this->get('braincrafted_bootstrap.flash');
             $flash->success('Block added!');
 
             return $this->redirectToRoute('homepage');
@@ -88,24 +83,20 @@ class BlockController extends Controller
      */
     public function editBlockAction(Request $request, Defaults $defaults, $id = null)
     {
-        $show = $defaults->showDefault();
-        $flash = $this->get('braincrafted_bootstrap.flash');
-        if (null === $show) {
-            $flash->info('Set a show to active before editing a ticket block!');
-
+        if (!$defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        $em = $this->getDoctrine()->getManager();
-        $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
-        if (empty($artists)) {
-            $flash->info('No artists in show');
-
+        if (!$defaults->hasArtistsInActiveShow()) {
             return $this->redirectToRoute('homepage');
         }
         if (null === $id) {
             return $this->redirectToRoute('artist_select', ['target' => 'block edit']);
         }
-        $artist = $em->getRepository('AppBundle:Artist')->find($id);
+
+        $show = $defaults->showDefault();
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        $em = $this->getDoctrine()->getManager();
+//        $artist = $em->getRepository('AppBundle:Artist')->find($id);
         $block = $em->getRepository('AppBundle:Block')->find($id);
         $form = $this->createForm(BlockType::class, $block,
             [
@@ -140,7 +131,6 @@ class BlockController extends Controller
     public function reassignBlockAction(Request $request, Defaults $defaults, $id = null, $replacementId = null)
     {
         $show = $defaults->showDefault();
-        $flash = $this->get('braincrafted_bootstrap.flash');
         if (null === $show) {
             $flash->info('Set a show to active before reassigning a ticket block!');
 
@@ -151,6 +141,7 @@ class BlockController extends Controller
         $artistsQuery = $em->getRepository('AppBundle:Artist')->canBeReplaced($show);
         $artists = $em->getRepository('AppBundle:Artist')->processQuery($artistsQuery);
         if (2 > count($artists)) {
+            $flash = $this->get('braincrafted_bootstrap.flash');
             $flash->info('A minimum of two artists with ticket blocks in show is required for block reassignment');
 
             return $this->redirectToRoute('homepage');

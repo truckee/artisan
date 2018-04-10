@@ -33,13 +33,10 @@ class NontaxableController extends Controller
      */
     public function addAmountAction(Request $request, Defaults $defaults, $id)
     {
-        $show = $defaults->showDefault();
-        $flash = $this->get('braincrafted_bootstrap.flash');
-        if (null === $show) {
-            $flash->info('Set a show to active before adding a nontaxable amount!');
-
-            return $this->redirectToRoute("homepage");
+        if (!$defaults->isActiveShowSet()) {
+            return $this->redirectToRoute('homepage');
         }
+
         if (null === $id) {
             return $this->redirectToRoute('receipt_select', ['target' => 'add_nontaxable']);
         }

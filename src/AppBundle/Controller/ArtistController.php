@@ -78,13 +78,11 @@ class ArtistController extends Controller
      */
     public function addExistingArtistsAction(Request $request, Defaults $defaults)
     {
-        $show = $defaults->showDefault();
-        $flash = $this->get('braincrafted_bootstrap.flash');
-        if (null === $show) {
-            $flash->info('Set a show to active before adding an artist!');
-
-            return $this->redirectToRoute("homepage");
+        if (!$defaults->isActiveShowSet()) {
+            return $this->redirectToRoute('homepage');
         }
+
+        $show = $defaults->showDefault();
         $artist = new Artist();
         $flash = $this->get('braincrafted_bootstrap.flash');
         $em = $this->getDoctrine()->getManager();
@@ -101,11 +99,6 @@ class ArtistController extends Controller
                 'cancel_action' => $this->generateUrl('homepage'),
             ]
         );
-        if (is_null($show)) {
-            $flash->info('Create a default show before adding an artist!');
-
-            return $this->redirectToRoute("show_add");
-        }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $artists = $form->get('artists')->getData();
@@ -239,20 +232,16 @@ class ArtistController extends Controller
      */
     public function allArtistsXMLAction(Defaults $defaults)
     {
-        $show = $defaults->showDefault();
-        $flash = $this->get('braincrafted_bootstrap.flash');
-        if (null === $show) {
-            $flash->info('Set a show to active before creating artists list!');
-
-            return $this->redirectToRoute("homepage");
+        if (!$defaults->isActiveShowSet()) {
+            return $this->redirectToRoute('homepage');
         }
+        if (!$defaults->hasArtistsInActiveShow()) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        $show = $defaults->showDefault();
         $em = $this->getDoctrine()->getManager();
         $showArtists = $em->getRepository('AppBundle:Artist')->artistShowTickets($show);
-        if (null === $showArtists) {
-            $flash->info('No artists in show!');
-
-            return $this->redirectToRoute("homepage");
-        }
         $content = $this->renderView('Artist/allArtists.xml.twig',
             [
                 'showArtists' => $showArtists,

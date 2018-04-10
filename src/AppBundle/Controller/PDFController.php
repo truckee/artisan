@@ -81,13 +81,12 @@ class PDFController extends Controller
      */
     public function allTicketsAction(PdfService $pdf, Defaults $defaults)
     {
+        if (!$defaults->isActiveShowSet()) {
+            return $this->redirectToRoute('homepage');
+        }
+
         $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
-        if (null === $show) {
-            $flash->info('Set a show to active before creating artists list!');
-
-            return $this->redirectToRoute("homepage");
-        }
         $em = $this->getDoctrine()->getManager();
         $receipts = $em->getRepository('AppBundle:Receipt')->nonzeroReceipts($show);
         if (empty($receipts)) {

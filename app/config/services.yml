@@ -39,7 +39,7 @@ services:
             $os: '%os%'
 
     Braincrafted\Bundle\BootstrapBundle\Session\FlashMessage:
-        public: false
+        public: true
 
     braincrafted_bootstrap.flash:
         alias: Braincrafted\Bundle\BootstrapBundle\Session\FlashMessage
