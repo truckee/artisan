@@ -78,7 +78,7 @@ class ArtistController extends Controller
      */
     public function addExistingArtistsAction(Request $request, Defaults $defaults)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -232,10 +232,10 @@ class ArtistController extends Controller
      */
     public function allArtistsXMLAction(Defaults $defaults)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        if (!$defaults->hasArtistsInActiveShow()) {
+        if (false === $defaults->hasArtistsInActiveShow()) {
             return $this->redirectToRoute('homepage');
         }
 

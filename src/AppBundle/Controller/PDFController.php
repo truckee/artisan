@@ -81,7 +81,7 @@ class PDFController extends Controller
      */
     public function allTicketsAction(PdfService $pdf, Defaults $defaults)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
 

@@ -54,7 +54,7 @@ class ReceiptController extends Controller
      */
     public function addReceipt(Defaults $defaults)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -112,10 +112,10 @@ class ReceiptController extends Controller
      */
     public function editReceiptAction(Request $request, Defaults $defaults, $id = null)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        if (!$defaults->hasReceiptsInActiveShow()) {
+        if (false === $defaults->hasReceiptsInActiveShow()) {
             return $this->redirectToRoute('homepage');
         }
 

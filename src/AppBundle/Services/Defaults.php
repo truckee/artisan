@@ -34,7 +34,7 @@ class Defaults
     {
         return $this->em->getRepository('AppBundle:Show')->findOneBy(['default' => true]);
     }
-    
+
     public function isActiveShowSet()
     {
         if (null === $this->showDefault()) {
@@ -54,7 +54,7 @@ class Defaults
 
             return false;
         }
-        
+
         return true;
     }
 
@@ -63,6 +63,30 @@ class Defaults
         $show = $this->showDefault();
         if (0 === count($show->getReceipts())) {
             $this->flash->info('No receipts in active show');
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public function artistHasBlocksInShow($artist)
+    {
+        $blocks = $this->em->getRepository('AppBundle:Block')->findBy(['show' => $this->showDefault(), 'artist' => $artist]);
+        if (0 === count($blocks)) {
+            $this->flash->info('No tickets for this artist in active show');
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public function showHasBlocks()
+    {
+        $blocks = $this->showDefault()->getBlocks();
+        if (0 === count($blocks)) {
+            $this->flash->info('No tickets/blocks in active show');
 
             return false;
         }

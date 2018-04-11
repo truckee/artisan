@@ -33,7 +33,7 @@ class NontaxableController extends Controller
      */
     public function addAmountAction(Request $request, Defaults $defaults, $id)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
 

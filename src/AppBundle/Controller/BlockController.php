@@ -34,25 +34,25 @@ class BlockController extends Controller
      */
     public function addBlockAction(Request $request, Defaults $defaults, $id = null)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        if (!$defaults->hasArtistsInActiveShow()) {
+        if (false === $defaults->hasArtistsInActiveShow()) {
             return $this->redirectToRoute('homepage');
         }
         if (null === $id) {
             return $this->redirectToRoute('artist_select', ['target' => 'block']);
         }
-
-        $block = new Block();
-        $show = $defaults->showDefault();
         $em = $this->getDoctrine()->getManager();
         $artist = $em->getRepository('AppBundle:Artist')->find($id);
+
+        $flash = $this->get('braincrafted_bootstrap.flash');
+        $block = new Block();
+        $show = $defaults->showDefault();
         $form = $this->createForm(BlockType::class, $block,
             [
                 'cancel_action' => $this->generateUrl('homepage'),
         ]);
-        $flash = $this->get('braincrafted_bootstrap.flash');
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $block->setArtist($artist);
@@ -83,17 +83,17 @@ class BlockController extends Controller
      */
     public function editBlockAction(Request $request, Defaults $defaults, $id = null)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        if (!$defaults->hasArtistsInActiveShow()) {
+        if (false === $defaults->hasArtistsInActiveShow()) {
             return $this->redirectToRoute('homepage');
         }
         if (null === $id) {
             return $this->redirectToRoute('artist_select', ['target' => 'block edit']);
         }
 
-        $show = $defaults->showDefault();
+//        $show = $defaults->showDefault();
         $flash = $this->get('braincrafted_bootstrap.flash');
         $em = $this->getDoctrine()->getManager();
 //        $artist = $em->getRepository('AppBundle:Artist')->find($id);
@@ -182,10 +182,14 @@ class BlockController extends Controller
     /**
      * @Route("/select/{id}/{action}", name="block_select")
      */
-    public function selectBlockAction(Request $request, $id, $action)
+    public function selectBlockAction(Request $request, Defaults $defaults, $id, $action)
     {
         $em = $this->getDoctrine()->getManager();
         $artist = $em->getRepository('AppBundle:Artist')->find($id);
+        if (false === $defaults->artistHasBlocksInShow($artist)) {
+            return $this->redirectToRoute('homepage');
+        }
+
         $form = $this->createForm(
             SelectBlockType::class, null,
             [

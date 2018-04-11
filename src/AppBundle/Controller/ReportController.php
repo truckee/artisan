@@ -23,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 class ReportController extends Controller
 {
+
     /**
      * @Route("/", name= "reports")
      */
@@ -36,10 +37,10 @@ class ReportController extends Controller
      */
     public function viewShowArtistsAction(Defaults $defaults)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        if (!$defaults->hasArtistsInActiveShow()) {
+        if (false === $defaults->hasArtistsInActiveShow()) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -58,8 +59,8 @@ class ReportController extends Controller
      */
     public function showSummaryAction($id = null)
     {
+        $em = $this->getDoctrine()->getManager();
         if (null !== $id) {
-            $em = $this->getDoctrine()->getManager();
             $show = $em->getRepository('AppBundle:Show')->find($id);
         } else {
             return $this->redirectToRoute('show_select', ['target' => 'summary']);
@@ -68,12 +69,12 @@ class ReportController extends Controller
         $taxfree = $em->getRepository('AppBundle:Show')->getShowNontaxable($show);
 
         return $this->render(
-            'Show/showSummary.html.twig',
+                'Show/showSummary.html.twig',
                 [
                     'artists' => $summary,
                     'taxfree' => $taxfree,
                     'show' => $show,
-        ]
+                ]
         );
     }
 
@@ -82,22 +83,26 @@ class ReportController extends Controller
      */
     public function showBlocksByArtistAction(Defaults $defaults)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        if (!$defaults->hasArtistsInActiveShow()) {
+        if (false === $defaults->hasArtistsInActiveShow()) {
+            return $this->redirectToRoute('homepage');
+        }
+        if (false === $defaults->showHasBlocks()) {
             return $this->redirectToRoute('homepage');
         }
 
+        $em = $this->getDoctrine()->getManager();
         $show = $defaults->showDefault();
         $blocks = $em->getRepository('AppBundle:Block')->getBlocksByArtists($show);
 
         return $this->render(
-            'Block/blocksByArtists.html.twig',
+                'Block/blocksByArtists.html.twig',
                 [
-                'blocks' => $blocks,
-                'show' => $show,
-        ]
+                    'blocks' => $blocks,
+                    'show' => $show,
+                ]
         );
     }
 
@@ -106,10 +111,10 @@ class ReportController extends Controller
      */
     public function viewShowReceiptsAction(Defaults $defaults)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        if (!$defaults->hasReceiptsInActiveShow()) {
+        if (false === $defaults->hasReceiptsInActiveShow()) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -119,8 +124,8 @@ class ReportController extends Controller
 
         return $this->render('Receipt/viewShowReceipts.html.twig',
                 [
-                'receipts' => $receipts,
-                'show' => $show,
+                    'receipts' => $receipts,
+                    'show' => $show,
         ]);
     }
 
@@ -129,10 +134,10 @@ class ReportController extends Controller
      */
     public function viewSingleArtistTicketsAction(Defaults $defaults, $id = null)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        if (!$defaults->hasArtistsInActiveShow()) {
+        if (false === $defaults->hasArtistsInActiveShow()) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -147,12 +152,12 @@ class ReportController extends Controller
         }
 
         return $this->render(
-            'Artist/singleArtistTickets.html.twig',
+                'Artist/singleArtistTickets.html.twig',
                 [
                     'artist' => $artist,
                     'tickets' => $tickets,
                     'show' => $show,
-        ]
+                ]
         );
     }
 
@@ -161,10 +166,10 @@ class ReportController extends Controller
      */
     public function viewArtistsAction(Defaults $defaults)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        if (!$defaults->hasArtistsInActiveShow()) {
+        if (false === $defaults->hasArtistsInActiveShow()) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -173,7 +178,7 @@ class ReportController extends Controller
         $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
 
         return $this->render('Artist/inShow.html.twig', [
-            'artists' => $artists,
+                'artists' => $artists,
         ]);
     }
 
@@ -182,10 +187,13 @@ class ReportController extends Controller
      */
     public function showArtistByBlocksAction(Defaults $defaults)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        if (!$defaults->hasArtistsInActiveShow()) {
+        if (false === $defaults->hasArtistsInActiveShow()) {
+            return $this->redirectToRoute('homepage');
+        }
+        if (false === $defaults->showHasBlocks()) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -194,11 +202,11 @@ class ReportController extends Controller
         $blocks = $em->getRepository('AppBundle:Block')->getBlocksByBlock($show);
 
         return $this->render(
-            'Block/blocksByBlock.html.twig',
+                'Block/blocksByBlock.html.twig',
                 [
-                'blocks' => $blocks,
-                'show' => $show,
-        ]
+                    'blocks' => $blocks,
+                    'show' => $show,
+                ]
         );
     }
 
@@ -207,10 +215,10 @@ class ReportController extends Controller
      */
     public function viewSingleReceiptAction(Defaults $defaults, $id = null)
     {
-        if (!$defaults->isActiveShowSet()) {
+        if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
-        if (!$defaults->hasReceiptsInActiveShow()) {
+        if (false === $defaults->hasReceiptsInActiveShow()) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -223,8 +231,8 @@ class ReportController extends Controller
 
         return $this->render('Receipt/viewSingleReceipt.html.twig',
                 [
-                'receipt' => $receipt,
-                'show' => $show,
+                    'receipt' => $receipt,
+                    'show' => $show,
         ]);
     }
 }
