@@ -143,9 +143,11 @@ class ReportController extends Controller
 
         $show = $defaults->showDefault();
         $em = $this->getDoctrine()->getManager();
-        $artists = $em->getRepository('AppBundle:Artist')->allArtistsInShow($show);
         if (null !== $id) {
             $artist = $em->getRepository('AppBundle:Artist')->find($id);
+            if (false === $defaults->artistHasBlocksInShow($artist)) {
+                return $this->redirectToRoute('homepage');
+            }
             $tickets = $em->getRepository('AppBundle:Show')->getSingleArtist($show, $artist);
         } else {
             return $this->redirectToRoute('artist_select', ['target' => 'tickets']);

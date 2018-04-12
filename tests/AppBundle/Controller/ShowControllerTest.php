@@ -67,7 +67,7 @@ class ShowControllerTest extends WebTestCase
     {
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/receipt/edit');
-
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("No receipts in active show")')->count());
+        
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("No tickets/blocks in active show")')->count());
     }
 }

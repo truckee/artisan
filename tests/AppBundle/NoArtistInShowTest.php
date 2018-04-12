@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-//src\Tests\AppBundle\Controller\NoArtistInShowTest.php
+//src\Tests\AppBundle\NoArtistInShowTest.php
 
-namespace Tests\AppBundle\Controller;
+namespace Tests\AppBundle;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 

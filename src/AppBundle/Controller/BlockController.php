@@ -216,38 +216,38 @@ class BlockController extends Controller
     /**
      * @Route("/delete/{id}", name="block_delete")
      */
-    public function deleteBlockAction(Request $request, Defaults $defaults, $id)
-    {
-        $show = $defaults->showDefault();
-        $em = $this->getDoctrine()->getManager();
-        $block = $em->getRepository('AppBundle:Block')->find($id);
-        $form = $this->createForm(BlockType::class, $block);
-        $form->handleRequest($request);
-        if ($request->isMethod('POST')) {
-            $flash = $this->get('braincrafted_bootstrap.flash');
-            $options['action'] = 'delete';
-            $options['block'] = $block;
-            $canBeDeleted = $em->getRepository('AppBundle:Block')->canBlockBeDeleted($show, $block);
-            if (true === $canBeDeleted) {
-                $artist = $block->getArtist();
-                $artist->removeBlock($block);
-                $em->persist($artist);
-                $em->flush();
-                $flash = $this->get('braincrafted_bootstrap.flash');
-                $flash->success('Block deleted!');
-            } else {
-                $flash->danger('Block contains at least one used ticket');
-            }
-
-            return $this->redirectToRoute('homepage');
-        }
-
-        return $this->render('Block/deleteBlock.html.twig',
-                [
-                    'block' => $block,
-                    'form' => $form->createView(),
-        ]);
-    }
+//    public function deleteBlockAction(Request $request, Defaults $defaults, $id)
+//    {
+//        $show = $defaults->showDefault();
+//        $em = $this->getDoctrine()->getManager();
+//        $block = $em->getRepository('AppBundle:Block')->find($id);
+//        $form = $this->createForm(BlockType::class, $block);
+//        $form->handleRequest($request);
+//        if ($request->isMethod('POST')) {
+//            $flash = $this->get('braincrafted_bootstrap.flash');
+//            $options['action'] = 'delete';
+//            $options['block'] = $block;
+//            $canBeDeleted = $em->getRepository('AppBundle:Block')->canBlockBeDeleted($show, $block);
+//            if (true === $canBeDeleted) {
+//                $artist = $block->getArtist();
+//                $artist->removeBlock($block);
+//                $em->persist($artist);
+//                $em->flush();
+//                $flash = $this->get('braincrafted_bootstrap.flash');
+//                $flash->success('Block deleted!');
+//            } else {
+//                $flash->danger('Block contains at least one used ticket');
+//            }
+//
+//            return $this->redirectToRoute('homepage');
+//        }
+//
+//        return $this->render('Block/deleteBlock.html.twig',
+//                [
+//                    'block' => $block,
+//                    'form' => $form->createView(),
+//        ]);
+//    }
 
     private function blockCheck($options)
     {

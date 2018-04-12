@@ -57,6 +57,9 @@ class ReceiptController extends Controller
         if (false === $defaults->isActiveShowSet()) {
             return $this->redirectToRoute('homepage');
         }
+        if (false === $defaults->showHasBlocks()) {
+            return $this->redirectToRoute('homepage');
+        }
 
         $receipt = new Receipt();
         $show = $defaults->showDefault();
@@ -113,6 +116,9 @@ class ReceiptController extends Controller
     public function editReceiptAction(Request $request, Defaults $defaults, $id = null)
     {
         if (false === $defaults->isActiveShowSet()) {
+            return $this->redirectToRoute('homepage');
+        }
+        if (false === $defaults->showHasBlocks()) {
             return $this->redirectToRoute('homepage');
         }
         if (false === $defaults->hasReceiptsInActiveShow()) {
