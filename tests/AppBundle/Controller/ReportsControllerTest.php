@@ -95,4 +95,12 @@ class ReportsControllerTest extends WebTestCase
 
         $this->assertGreaterThan(0, $crawler->filter('html:contains("Borko, Benny")')->count());
     }
+
+    public function testPDFController()
+    {
+        $crawler = $this->login();
+        $crawler = $this->client->request('GET', '/pdf/allTickets');
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
 }

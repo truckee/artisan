@@ -110,38 +110,6 @@ class TicketController extends Controller
     }
 
     /**
-     * @Route("/delete/{id}", name="ticket_delete")
-     */
-    public function deleteTicketAction(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $flash = $this->get('braincrafted_bootstrap.flash');
-        $ticket = $em->getRepository('AppBundle:Ticket')->find($id);
-        if (null === $ticket) {
-            $flash->alert('Ticket does not exist');
-
-            return $this->redirectToRoute('homepage');
-        }
-        $form = $this->createForm(TicketType::class, $ticket);
-        $form->handleRequest($request);
-        if ($request->isMethod('POST')) {
-            $artist = $ticket->getArtist();
-            $artist->removeTicket($ticket);
-            $em->persist($artist);
-            $em->flush();
-            $flash->alert('Ticket has been deleted');
-
-            return $this->redirectToRoute('homepage');
-        }
-
-        return $this->render('Ticket/deleteTicket.html.twig',
-                [
-                    'form' => $form->createView(),
-                    'ticket' => $ticket,
-        ]);
-    }
-
-    /**
      * Used by receipt form to get artist name
      *
      * @Route("/findTicket/{ticket}", name="find_ticket")

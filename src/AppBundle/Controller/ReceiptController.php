@@ -31,25 +31,6 @@ class ReceiptController extends Controller
 {
 
     /**
-     * Used by receipt form to get artist name
-     *
-     * @Route("/findTicket/{ticket}", name="find_ticket")
-     */
-    public function findTicketAction(Request $request, TicketArtist $artist, $ticket)
-    {
-        $entity = $artist->getTicketArtist($ticket);
-        if (null === $entity) {
-            $response = new Response('Ticket does not exist');
-
-            return $response;
-        }
-        $name = $entity->getFirstName() . ' ' . $entity->getLastName();
-        $response = new Response($name);
-
-        return $response;
-    }
-
-    /**
      * @Route("/add", name="receipt_add")
      */
     public function addReceipt(Defaults $defaults)

@@ -126,7 +126,7 @@ class Ticket
         $total = 0;
         $tickets = $receipt->getTickets();
         foreach ($tickets as $value) {
-            $total += ($this->getTicket() !== $value->getTicket()) ? $value->getAmount() : $this->getAmount() - $value->getAmount();
+            $total += ($this->getTicket() !== $value->getTicket()) ? $value->getAmount() : $this->getAmount();
         }
         if (0 > $total) {
             $context->buildViolation('Artist\'s receipt total may not be < 0!')
