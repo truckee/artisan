@@ -31,7 +31,7 @@ class ReportsControllerTest extends WebTestCase
             'AppBundle\DataFixtures\Test\TwoArtistFixture',
             'AppBundle\DataFixtures\Test\BlocksToShowFixture',
             'AppBundle\DataFixtures\Test\ReceiptFixture',
-        ]);
+        ])->getReferenceRepository();
     }
 
     public function login()
@@ -101,6 +101,6 @@ class ReportsControllerTest extends WebTestCase
         $crawler = $this->login();
         $crawler = $this->client->request('GET', '/pdf/allTickets');
 
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("No artists with ticket sum > $0 for show")')->count());
     }
 }

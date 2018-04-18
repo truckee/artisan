@@ -6,7 +6,7 @@
                 {{ ticket.ticket|number_format(0, '', '') }}
             </div>
             <div class="col-xs-2 text-right">
-                {{ ticket.receiptNo|number_format(0, '', '') }}
+                {{ ticket.receipt.id|number_format(0, '', '') }}
             </div>
             <div class="col-xs-3 text-right">
                 {{ ticket.amount|number_format(2) }}

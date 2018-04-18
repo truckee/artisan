@@ -12,9 +12,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Artist;
+use AppBundle\Entity\Show;
 use AppBundle\Services\Defaults;
 use AppBundle\Services\PdfService;
-//use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use PDFMerger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -89,12 +90,19 @@ class PDFController extends Controller
         $flash = $this->get('braincrafted_bootstrap.flash');
         $em = $this->getDoctrine()->getManager();
         $receipts = $em->getRepository('AppBundle:Receipt')->nonzeroReceipts($show);
-        if (empty($receipts)) {
-            $flash->info('No receipts with > $0 for show');
+//        if (empty($receipts)) {
+//            $flash->info('No receipts with > $0 for show');
+//
+//            return $this->redirectToRoute('homepage');
+//        }
+        $showArtists = $em->getRepository(Artist::class)->showArtistNonZeroTicketSum($show);
+         if (empty($showArtists)) {
+            $flash->info('No artists with ticket sum > $0 for show');
 
             return $this->redirectToRoute('homepage');
         }
 
+        
         $exec = $pdf->pdfExecutable();
         $snappy = new Pdf($exec);
         $dir = $this->getParameter('kernel.project_dir') . '/web/files/';
@@ -104,15 +112,15 @@ class PDFController extends Controller
         // remove time limit - this can take a while
         set_time_limit(0);
         foreach ($showArtists as $artist) {
-            $filename = $dir . $showName . $artist['artist']->getFirstName() . $artist['artist']->getLastName() . '.pdf';
+            $filename = $dir . $showName . $artist->getFirstName() . $artist->getLastName() . '.pdf';
             $header = $this->renderView('Pdf/Artist/pdfArtistsTicketsHeader.html.twig',
                 [
-                    'artist' => $artist['artist'],
+                    'artist' => $artist,
                     'show' => $show,
             ]);
             $page = $this->renderView(('Pdf/Artist/pdfArtistsTickets.html.twig'),
                 [
-                    'tickets' => $artist['tickets'],
+                    'tickets' => $artist->getTickets(),
                     'show' => $show,
             ]);
             $snappy->setOption('header-html', $header);

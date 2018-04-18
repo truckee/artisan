@@ -133,4 +133,18 @@ class ArtistRepository extends EntityRepository
     {
         return $query->getQuery()->getResult();
     }
-}
+
+    public function showArtistNonZeroTicketSum($show)
+    {
+        return $this->createQueryBuilder('a')
+            ->join('AppBundle:Ticket', 't', 'WITH', 't.artist = a')
+            ->join('AppBundle:Receipt', 'r', 'WITH', 't.receipt = r')
+            ->where('t.artist = a')
+            ->andWhere('r.show = :show')
+            ->having('SUM(t.amount) > 0')
+            ->groupBy('a.firstName')
+            ->groupBy('a.lastName')
+            ->setParameter('show', $show)
+            ->getQuery()->getResult();
+            ;
+    }}

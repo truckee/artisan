@@ -45,6 +45,7 @@ class ReceiptFixture extends AbstractFixture implements OrderedFixtureInterface
         $manager->persist($ticket);
         $manager->persist($ticket2);
         $manager->persist($receipt);
+        $this->setReference('receipt', $receipt);
 
         $manager->flush();
 

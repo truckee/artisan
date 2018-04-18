@@ -12,6 +12,9 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Artist;
+use AppBundle\Entity\Ticket;
+
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -66,4 +69,5 @@ class ShowRepository extends EntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
 }
