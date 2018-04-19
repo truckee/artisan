@@ -44,11 +44,11 @@ class UsersFixture extends AbstractFixture implements OrderedFixtureInterface, C
         $userManager = $this->container->get('fos_user.user_manager');
 
         $admin = $userManager->createUser();
-        $admin->setUsername('admin');
+        $admin->setUsername('support');
         $admin->setFirstName('Benny');
         $admin->setLastName('Borko');
         $admin->setEmail('admin@bogus.info');
-        $admin->setPlainPassword('manapw');
+        $admin->setPlainPassword('art2017');
         $admin->setEnabled(true);
         $admin->setRoles(array('ROLE_ADMIN'));
 

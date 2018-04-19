@@ -140,8 +140,9 @@ class BlockController extends Controller
         $em = $this->getDoctrine()->getManager();
         $artistsQuery = $em->getRepository('AppBundle:Artist')->canBeReplaced($show);
         $artists = $em->getRepository('AppBundle:Artist')->processQuery($artistsQuery);
+        $flash = $this->get('braincrafted_bootstrap.flash');
+
         if (2 > count($artists)) {
-            $flash = $this->get('braincrafted_bootstrap.flash');
             $flash->info('A minimum of two artists with ticket blocks in show is required for block reassignment');
 
             return $this->redirectToRoute('homepage');

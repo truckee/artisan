@@ -112,21 +112,27 @@ class ArtistRepository extends EntityRepository
     public function deleteableArtists()
     {
         return $this->createQueryBuilder('a')
-                ->join('AppBundle:Ticket', 't', 'WITH', 't.artist = a')
-                ->groupBy('a.lastName')
+                ->leftJoin('AppBundle:Ticket', 't', 'WITH', 't.artist = a')
                 ->groupBy('a.firstName')
+                ->groupBy('a.lastName')
                 ->having('SUM(t.amount) = 0')
+                ->orHaving('SUM(t.amount) IS NULL')
+                ->orderBy('a.firstName', 'ASC')
+                ->orderBy('a.lastName', 'ASC')
+            ;
         ;
     }
 
     public function canBeReplaced($show)
     {
         return $this->createQueryBuilder('a')
-            ->join('a.shows', 's')
-            ->join('a.blocks', 'b')
-            ->where('s.show = ?1')
-            ->having('count(b) > 0')
-            ->setParameter(1, $show->getShow());
+                ->join('a.shows', 's')
+                ->join('a.blocks', 'b')
+                ->where('s.show = ?1')
+                ->groupBy('a.firstName')
+                ->groupBy('a.lastName')
+                ->having('count(b) > 0')
+                ->setParameter(1, $show->getShow());
     }
 
     public function processQuery($query)
@@ -137,14 +143,15 @@ class ArtistRepository extends EntityRepository
     public function showArtistNonZeroTicketSum($show)
     {
         return $this->createQueryBuilder('a')
-            ->join('AppBundle:Ticket', 't', 'WITH', 't.artist = a')
-            ->join('AppBundle:Receipt', 'r', 'WITH', 't.receipt = r')
-            ->where('t.artist = a')
-            ->andWhere('r.show = :show')
-            ->having('SUM(t.amount) > 0')
-            ->groupBy('a.firstName')
-            ->groupBy('a.lastName')
-            ->setParameter('show', $show)
-            ->getQuery()->getResult();
-            ;
-    }}
+                ->join('AppBundle:Ticket', 't', 'WITH', 't.artist = a')
+                ->join('AppBundle:Receipt', 'r', 'WITH', 't.receipt = r')
+                ->where('t.artist = a')
+                ->andWhere('r.show = :show')
+                ->having('SUM(t.amount) > 0')
+                ->groupBy('a.firstName')
+                ->groupBy('a.lastName')
+                ->setParameter('show', $show)
+                ->getQuery()->getResult();
+        ;
+    }
+}

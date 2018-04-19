@@ -49,22 +49,22 @@ class BlockRepository extends EntityRepository
                 ->getResult();
     }
 
-    public function canBlockBeDeleted($show, $block)
-    {
-        $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('COUNT(t.ticket)')
-            ->from('AppBundle:Ticket', 't')
-            ->join('AppBundle:Receipt', 'r', 'WITH', 't.receipt = r')
-            ->where('r.show = :show')
-            ->andWhere('t.ticket >= :lower')
-            ->andWhere('t.ticket <= :upper')
-            ->setParameters([
-                'show' => $show->getId(),
-                'lower' => $block->getLower(),
-                'upper' => $block->getUpper()
-                ])
-            ->getQuery()->getSingleScalarResult();
-
-        return ($query) ? false : true;
-    }
+//    public function canBlockBeDeleted($show, $block)
+//    {
+//        $query = $this->getEntityManager()->createQueryBuilder()
+//            ->select('COUNT(t.ticket)')
+//            ->from('AppBundle:Ticket', 't')
+//            ->join('AppBundle:Receipt', 'r', 'WITH', 't.receipt = r')
+//            ->where('r.show = :show')
+//            ->andWhere('t.ticket >= :lower')
+//            ->andWhere('t.ticket <= :upper')
+//            ->setParameters([
+//                'show' => $show->getId(),
+//                'lower' => $block->getLower(),
+//                'upper' => $block->getUpper()
+//                ])
+//            ->getQuery()->getSingleScalarResult();
+//
+//        return ($query) ? false : true;
+//    }
 }

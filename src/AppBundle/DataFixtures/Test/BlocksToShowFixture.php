@@ -40,6 +40,7 @@ class BlocksToShowFixture extends AbstractFixture implements OrderedFixtureInter
         $block2 = new Block();
         $block2->setLower(20);
         $block2->setUpper(29);
+        $this->setReference('block2', $block2);
         $show2 = new Show();
         $show2->setShow('Art 2018');
         $show2->setDefault(false);

@@ -227,35 +227,35 @@ class ArtistController extends Controller
         );
     }
 
-    /**
-     * @Route("/xml", name="artists_xml")
-     */
-    public function allArtistsXMLAction(Defaults $defaults)
-    {
-        if (false === $defaults->isActiveShowSet()) {
-            return $this->redirectToRoute('homepage');
-        }
-        if (false === $defaults->hasArtistsInActiveShow()) {
-            return $this->redirectToRoute('homepage');
-        }
-
-        $show = $defaults->showDefault();
-        $em = $this->getDoctrine()->getManager();
-        $showArtists = $em->getRepository('AppBundle:Artist')->artistShowTickets($show);
-        $content = $this->renderView('Artist/allArtists.xml.twig',
-            [
-                'showArtists' => $showArtists,
-        ]);
-        $filename = $show->getShow();
-        $response = new Response($content, 200,
-            [
-            'Content-Type' => 'application/xml; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename=' . urlencode($filename)
-            ]
-        );
-
-        return $response;
-    }
+//    /**
+//     * @Route("/xml", name="artists_xml")
+//     */
+//    public function allArtistsXMLAction(Defaults $defaults)
+//    {
+//        if (false === $defaults->isActiveShowSet()) {
+//            return $this->redirectToRoute('homepage');
+//        }
+//        if (false === $defaults->hasArtistsInActiveShow()) {
+//            return $this->redirectToRoute('homepage');
+//        }
+//
+//        $show = $defaults->showDefault();
+//        $em = $this->getDoctrine()->getManager();
+//        $showArtists = $em->getRepository('AppBundle:Artist')->artistShowTickets($show);
+//        $content = $this->renderView('Artist/allArtists.xml.twig',
+//            [
+//                'showArtists' => $showArtists,
+//        ]);
+//        $filename = $show->getShow();
+//        $response = new Response($content, 200,
+//            [
+//            'Content-Type' => 'application/xml; charset=utf-8',
+//            'Content-Disposition' => 'attachment; filename=' . urlencode($filename)
+//            ]
+//        );
+//
+//        return $response;
+//    }
 
     /**
      * @Route("/delete/{id}", name="artist_delete")

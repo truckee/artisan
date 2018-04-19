@@ -36,8 +36,8 @@ class ExistingArtistControllerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/');
         $form = $crawler->selectButton('Log in')->form();
-        $form['_username'] = 'admin';
-        $form['_password'] = 'manapw';
+        $form['_username'] = 'support';
+        $form['_password'] = 'art2017';
         $crawler = $this->client->submit($form);
 
         return $crawler;

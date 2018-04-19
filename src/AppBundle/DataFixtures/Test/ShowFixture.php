@@ -28,8 +28,15 @@ class ShowFixture extends AbstractFixture implements OrderedFixtureInterface
         $receipt = $this->getReference('receipt');
         $receipt->setShow($show);
         $show->setDefault(true);
-        $manager->persist($show);
         $manager->persist($receipt);
+
+        $artist2 = $this->getReference('artist2');
+        $artist2->addShow($show);
+        $block2 = $this->getReference('block2');
+        $block2->setArtist($artist2);
+        $show->addBlock($block2);
+        $manager->persist($block2);
+        $manager->persist($show);
 
         $manager->flush();
     }

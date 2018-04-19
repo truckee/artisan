@@ -8,17 +8,17 @@
  * file that was distributed with this source code.
  */
 
-//src\Tests\AppBundle\Controller\PDFControllerTest.php
+//src\Tests\AppBundle\Controller\ReplaceBlockOwnerTest.php
 
 namespace Tests\AppBundle\Controller;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
- * PDFControllerTest
+ * ReplaceBlockOwnerTest
  *
  */
-class PDFControllerTest extends WebTestCase
+class ReplaceBlockOwnerTest extends WebTestCase
 {
 
     public function setup()
@@ -32,7 +32,7 @@ class PDFControllerTest extends WebTestCase
             'AppBundle\DataFixtures\Test\BlocksToShowFixture',
             'AppBundle\DataFixtures\Test\ReceiptFixture',
             'AppBundle\DataFixtures\Test\ShowFixture',
-        ])->getReferenceRepository();
+            ])->getReferenceRepository();
     }
 
     public function login()
@@ -46,11 +46,28 @@ class PDFControllerTest extends WebTestCase
         return $crawler;
     }
 
-    public function testPdfAllTickets()
+    public function testBlockReassign()
     {
         $crawler = $this->login();
-        $crawler = $this->client->request('GET', '/pdf/allTickets');
+        $crawler = $this->client->request('GET', '/block/reassign');
 
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Borko, Benny")')->count());
+
+        $form = $crawler->filter('form')->form();
+        $crawler = $this->client->submit($form);
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("1 to 10")')->count());
+
+        $form = $crawler->filter('form')->form();
+        $crawler = $this->client->submit($form);
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Einstein, Al")')->count());
+
+        $form = $crawler->filter('form')->form();
+        $crawler = $this->client->submit($form);
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("tickets reassigned to artist")')->count());
+
     }
+    
 }
