@@ -32,8 +32,8 @@ class ShowRepository extends EntityRepository
             ->join('AppBundle:Artist', 'a', 'WITH', 't.artist = a')
             ->where('r.show = :show')
             ->setParameter(':show', $show)
-            ->groupBy('a.firstName')
-            ->groupBy('a.lastName')
+//            ->groupBy('a.firstName')
+            ->groupBy('a.lastName, a.firstName')
             ->getQuery()
             ->getResult();
 
