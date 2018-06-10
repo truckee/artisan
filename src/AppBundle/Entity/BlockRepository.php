@@ -22,10 +22,8 @@ class BlockRepository extends EntityRepository
 {
     private function qb($show)
     {
-        return $this->getEntityManager()->createQueryBuilder()
-                ->select('b')
-                ->from('AppBundle:Block', 'b')
-                ->join('AppBundle:Artist', 'a', 'WITH', 'b.artist = a')
+        return $this->createQueryBuilder('b')
+                ->join('b.artist', 'a')
                 ->where('b.show = ?1');
     }
 
@@ -48,23 +46,4 @@ class BlockRepository extends EntityRepository
                 ->getQuery()
                 ->getResult();
     }
-
-//    public function canBlockBeDeleted($show, $block)
-//    {
-//        $query = $this->getEntityManager()->createQueryBuilder()
-//            ->select('COUNT(t.ticket)')
-//            ->from('AppBundle:Ticket', 't')
-//            ->join('AppBundle:Receipt', 'r', 'WITH', 't.receipt = r')
-//            ->where('r.show = :show')
-//            ->andWhere('t.ticket >= :lower')
-//            ->andWhere('t.ticket <= :upper')
-//            ->setParameters([
-//                'show' => $show->getId(),
-//                'lower' => $block->getLower(),
-//                'upper' => $block->getUpper()
-//                ])
-//            ->getQuery()->getSingleScalarResult();
-//
-//        return ($query) ? false : true;
-//    }
 }
